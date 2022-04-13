@@ -1,0 +1,5 @@
+name: stencil-golang
+modules:
+  - name: github.com/getoutreach/stencil-template-base
+arguments:
+  reportingTeam: fnd-dtss

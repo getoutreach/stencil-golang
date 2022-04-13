@@ -1,0 +1,59 @@
+version: 2.1
+
+orbs:
+  shared: getoutreach/shared@1.55.2
+
+jobs:
+  ###Block(circleJobs)
+
+  ###EndBlock(circleJobs)
+
+  release-dryrun:
+    executor:
+      name: shared/testbed-machine
+    resource_class: xlarge
+    steps:
+      - shared/setup_environment:
+          machine: true
+      - shared/with_go_cache
+      - shared/with_node_cache:
+          save: true
+      - run:
+          name: Release (Dry-run)
+          command: ./scripts/shell-wrapper.sh ci/release/dryrun.sh
+      - shared/save_go_cache
+
+  release:
+    executor:
+      name: shared/testbed-machine
+    resource_class: xlarge
+    steps:
+      - shared/setup_environment:
+          machine: true
+      - shared/with_go_cache
+      - shared/with_node_cache:
+          save: true
+      - run:
+          name: Release
+          command: ./scripts/shell-wrapper.sh ci/release/release.sh
+      - shared/save_go_cache
+
+workflows:
+  version: 2
+  ###Block(circleWorkflows)
+
+  ###EndBlock(circleWorkflows)
+  build_and_test:
+    jobs:
+      - release-dryrun:
+          ###Block(releaseDryrunConfig)
+          filters:
+            branches:
+              ignore: main
+          ###EndBlock(releaseDryrunConfig)
+      - release:
+          ###Block(releaseConfig)
+          filters:
+            branches:
+              only: main
+          ###EndBlock(releaseConfig)

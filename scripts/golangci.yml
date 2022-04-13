@@ -1,0 +1,105 @@
+# HACK(jaredallard): Remove when stencil-base is cleaned up.
+# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
+
+# Linter settings
+linters-settings:
+  errcheck:
+    check-blank: true
+  govet:
+    check-shadowing: true
+  revive:
+    confidence: 0
+  gocyclo:
+    min-complexity: 25
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  depguard:
+    list-type: blacklist
+  misspell:
+    locale: US
+  lll:
+    line-length: 140
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - whyNoLint # Doesn't seem to work properly
+  funlen:
+    lines: 500
+    statements: 50
+
+linters:
+  # Inverted configuration with enable-all and disable is not scalable during updates of golangci-lint.
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - depguard
+    - dogsled
+    - errcheck
+    - errorlint
+    - exhaustive # Checks exhaustiveness of enum switch statements.
+    - exportloopref # Checks for pointers to enclosing loop variables.
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - revive
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    # - misspell        # The reason we're disabling this right now is because it uses 1/2 of the memory of the run.
+    - nakedret
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+
+issues:
+  exclude:
+    # We allow error shadowing
+    - 'declaration of "err" shadows declaration at'
+
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - funlen
+        - gochecknoglobals # Globals in test files are tolerated.
+    # This rule is buggy and breaks on our `///Block` lines.  Disable for now.
+    - linters:
+        - gocritic
+      text: "commentFormatting: put a space"
+    # This rule incorrectly flags nil references after assert.Assert(t, x != nil)
+    - path: _test\.go
+      text: "SA5011"
+      linters:
+        - staticcheck
+
+output:
+  format: colored-line-number
+  sort-results: true
+  print-severity: true
