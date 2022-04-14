@@ -1,8 +1,8 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file contains the package documentation for the gRPC
-// client service interface package for {{ .appName }}.
+// client service interface package for {{ .Config.Name }}.
 
-// Package {{ .underscoreAppName }} implements the client interface to the
-// {{ .appName }} gRPC service.
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
+// Package {{ stencil.ApplyTemplate "goPackageSafeName" }} implements the client interface to the
+// {{ .Config.Name }} gRPC service.
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].

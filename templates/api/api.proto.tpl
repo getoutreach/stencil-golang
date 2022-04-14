@@ -1,10 +1,12 @@
+{{- $_ := file.Static }}
+// {{ stencil.ApplyTemplate "copyright" }} 
 // Please modify this to match the interface specified in {{ .appName }}.go
 syntax = "proto3";
 
 package {{ .repo }}.api;
 
-option go_package = "github.com/getoutreach/{{ .repo }}/api";
-option ruby_package = "{{ .titleName }}Client";
+option go_package = "github.com/{{ .Runtime.Box.Org }}/{{ .Config.Name }}/api";
+option ruby_package = "{{ .Config.Name | title }}Client";
 
 // Define your grpc service structures here
 // PingRequest is the request for ping
@@ -27,26 +29,15 @@ message PongResponse {
   string message = 1;
 }
 
-{{ if .manifest.Temporal }}
-{{ if .manifest.Temporal.Client }}
-message StartPingPongWorkflowRequest {
-  string message = 1;
-}
+{{- range stencil.GetModuleHook "api.proto.message" }}
+{{- . | indent 2}}
+{{- end }}
 
-message StartPingPongWorkflowResponse {
-  string result = 1;
-}
-
-{{ end }}
-{{ end }}
-// {{ .titleName }} is the {{ .appName }} service.
-service {{ .titleName }} {
+// {{ .Config.Name | title }} is the {{ .Config.Name }} service.
+service {{ .Config.Name | title }} {
   rpc Ping(PingRequest) returns (PingResponse) {}
   rpc Pong(PongRequest) returns (PongResponse) {}
-{{ if .manifest.Temporal }}
-{{ if .manifest.Temporal.Client }}
-
-  rpc StartPingPongWorkflow(StartPingPongWorkflowRequest) returns (StartPingPongWorkflowResponse) {}
-{{ end }}
-{{ end }}
+{{- range stencil.GetModuleHook "api.proto.service" }}
+{{- . | indent 2}}
+{{- end }}
 }

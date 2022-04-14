@@ -1,4 +1,4 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file defines the gRPC server service interface for
 // {{ .appName }}.
@@ -17,10 +17,7 @@ type Service interface {
 	Close(ctx context.Context) error
 	Ping(ctx context.Context, message string) (string, error)
 	Pong(ctx context.Context, message string) (string, error)
-{{ if .manifest.Temporal }}
-{{ if .manifest.Temporal.Client }}
-
-        StartPingPongWorkflow(ctx context.Context, message string) (string, error)
-{{ end }}
-{{ end }}
+{{- range stencil.GetModuleHook "api.Service" }}
+{{- . | indent 2}}
+{{- end }}
 }

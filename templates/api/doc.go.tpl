@@ -1,11 +1,11 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file serves as package documentation for the api
 // package.
 
-// Package api defines the interface to the {{ .appName }} service.
+// Package api defines the interface to the {{ .Config.Name }} service.
 //
-// Please see api/{{ .appName }} for the client implementation.
+// Please see api/{{ .Config.Name }} for the client implementation.
 //
 // Please edit this to accurately reflect the service interface.
 //
