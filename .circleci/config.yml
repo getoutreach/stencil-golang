@@ -1,59 +1,80 @@
+# Please re-run stencil after any changes to this file.
 version: 2.1
-
 orbs:
-  shared: getoutreach/shared@1.55.2
+  shared: getoutreach/shared@1.57.1
+
+# Extra contexts to expose to all jobs below
+contexts: &contexts
+  ### Start contexts inserted by other modules
+
+  ### End contexts inserted by other modules
+  ###Block(extraContexts)
+  - docker-registry
+  - ghaccesstoken
+  ###EndBlock(extraContexts)
 
 jobs:
+  {}
   ###Block(circleJobs)
 
   ###EndBlock(circleJobs)
 
-  release-dryrun:
-    executor:
-      name: shared/testbed-machine
-    resource_class: xlarge
-    steps:
-      - shared/setup_environment:
-          machine: true
-      - shared/with_go_cache
-      - shared/with_node_cache:
-          save: true
-      - run:
-          name: Release (Dry-run)
-          command: ./scripts/shell-wrapper.sh ci/release/dryrun.sh
-      - shared/save_go_cache
+  ### Start jobs inserted by other modules
 
-  release:
-    executor:
-      name: shared/testbed-machine
-    resource_class: xlarge
-    steps:
-      - shared/setup_environment:
-          machine: true
-      - shared/with_go_cache
-      - shared/with_node_cache:
-          save: true
-      - run:
-          name: Release
-          command: ./scripts/shell-wrapper.sh ci/release/release.sh
-      - shared/save_go_cache
+  ### End jobs inserted by other modules
 
 workflows:
   version: 2
   ###Block(circleWorkflows)
 
   ###EndBlock(circleWorkflows)
-  build_and_test:
+
+  ### Start workflows inserted by other modules
+
+  ### End workflows inserted by other modules
+
+  release:
     jobs:
-      - release-dryrun:
-          ###Block(releaseDryrunConfig)
+      ###Block(circleWorkflowJobs)
+
+      ###EndBlock(circleWorkflowJobs)
+      - shared/release: &release
+          dryrun: false
+          context: *contexts
+          ###Block(circleReleaseExtra)
+
+          ###EndBlock(circleReleaseExtra)
+          requires:
+            ###Block(circleReleaseRequires)
+
+            ###EndBlock(circleReleaseRequires)
+            - shared/test
           filters:
             branches:
-              ignore: main
-          ###EndBlock(releaseDryrunConfig)
-      - release:
-          ###Block(releaseConfig)
+              only:
+                - master
+                - main
+      # Dryrun release for PRs
+      - shared/release:
+          <<: *release
+          dryrun: true
           filters:
             branches:
-              only: main
-          ###EndBlock(releaseConfig)
+              ignore:
+                - master
+                - main
+      - shared/test:
+          context: *contexts
+          app_name: stencil-golang
+
+      - shared/publish_docs:
+          context: *contexts
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
+      - shared/finalize-coverage:
+          context: *contexts
+          requires:
+            - shared/test

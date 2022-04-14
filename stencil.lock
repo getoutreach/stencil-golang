@@ -1,16 +1,16 @@
-version: v1.9.2
-generated: 2022-04-13T17:03:15.227566Z
+version: v1.10.0
+generated: 2022-04-14T20:14:52.682735Z
 modules:
 - name: github.com/getoutreach/stencil-template-base
   url: https://github.com/getoutreach/stencil-template-base
-  version: v0.1.1
+  version: v0.2.0
 - name: github.com/getoutreach/stencil-base
   url: https://github.com/getoutreach/stencil-base
   version: v0.2.0
+- name: github.com/getoutreach/stencil-circleci
+  url: https://github.com/getoutreach/stencil-circleci
+  version: v0.1.3
 files:
-- name: .circleci/config.yml
-  template: .circleci/config.yml.tpl
-  module: github.com/getoutreach/stencil-template-base
 - name: .tool-versions
   template: .tool-versions.tpl
   module: github.com/getoutreach/stencil-template-base
@@ -26,11 +26,14 @@ files:
 - name: go.mod
   template: go.mod.tpl
   module: github.com/getoutreach/stencil-template-base
-- name: main_test.go
-  template: main_test.go.tpl
+- name: manifest.yaml
+  template: manifest.yaml.tpl
   module: github.com/getoutreach/stencil-template-base
 - name: scripts/golangci.yml
   template: scripts/golangci.yml.tpl
+  module: github.com/getoutreach/stencil-template-base
+- name: templates/main_test.go
+  template: templates/main_test.go.tpl
   module: github.com/getoutreach/stencil-template-base
 - name: .editorconfig
   template: .editorconfig.tpl
@@ -86,3 +89,9 @@ files:
 - name: scripts/shell-wrapper.sh
   template: scripts/shell-wrapper.sh.tpl
   module: github.com/getoutreach/stencil-base
+- name: .circleci/config.yml
+  template: .circleci/config.yml.tpl
+  module: github.com/getoutreach/stencil-circleci
+- name: _helpers
+  template: _helpers.tpl
+  module: github.com/getoutreach/stencil-circleci
