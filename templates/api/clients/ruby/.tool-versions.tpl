@@ -1,6 +1,4 @@
 ruby {{ .versions.ruby }}
 ###Block(rubyToolVersions)
-{{- if .rubyToolVersions }}
-{{ .rubyToolVersions }}
-{{- end }}
+{{ file.Block "rubyToolVersions" }}
 ###EndBlock(rubyToolVersions)

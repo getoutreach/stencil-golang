@@ -1,9 +1,9 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file is responsible for creating consumers of kafka streams.
 // Managed: true
 
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 
 import (
 	"context"
@@ -52,9 +52,7 @@ type KafkaConsumerService struct {
 
 	// place any additional properties here
 	///Block(consumerproperties)
-{{- if .consumerproperties }}
-{{ .consumerproperties }}
-{{- end }}
+{{ file.Block "consumerproperties" }}
 	///EndBlock(consumerproperties)
 }
 
@@ -64,9 +62,7 @@ func NewKafkaConsumerService() *KafkaConsumerService {
 
 	// initialize your consumer here
 	///Block(initialization)
-{{- if .initialization }}
-{{ .initialization }}
-{{- end }}
+{{ file.Block "initialization" }}
 	///EndBlock(initialization)
 
 	return &svc
@@ -123,9 +119,7 @@ func (s *KafkaConsumerService) pollMessages(ctx context.Context) {
 
 		// handle the kafka message here
 		///Block(handlemessage)
-{{- if .handlemessage }}
-{{ .handlemessage }}
-{{- end }}
+{{ file.Block "handlemessage" }}
 		///EndBlock(handlemessage)
 
 		// DEPRECATED.  Use the 'handlemessage' block instead

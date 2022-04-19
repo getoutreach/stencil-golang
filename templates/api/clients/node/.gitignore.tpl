@@ -42,7 +42,5 @@ typings/
 .DS_Store
 
 ###Block(nodeGitIgnore)
-{{- if .nodeGitIgnore }}
-{{ .nodeGitIgnore }}
-{{- end }}
+{{ file.Block "nodeGitIgnore" }}
 ###EndBlock(nodeGitIgnore)

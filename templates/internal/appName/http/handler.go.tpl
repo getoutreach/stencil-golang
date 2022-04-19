@@ -1,9 +1,8 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file exposes the public HTTP service for {{ .appName }}.
+// Description: This file exposes the public HTTP service for {{ .Config.Name }}.
 
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
-
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 import (
 	"net/http"
 

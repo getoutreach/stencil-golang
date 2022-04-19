@@ -1,11 +1,11 @@
 {{- $_ := file.Static }}
 // {{ stencil.ApplyTemplate "copyright" }} 
-// Please modify this to match the interface specified in {{ .appName }}.go
+// Please modify this to match the interface specified in {{ .Config.Name }}.go
 syntax = "proto3";
 
-package {{ .repo }}.api;
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}.api;
 
-option go_package = "github.com/{{ .Runtime.Box.Org }}/{{ .Config.Name }}/api";
+option go_package = "{{ stencil.ApplyTemplate "appImportPath" }}/api";
 option ruby_package = "{{ .Config.Name | title }}Client";
 
 // Define your grpc service structures here

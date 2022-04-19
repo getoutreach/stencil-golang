@@ -1,14 +1,13 @@
-// Code managed by {{ .tool -}}
-// Please update to match your service definition.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-package {{ .underscoreAppName }}_test
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
 
 import (
 	"fmt"
 	"io"
 	"net/http/httptest"
 
-	"github.com/getoutreach/{{ .repo }}/internal/{{ .appName }}"
+	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/shuffler"
 
@@ -53,7 +52,7 @@ func ExampleHandler_ping() {
 	state := testSetup()
 	defer state.Close()
 
-	srv := httptest.NewServer({{ .underscoreAppName }}.Handler())
+	srv := httptest.NewServer({{ stencil.ApplyTemplate "goPackageSafeName" }}.Handler())
 	defer srv.Close()
 
 	resp, err := srv.Client().Get(srv.URL + "/ping")
@@ -85,12 +84,7 @@ func (t testState) Close() {
 }
 
 func testSetup() testState {
-	{{- if (or .manifest.Temporal .manifest.Resources.temporal_cassandra) }}
-	// Use the local address for temporal
-	defer findtest.UseTemporalIntegration()
-
-	{{- end }}
-	state := testState{log.Output(), httptest.NewServer({{ .underscoreAppName }}.Handler())}
+	state := testState{log.Output(), httptest.NewServer({{ stencil.ApplyTemplate "goPackageSafeName" }}.Handler())}
 	log.SetOutput(io.Discard)
 	return state
 }

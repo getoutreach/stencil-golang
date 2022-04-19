@@ -1,1 +1,1 @@
-{{ .versions.nodejs }}
+{{ file.Delete }}

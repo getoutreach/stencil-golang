@@ -1,9 +1,9 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file exposes the private HTTP service for {{ .appName }}.
+// Description: This file exposes the private HTTP service for {{ .Config.Name }}.
 // Managed: true
 
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 
 import (
 	"context"
@@ -17,23 +17,22 @@ import (
 
 	// Place any extra imports for your service code here
 	///Block(imports)
-	{{- if .imports }}
-{{ .imports }}
-	{{- end }}
+{{ file.Block "imports" }}
 	///EndBlock(imports)
 )
 
-// HTTPService handles internal http requests
+// HTTPService handles internal http requests, suchs as metrics, health
+// and readiness checks. This is required for ALL services to have.
 type HTTPService struct {
 	handlers.Service
 }
 
 // Run is the entrypoint for the HTTPService serviceActivity.
-func (s *HTTPService) Run(ctx context.Context, config *Config) error {
+func (s *HTTPService) Run(ctx context.Context) error {
 	// create a http handler (handlers.Service does metrics, health etc)
 	///Block(privatehandler)
-	{{- if .privatehandler }}
-{{ .privatehandler }}
+	{{- if file.Block "privatehandler" }}
+{{ file.Block "privatehandler"  }}
 	{{- else }}
 	s.App = http.NotFoundHandler()
 	{{- end }}
@@ -48,11 +47,11 @@ type PublicHTTPService struct {
 }
 
 // Run starts the HTTP service at the host/port specified in the config
-func (s *PublicHTTPService) Run(ctx context.Context, config *Config) error {
+func (s *PublicHTTPService) Run(ctx context.Context) error {
 	// set your public handler here.
 	///Block(publichandler)
-	{{- if .publichandler }}
-{{ .publichandler }}
+	{{- if file.Block "publichandler" }}
+{{ file.Block "publichandler" }}
 	{{- else }}
 	s.App = Handler()
 	{{- end }}

@@ -1,3 +1,3 @@
-module {{ .titleName }}Client
+module {{ title .Config.Name }}Client
   VERSION = "1.0.0"
 end

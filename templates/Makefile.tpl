@@ -1,11 +1,9 @@
-APP := {{ .appName }}
-OSS := {{ .manifest.OSS }}
+APP := {{ .Config.Name }}
+OSS := {{ stencil.Arg "oss" }}
 _ := $(shell ./scripts/devbase.sh) 
 
 include .bootstrap/root/Makefile
 
 ###Block(targets)
-{{- if .targets }}
-{{ .targets }}
-{{- end }}
+{{ file.Block "targets" }}
 ###EndBlock(targets)

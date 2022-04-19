@@ -1,6 +1,8 @@
-// +build or_int
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// This example was created by {{ .tool }} and will not be updated by {{ .tool -}} again.
+// go:build or_int
+
+// This example was created by {{ .Runtime.Generator }} and will not be updated by {{ .Runtime.Generator }} again.
 //
 // The contents of this file are meant to exist as part of the project
 // and provide documentation as an example of how to use the service's API.
@@ -9,15 +11,16 @@
 //
 // This example will be accessible via engdocs.outreach.cloud, so
 // please make sure the example illustrates how to use the API.
-package {{ .underscoreAppName -}}_test
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
+
 
 import (
 	"context"
 	"fmt"
 	"net"
 
-	client "github.com/getoutreach/{{- .repo -}}/api/{{- .appName -}}"
-	server "github.com/getoutreach/{{- .repo -}}/internal/{{- .appName -}}"
+	client "{{ stencil.ApplyTemplate "appImportPath" }}/api/{{ .Config.Name }}"
+	server "{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/trace"

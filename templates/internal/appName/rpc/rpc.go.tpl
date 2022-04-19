@@ -1,11 +1,11 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file contains the gRPC server passthrough implementation for the
-// {{ .appName }} API defined in api/{{ .underscoreAppName }}.proto. The concrete implementation
+// {{ .Config.Name }} API defined in api/{{ .Config.Name }}.proto. The concrete implementation
 // exists in the server.go file in this same directory.
 // Managed: true
 
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 
 import (
 	"context"
@@ -16,7 +16,7 @@ import (
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/trace"
-	"github.com/getoutreach/{{- .repo -}}/api"
+	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
 	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/orgservice/pkg/lifecycle"
 	"github.com/getoutreach/services/pkg/grpcx"
@@ -25,9 +25,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	// Place any extra imports for your handler code here
 	///Block(imports)
-	{{- if .imports }}
-{{ .imports }}
-	{{- end }}
+{{ file.Block "imports" }}
 	///EndBlock(imports)
 )
 
@@ -56,8 +54,8 @@ func (s *GRPCService) Run(ctx context.Context, cfg *Config) error {
 
     // Initialize your server instance here.
     ///Block(server)
-	{{- if .server }}
-{{ .server }}
+	{{- if file.Block "server" }}
+{{ file.Block "server" }}
 	{{- else }}
 	server, err := NewServer(ctx, cfg)
     if err != nil {
@@ -102,8 +100,8 @@ func StartServer(ctx context.Context, service api.Service, t *tollgate.Tollgate,
 	}
 
 	///Block(grpcServerOptions)
-	{{- if .grpcServerOptions }}
-{{ .grpcServerOptions }}
+	{{- if file.Block "grpcServerOptions" }}
+{{ file.Block "grpcServerOptions" }}
 	{{- else }}
 	withAuthn := grpcx.WithAuthnContext(func (ctx context.Context, headers map[string][]string, method string) context.Context {
 		if c := authn.FromHeaders(ctx, headers); c != nil {
@@ -144,8 +142,8 @@ type rpcserver struct {
 
 // Place any GRPC handler functions for your service here
 ///Block(handlers)
-{{- if .handlers }}
-{{ .handlers }}
+{{- if file.Block "handlers" }}
+{{ file.Block "handlers" }}
 {{- else }}
 func (s rpcserver) Ping(ctx context.Context, req *api.PingRequest) (*api.PingResponse, error) {
 	message, err := s.Service.Ping(ctx, req.Message)
@@ -162,18 +160,5 @@ func (s rpcserver) Pong(ctx context.Context, req *api.PongRequest) (*api.PongRes
 	}
 	return &api.PongResponse{Message: message}, nil
 }
-{{ if .manifest.Temporal }}
-{{- if .manifest.Temporal.Client }}
-
-func (s rpcserver) StartPingPongWorkflow(ctx context.Context, 
-	req *api.StartPingPongWorkflowRequest) (*api.StartPingPongWorkflowResponse, error) {
-        result, err := s.Service.StartPingPongWorkflow(ctx, req.Message)
-        if err != nil {
-                return nil, err
-        }
-        return &api.StartPingPongWorkflowResponse{Result: result}, nil
-}
-{{- end }}
-{{ end }}
 {{- end }}
 ///EndBlock(handlers)

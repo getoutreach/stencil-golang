@@ -1,13 +1,16 @@
-// +build or_int
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// Package {{ .appName}}test implements the test suite for the {{ .appName }} service.
-package {{ .underscoreAppName -}}test
+// go:build or_int
+
+// Package {{ .Config.Name }}test implements the test suite for the {{ .Config.name }} service.
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}test //nolint:revive // Why: We allow [-_].
+
 
 import (
 	"context"
 	"testing"
 
-	"github.com/getoutreach/{{- .repo -}}/api"
+	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
 	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/mint/pkg/authn/authntest"
 	"github.com/getoutreach/gobox/pkg/shuffler"
@@ -15,11 +18,11 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-// Run{{- .titleName -}}Tests runs a set of tests on the generic service
+// Run{{ title .Config.Name }}Tests runs a set of tests on the generic service
 //
 // Specific implementations are expected to be server implementations
 // and rpc-based client implementations.
-func Run{{- .titleName -}}Tests(t *testing.T, s api.Service) {
+func Run{{ title .Config.Name }}Tests(t *testing.T, s api.Service) {
 	shuffler.Run(t, suite{s})
 }
 

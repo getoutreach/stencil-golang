@@ -1,27 +1,11 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+{{- file.Skip "Using bootstrap main.go for now" }}
+{{- /* Breaking changes are required for clerk, temporal, and tollmon integration currently */}}
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file is the entrypoint for {{ .appName }}.
+// Description: This file is the entrypoint for {{ .Config.Name }}.
 // Managed: true
 
-// Package main implements the main entrypoint for the {{ .appName }} service.
-//
-// To build this package do:
-//
-//   make
-//
-// To run this do:
-//
-//   ./bin/{{ .appName }}
-//
-// To run with honeycomb enabled do: (Note: the below section assumes you have go-outreach cloned somewhere.)
-//
-//    $> push <go-outreach>
-//    $> ./scripts/devconfig.sh
-//    $> vault kv get -format=json dev/honeycomb/dev-env | jq -cr '.data.data.apiKey' > ~/.outreach/honeycomb.key
-//    $> popd
-//    $> ./scripts/devconfig.sh
-//    $> ./bin/{{ .appName }}
-//
+// Package main implements the main entrypoint for the {{ .Config.Name }} service.
 package main
 
 import (
@@ -37,22 +21,13 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/trace"
-	orglife "github.com/getoutreach/orgservice/pkg/lifecycle"
 	"github.com/getoutreach/tollmon/pkg/tollgate"
 
-	"github.com/getoutreach/{{ .repo }}/internal/{{ .appName }}"
-	{{- if .clerk.Producers }}
-	"github.com/getoutreach/{{ .appName }}/internal/clerk/producers"
-	{{- end}}
-	{{- if or .clerk.Consumers.Basic .clerk.Consumers.CDC }}
-	"github.com/getoutreach/{{ .appName }}/internal/clerk/consumers"
-	{{- end}}
+	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 
 	// Place any extra imports for your startup code here
 	///Block(imports)
-	{{- if .imports }}
-{{ .imports }}
-	{{- end }}
+{{ file.Block "imports" }}
 	///EndBlock(imports)
 )
 
@@ -70,32 +45,23 @@ func setMaxProcs(ctx context.Context) func() {
 	return undo
 }
 
-// serviceActivity defines the interface that runnable services need to adhere to
-// in order to be ran by main.
-type serviceActivity interface {
-	Run(ctx context.Context, config *{{ .underscoreAppName }}.Config) error
-	Close(ctx context.Context) error
-}
-
 // Place any customized code for your service in this block
 ///Block(customized)
-{{- if .customized }}
-{{ .customized }}
-{{- else }}
-{{- end }}
+{{ file.Block "customized" }}
 ///EndBlock(customized)
 
+{{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	env.ApplyOverrides()
-	app.SetName("{{ .appName }}")
+	app.SetName("{{ .Config.Name }}")
 	defer setMaxProcs(ctx)()
 
-	cfg := {{ .underscoreAppName }}.LoadConfig(ctx)
+	cfg := {{ $pkgName }}.LoadConfig(ctx)
 
-	if err := trace.InitTracer(ctx, "{{ .appName }}"); err != nil {
+	if err := trace.InitTracer(ctx, "{{ .Config.Name }}"); err != nil {
 		log.Error(ctx, "tracing failed to start", events.NewErrorInfo(err))
 		return
 	}
@@ -103,113 +69,38 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
 
-	{{- if .grpc }}
-	t := tollgate.New("{{ .appName }}",
-		tollgate.WithMonitoringMode(true),
-		///Block(tollgateOpts)
-		{{- if .tollgateOpts }}
-{{ .tollgateOpts }}
-		{{- else }}
-		tollgate.WithPartitionRules(tollgate.PartitionByOrgGUID),
-		{{- end }}
-		///EndBlock(tollgateOpts)
-	)
-	orgLifecycle := orglife.Lifecycle{}
-	{{- end }}
-
-	{{- if .clerk.Producers }}
-
-	clerkProducers, err := producers.NewClerkProducers(ctx, {{ .underscoreAppName }}.NewClerkProducersConfig(cfg).GetProducersOpts())
-	if err != nil {
-		log.Error(ctx, "unable to initialize clerk producers", events.NewErrorInfo(err))
-		return
-	}
-	defer clerkProducers.Close(ctx)
-	log.Info(ctx, "successfully initialized clerk producers")
-	{{- end }}
-
 	// Place any code for your service to run before registering service activities in this block
 	///Block(initialization)
-	{{- if .initialization }}
-{{ .initialization }}
-	{{- end }}
+{{ file.Block "initialization" }}
 	///EndBlock(initialization)
-	
-	{{- if or .clerk.Consumers.Basic .clerk.Consumers.CDC }}
-	// Add clerk message handler mapping here
-	basicClerkProcessors := []*consumers.BasicProcessor{
-		///Block(clerkBasicConsumers)
-		{{- if .clerkBasicConsumers }}
-{{ .clerkBasicConsumers }}
-		{{- else }}
-		{{- end }}
-		///EndBlock(clerkBasicConsumers)
-	}
-	cdcClerkProcessors := []*consumers.CDCProcessor{
-		///Block(clerkCDCConsumers)
-		{{- if .clerkCDCConsumers }}
-{{ .clerkCDCConsumers }}
-		{{- else }}
-		{{- end }}
-		///EndBlock(clerkCDCConsumers)
-	}
-	clerkConsumers, err := consumers.NewClerkConsumers(ctx, basicClerkProcessors, cdcClerkProcessors)
-	if err != nil {
-		log.Error(ctx, "unable to initialize clerk consumers", events.NewErrorInfo(err))
-		return
-	}
-	{{- end }}
 
-	acts := []serviceActivity {
-		{{ .underscoreAppName }}.NewShutdownService(),
-		&{{ .underscoreAppName }}.HTTPService{},
+	acts := []async.Runner{
+		{{ $pkgName }}.NewShutdownService(),
+		&{{ $appName }.NewHTTPService(),
 		{{- if .http }}
-		&{{ .underscoreAppName }}.PublicHTTPService{},
+		&{{ $pkgName }.NewPublicHTTPService(),
 		{{- end }}
 		{{- if .grpc }}
-		&{{ .underscoreAppName }}.GRPCService{
-			Tollgate: t,
-			OrgService: orglife.New(orgLifecycle.Hooks()),
-		},
+		&{{ $pkgName }.NewGRPCService(),
 		{{- end }}
-		{{- if .manifest.Temporal }}
-		{{ if .manifest.Temporal.Client }}
-		&{{ .underscoreAppName }}.WorkerService{},
-		{{ end }}
-	  {{- end }}
 		{{- if .kafka }}
-		{{ .underscoreAppName }}.NewKafkaConsumerService(),
+		{{ $pkgName }.NewKafkaConsumerService(),
 		{{- end }}
-		{{- if ne (len .manifest.Kubernetes.Groups) 0 }}
-		{{ .underscoreAppName }}.NewKubernetesService(),
+		{{- if not (empty manifest.Kubernetes.Groups) }}
+		{{ $pkgName }.NewKubernetesService(),
 		{{- end }}
 		// Place any additional ServiceActivities that your service has built here to have them handled automatically
 		///Block(services)
-		{{- if .services }}
-{{ .services }}
-		{{- end }}
+{{ file.Block "services" }}
 		///EndBlock(services)
-		{{- if or .clerk.Consumers.Basic .clerk.Consumers.CDC }}
-		clerkConsumers,
-		{{- end }}
 	}
 
 	// Place any code for your service to run during startup in this block
 	///Block(startup)
-	{{- if .startup }}
-{{ .startup }}
-	{{- end }}
+{{ file.Block "startup" }}
 	///EndBlock(startup)
 
-	g, ctx := errgroup.WithContext(ctx)
-	for idx := range acts {
-		act := acts[idx]
-		g.Go(func() error{
-			defer act.Close(ctx)
-			return act.Run(ctx, cfg)
-		})
-	}
-	if err := g.Wait(); err != nil {
-		log.Info(ctx, "Closing down service due to", events.NewErrorInfo(err))
+	if err := async.RunGroup(acts).Run(ctx); err != nil {
+		log.Warn(ctx, "shutting down service", events.NewErrorInfo(err))
 	}
 }

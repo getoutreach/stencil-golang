@@ -1,6 +1,9 @@
-// +build or_int
+// {{ stencil.ApplyTemplate "copyright" }}
 
-package {{ .underscoreAppName }}_test
+// go:build or_int
+
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
+
 
 // The Kafka suite illustrates how to test your kafka-based code in an
 // integration environment (i.e. with a real Kafka service).  Kafka

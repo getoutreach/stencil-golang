@@ -11,7 +11,7 @@ import (
 	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/services/pkg/grpcx"
 
-	"github.com/getoutreach/{{ .Config.Name }}/api"
+	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
 )
 
 // New returns a new grpc client for the {{ .Config.Name }} Service

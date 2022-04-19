@@ -4,7 +4,7 @@ before:
   hooks:
     - make dep
 builds:
-{{- range $cmdName := .manifest.Commands }}
+{{- range $cmdName := stencil.Arg "commands" }}
 - main: ./cmd/{{ $cmdName }}
   id: &name {{ $cmdName }}
   binary: *name
@@ -23,11 +23,9 @@ builds:
 archives: []
 checksum:
   name_template: 'checksums.txt'
-{{- if eq .manifest.ReleaseType "semver" }}
 release:
   # We handle releasing via semantic-release
   disable: true
-{{- else }}
 env_files:
   github_token: '~/.outreach/github.token'
 changelog:
@@ -38,5 +36,5 @@ changelog:
 release:
   github:
     owner: getoutreach
-    name: {{ .repo }}
+    name: {{ .Config.Name }}
 {{- end }}

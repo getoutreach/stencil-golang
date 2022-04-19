@@ -3,25 +3,21 @@
   // In order to do so, run: `make gogenerate` in the root
   // of this repository.
 
-  "name": "@outreach/{{ .appName }}-client",
+  "name": "@outreach/{{ .Config.Name }}-client",
   "version": "0.0.1",
-  "description": "{{ .appName }} client implementation",
+  "description": "{{ .Config.Name }} client implementation",
   "main": "dist/index.js",
-  "repository": "https://github.com/getoutreach/{{ .appName }}",
+  "repository": "https://github.com/getoutreach/{{ .Config.Name }}",
   "files": [
     ///Block(nodeDistFiles)
-    {{- if .nodeDistFiles }}
-{{ .nodeDistFiles }}
-    {{- end }}
+{{ file.Block "nodeDistFiles" }}
     ///EndBlock(nodeDistFiles)
     "dist"
   ],
   "license": "UNLICENSED",
   "dependencies": {
     ///Block(nodeDependencies)
-    {{- if .nodeDependencies }}
-{{ .nodeDependencies }}
-    {{- end }}
+{{ file.Block "nodeDependencies" }}
     ///EndBlock(nodeDependencies)
 	{{- range $d := .bootstrap_dependencies.NodeClient.Dependencies }}
 	  "{{ $d.Name }}": "{{ $d.Version }}",
@@ -29,9 +25,7 @@
   },
   "devDependencies": {
     ///Block(nodeDevDependencies)
-    {{- if .nodeDevDependencies }}
-{{ .nodeDevDependencies }}
-    {{- end }}
+{{ file.Block "nodeDevDependencies" }}
     ///EndBlock(nodeDevDependencies)
 	{{- range $d := .bootstrap_dependencies.NodeClient.DevDependencies }}
 	  "{{ $d.Name }}": "{{ $d.Version }}",
@@ -39,9 +33,7 @@
   },
   "scripts": {
     ///Block(nodeScripts)
-    {{- if .nodeScripts }}
-{{ .nodeScripts }}
-    {{- end }}
+{{ file.Block "nodeScripts" }}
     ///EndBlock(nodeScripts)
     "build": "npm-run-all clean pretty lint tsc",
     "ci": "npm-run-all pretty lint test-ci",

@@ -1,6 +1,8 @@
-// +build or_int
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-package  {{ .underscoreAppName -}}_test
+// go:build or_int
+
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
 
 import (
 	"context"
@@ -8,21 +10,21 @@ import (
 	"net"
 	"testing"
 
-	client "github.com/getoutreach/{{- .repo -}}/api/{{- .appName -}}"
-	server "github.com/getoutreach/{{- .repo -}}/internal/{{- .appName -}}"
-	"github.com/getoutreach/{{- .repo -}}/internal/{{- .appName -}}test"
+	client "{{ stencil.ApplyTemplate "appImportPath" }}/api/{{ .Config.Name }}"
+	server "{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
+	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}test"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/tollmon/pkg/tollgate"
 	orglife "github.com/getoutreach/orgservice/pkg/lifecycle"
 )
 
-func (suite) Test{{- .titleName -}}RPC(t *testing.T) {
+func (suite) Test{{ title .Config.Name }}RPC(t *testing.T) {
 	// Initialize an instance of your server implementation here.
 	///Block(server)
-        {{- if .server }}
-{{ .server }}
-        {{- else }}
+	{{- if file.Block "server" }}
+{{ file.Block "server" }}
+	{{- else }}
 	instance := &server.Server{}
 	{{- end }}
 	///EndBlock(server)
@@ -48,16 +50,16 @@ func (suite) Test{{- .titleName -}}RPC(t *testing.T) {
 		t.Fatalf("could not dial client: %v\n", err)
 	}
 
-	{{ .underscoreAppName -}}test.Run{{- .titleName -}}Tests(t, c)
+	{{ stencil.ApplyTemplate "goPackageSafeName" }}test.Run{{ title .Config.Name }}Tests(t, c)
 }
 
-func (suite) Test{{- .titleName -}}Server(t *testing.T) {
+func (suite) Test{{ title .Config.Name }}Server(t *testing.T) {
 	///Block(serverTwo)
-        {{- if .serverTwo }}
-{{ .serverTwo }}
-        {{- else }}
+	{{- if file.Block "serverTwo" }}
+{{ file.Block "serverTwo" }}
+	{{- else }}
 	instance := &server.Server{}
 	{{- end }}
 	///EndBlock(serverTwo)
-	{{ .underscoreAppName -}}test.Run{{- .titleName -}}Tests(t, instance)
+	{{ stencil.ApplyTemplate "goPackageSafeName" }}test.Run{{ title .Config.Name }}Tests(t, instance)
 }

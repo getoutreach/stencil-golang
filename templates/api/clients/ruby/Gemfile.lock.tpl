@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    {{ .appName }}_client (1.63.0)
+    {{ .Config.Name }}_client (1.63.0)
       grpc (~> 1.38)
 
 GEM
@@ -19,7 +19,7 @@ PLATFORMS
   -darwin-20
 
 DEPENDENCIES
-  {{ .appName }}_client!
+  {{ .Config.Name }}_client!
   rake
 
 BUNDLED WITH

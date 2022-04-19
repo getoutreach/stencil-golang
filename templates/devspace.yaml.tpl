@@ -11,7 +11,7 @@ vars:
   # It's probably not the best approach, but it works well.
   - name: DEVENV_DEPLOY_APPNAME
     source: env
-    default: {{ .appName }}
+    default: {{ .Config.Name }}
 
   - name: DEVENV_DEPLOY_LABELS
     value:
@@ -122,10 +122,10 @@ dev:
       namespace: ${DEVENV_DEPLOY_NAMESPACE}
       forward:
         - port: 8000
-{{- if .manifest.GRPC }}
+{{- if (has "grpc" (stencil.Arg "type")) }}
         - port: 5000
 {{- end }}
-{{- if .manifest.HTTP }}
+{{- if (has "http" (stencil.Arg "type")) }}
         - port: 8080
 {{- end }}
         # Remote debugging port
@@ -144,7 +144,7 @@ dev:
         - bin
         - ./vendor
         - node_modules
-        {{- if (has "node" .manifest.GRPCClients) }}
+        {{- if (has "node" (stencil.Arg "grpcClients")) }}
         - api/clients/node/node_modules/
         {{- end }}
 
@@ -347,32 +347,12 @@ profiles:
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
   # You get to choose from them which app you want to substitute with the dev container.
-  - name: deployment__{{ .appName }}
+  - name: deployment__{{ .Config.Name }}
     description: Default app profile. This doesn't change configuration, because it's set by default.
     activation:
       - env:
-          DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .appName }}
+          DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
 
-{{ if .manifest.ManagedResources.PostgreSQL.HasCDC }}
-  # Managed Resources - PostgreSQL
-  - name: deployment__{{ .appName }}-cdc
-    activation:
-      - env:
-          DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .appName }}-cdc
-    patches:
-      - op: replace
-        path: vars.name=DEVENV_DEPLOY_LABELS
-        value:
-          name: DEVENV_DEPLOY_LABELS
-          value:
-            app: {{ .appName }}-cdc
-      - op: replace
-        path: vars.name=DEV_CONTAINER_EXECUTABLE
-        value:
-          name: DEV_CONTAINER_EXECUTABLE
-          value: {{ .appName }}-cdc
-
-{{- end }}
   ###Block(profiles)
 {{- if .profiles }}
 {{ .profiles }}

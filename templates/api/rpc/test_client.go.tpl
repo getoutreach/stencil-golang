@@ -2,7 +2,7 @@
 
 // Description: This file contains test for the gRPC client for {{ .Config.Name }} service.
 
-// +build or_test or_int
+// go:build or_test or_int
 
 // Please edit this file to more accurately reflect the service.
 
@@ -14,7 +14,7 @@ import (
 	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/services/pkg/grpcx"
 
-	"github.com/getoutreach/{{ .Config.Name }}/api"
+	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
 )
 
 // NewForTest returns a test grpc client for the {{ .Config.Name }} Service

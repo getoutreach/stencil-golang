@@ -1,5 +1,5 @@
 import * as grpc from '@grpc/grpc-js';
-import { {{ .titleName }}Client } from './grpc/{{ .appName }}_grpc_pb';
+import { {{ title .Config.Name }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
 import { createAuthenticationInterceptor, createErrorLoggerInterceptor } from '@outreach/grpc-client';
 import winston from 'winston';
 import * as find from '@outreach/find';
@@ -12,7 +12,7 @@ const ConsoleTransport = () => {
 };
 
 /**
- * The ClientOptions interface defines the gRPC service endpoint the {{ .titleName }}Client connects to as well
+ * The ClientOptions interface defines the gRPC service endpoint the {{ title .Config.Name }}Client connects to as well
  * as any gRPC options that should be used by the client.
  */
 export interface ClientOptions {
@@ -26,17 +26,17 @@ export interface ClientOptions {
 /**
  * @param accessToken The token to use to authenticate all requests the client submits
  * @param options The client options that affect its behavior
- * @returns The newly created {{ .titleName }}Client instance
+ * @returns The newly created {{ title .Config.Name }}Client instance
  */
-export function create{{ .titleName }}Client(accessToken: string, options?: ClientOptions): {{ .titleName }}Client {
+export function create{{ title .Config.Name }}Client(accessToken: string, options?: ClientOptions): {{ title .Config.Name }}Client {
   const logger = winston.createLogger({ transports: [ConsoleTransport()] });
-  const endpoint = options?.endpoint || find.service('{{ .appName }}').dnsName + ':5000';
-  const clientName = '{{ .appName }}' + ':gRPCClient';
+  const endpoint = options?.endpoint || find.service('{{ .Config.Name }}').dnsName + ':5000';
+  const clientName = '{{ .Config.Name }}' + ':gRPCClient';
   logger.info(`${clientName}: Endpoint information: ${endpoint}`);
   const interceptors = [createAuthenticationInterceptor(accessToken), createErrorLoggerInterceptor(logger, endpoint)];
   if (options?.interceptors) {
     interceptors.push(...options.interceptors);
   }
 
-  return new {{ .titleName }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
+  return new {{ title .Config.name }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
 }

@@ -1,8 +1,7 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file contains the package documentation for {{ .appName }}.
+// Description: This file contains the package documentation for {{ .Config.Name }}.
 
-// Package {{ .underscoreAppName }} contains the base service activities such
-// as HTTP, gRPC, temporal, Kafka consumers, etc. as well as foundational
-// functionality such as loading configuration.
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
+// Package {{ stencil.ApplyTemplate "goPackageSafeName" }} contains the base activities
+// that make up the service.
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].

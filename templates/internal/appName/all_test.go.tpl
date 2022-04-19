@@ -1,7 +1,7 @@
-// Code managed by {{ .tool }}, DO NOT MODIFY
-// Please update to match your service definition.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-package {{ .underscoreAppName }}_test
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
+
 
 import (
 	"testing"

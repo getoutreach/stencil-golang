@@ -1,7 +1,7 @@
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file defines the gRPC server service interface for
-// {{ .appName }}.
+// {{ .Config.Name }}.
 
 package api
 
@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-// Service is the {{ .titleName }} server interface
+// Service is the {{ .Config.Name | title }} server interface
 //
 // This interface is implemented by the server and the rpc client
 type Service interface {

@@ -3,7 +3,7 @@
 # Node modules
 
 node_modules/
-{{- if (has "node" .manifest.GRPCClients) }}
+{{- if (has "node" stencil.Arg "grpcClients") }}
 api/clients/node/node_modules/
 {{- end }}
 
@@ -12,7 +12,5 @@ api/clients/node/node_modules/
 bin/
 
 ###Block(extras)
-{{- if .extras }}
-{{ .extras }}
-{{- end }}
+{{ file.Block "extras" }}
 ###EndBlock(extras)

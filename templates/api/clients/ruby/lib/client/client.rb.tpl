@@ -1,8 +1,8 @@
-require "{{ .appName }}_client/{{ .appName }}_pb"
-require "{{ .appName }}_client/{{ .appName }}_services_pb"
+require "{{ .Config.Name }}_client/{{ .Config.Name }}_pb"
+require "{{ .Config.Name }}_client/{{ .Config.Name }}_services_pb"
 
-module {{ .titleName }}Client
-  class Client < {{ .titleName }}::Stub
+module {{ title .Config.Name }}Client
+  class Client < {{ title .Config.Name }}::Stub
     class Interceptor < GRPC::ClientInterceptor
       def initialize(token)
         @token = token
@@ -49,7 +49,7 @@ module {{ .titleName }}Client
   end
 
   def self.create(bento, token, interceptors: [])
-    host = "{{ .appName }}.{{ .appName }}--#{bento}.svc.cluster.local:5000"
+    host = "{{ .Config.Name }}.{{ .Config.Name }}--#{bento}.svc.cluster.local:5000"
     Client.new(host, token, interceptors: interceptors)
   end
 end

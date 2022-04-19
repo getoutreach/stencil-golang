@@ -1,6 +1,9 @@
-// +build or_int
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-package {{ .underscoreAppName }}_test
+// go:build or_int
+
+package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
+
 
 // The S3 suite illustrates how to test your s3-based code in an
 // integration environment (i.e. with a fake S3 service).

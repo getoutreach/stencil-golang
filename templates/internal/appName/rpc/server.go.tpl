@@ -1,20 +1,13 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+// {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file contains the gRPC server implementation for the {{ .appName }}
-// API defined in api/{{ .underscoreAppName }}.proto. This implementation is used in the
+// Description: This file contains the gRPC server implementation for the {{ .Config.Name }}
+// API defined in api/{{ .Config.Name }}.proto. This implementation is used in the
 // rpc.go when creating and exposing the gRPC server.
 
-package {{ .underscoreAppName }} //nolint:revive // Why: This nolint is here just in case your project name contains any of [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 
 import (
 	"context"
-{{ if .manifest.Temporal }}
-{{ if .manifest.Temporal.Client }}
-	temporalclient "go.temporal.io/sdk/client"
-	"github.com/getoutreach/services/pkg/temporal"
-	"github.com/getoutreach/{{ .repo }}/internal/{{ .appName }}/workflows"
-{{ end }}
-{{ end }}
 	"github.com/getoutreach/mint/pkg/authn"
 )
 
@@ -24,29 +17,11 @@ import (
 // methods.
 type Server struct{
 	// Place any handler state for your service here.
-{{- if .manifest.Temporal }}
-{{- if .manifest.Temporal.Client }}
-	temporalc temporalclient.Client
-{{- end }}
-{{- end }}
 }
 
 // Define a `NewServer` function for your service here.
 func NewServer(ctx context.Context, cfg *Config) (*Server, error) {
-{{- if .manifest.Temporal }}
-{{- if .manifest.Temporal.Client }}
-        c, err := temporal.CreateClient(ctx, nil)
-        if err != nil {
-                return nil, errors.Wrap(err, "failed to init server")
-        }
-
-        return &Server{temporalc: c}, nil
-{{- else }}
-       return &Server{}, nil
-{{- end }}
-{{- else }}
-       return &Server{}, nil
-{{- end }}
+	return &Server{}, nil
 }
 
 // Place any GRPC handler functions for your service here.
@@ -71,20 +46,3 @@ func (s *Server) Pong(ctx context.Context, message string) (string, error) {
 func (s *Server) Close(_ context.Context) error {
 	return fmt.Errorf("closing the server is not allowed")
 }
-
-{{ if .manifest.Temporal }}
-{{ if .manifest.Temporal.Client }}
-// StartPingPongWorkflow implements the PingPongWorkflow temporal handler for the Server
-// pointer receiver.
-func (s *Server) StartPingPongWorkflow(ctx context.Context, message string) (string, error) {
-        opts := temporalclient.StartWorkflowOptions{
-                TaskQueue: workflows.TaskQueueName,
-        }
-        run, err := s.temporalc.ExecuteWorkflow(ctx, opts, workflows.PingPongWorkflow, message)
-        if err != nil {
-                return "", err
-        }
-        return fmt.Sprintf("Started worfklow ID: '%s'", run.GetID()), nil
-}
-{{ end }}
-{{ end }}

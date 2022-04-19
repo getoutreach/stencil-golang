@@ -6,7 +6,5 @@ source 'https://rubygems.org'
 gemspec
 
 ###Block(extraClientGems)
-{{- if .extraClientGems }}
-{{ .extraClientGems }}
-{{- end }}
+{{ file.Block "extraClientGems" }}
 ###EndBlock(extraClientGems)

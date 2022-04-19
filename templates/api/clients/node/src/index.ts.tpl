@@ -1,5 +1,5 @@
-export * as {{ .titleName }}Types from './grpc/{{ .appName }}_pb';
+export * as {{ title .Config.Name }}Types from './grpc/{{ .Config.Name }}_pb';
 export * from './client-helpers';
 
-import { {{ .titleName }}Client } from './grpc/{{ .appName }}_grpc_pb';
-export default {{ .titleName }}Client;
+import { {{ title .Config.Name }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
+export default {{ title .Config.Name }}Client;

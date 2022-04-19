@@ -3,7 +3,7 @@ module.exports = {
   collectCoverageFrom: ['**/src/**'],
   coveragePathIgnorePatterns: ['<rootDir>/src/grpc/'],
   moduleNameMapper: {
-    ['@outreach/{{ .appName }}-client']: '<rootDir>/src'
+    ['@outreach/{{ .Config.Name }}-client']: '<rootDir>/src'
   },
   modulePathIgnorePatterns: ['dist', '\\.(json)$'],
   preset: 'ts-jest',

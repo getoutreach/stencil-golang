@@ -1,7 +1,10 @@
-// Copyright {{ .currentYear }} Outreach Corporation. All Rights Reserved.
+{{ file.Skip "Virtual file to generate CLIs" }}
 
-// Description: This file is the entrypoint for the {{ .cmdName }} CLI
-// command for {{ .appName }}.
+{{- define "main-cli" }}
+// {{ stencil.ApplyTemplate "copyright" }} 
+
+// Description: This file is the entrypoint for the {{ .Config.Name }} CLI
+// command for {{ .Config.Name }}.
 // Managed: true
 
 package main
@@ -17,9 +20,7 @@ import (
 
 	// Place any extra imports for your startup code here
 	///Block(imports)
-	{{- if .imports }}
-{{ .imports }}
-	{{- end }}
+{{ file.Block "imports" }}
 	///EndBlock(imports)
 )
 
@@ -28,8 +29,8 @@ import (
 var HoneycombTracingKey = "NOTSET" //nolint:gochecknoglobals // Why: We can't compile in things as a const.
 
 ///Block(honeycombDataset)
-{{- if .honeycombDataset }}
-{{ .honeycombDataset }}
+{{- if file.Block "honeycombDataset" }}
+{{ file.Block "honeycombDataset" }}
 {{- else }}
 
 // HoneycombDataset is a constant denoting the dataset that traces should be stored
@@ -39,9 +40,7 @@ const HoneycombDataset = ""
 ///EndBlock(honeycombDataset)
 
 ///Block(global)
-{{- if .global }}
-{{ .global }}
-{{- end }}
+{{ file.Block "global" }}
 ///EndBlock(global)
 
 func main() {
@@ -49,41 +48,39 @@ func main() {
 	log := logrus.New()
 
 	///Block(init)
-	{{- if .init }}
-{{ .init }}
-	{{- end }}
+{{ file.Block "init" }}
 	///EndBlock(init)
 
 	app := cli.App{
 		Version: oapp.Version,
 		Name: "{{ .cmdName }}",
 		///Block(app)
-		{{- if .app }}
-{{ .app }}
-		{{- end }}
+{{ file.Block "app" }}
 		///EndBlock(app)
 	}
 	app.Flags = []cli.Flag{
 		///Block(flags)
-		{{- if .flags }}
-{{ .flags }}
-		{{- end }}
+{{ file.Block "flags" }}
 		///EndBlock(flags)
 	}
 	app.Commands = []*cli.Command{
 		///Block(commands)
-		{{- if .commands }}
-{{ .commands }}
-		{{- end }}
+{{ file.Block "commands" }}
 		///EndBlock(commands)
 	}
 
 	///Block(postApp)
-	{{- if .postApp }}
-{{ .postApp }}
-	{{- end }}
+{{ file.Block "postApp" }}
 	///EndBlock(postApp)
 
 	// Insert global flags, tracing, updating and start the application.
 	gcli.HookInUrfaveCLI(ctx, cancel, &app, log, HoneycombTracingKey, HoneycombDataset)
 }
+
+{{- end }}
+
+{{ $root := . }}
+{{- range := stencil.Arg "commands" }}
+{{ file.Create (printf "%s.go" .) 0600 now }}
+{{ file.SetContents (stencil.ApplyTemplate "main-cli" (dict "Config" $root.Config "cmdName" . )) }}
+{{- end }}

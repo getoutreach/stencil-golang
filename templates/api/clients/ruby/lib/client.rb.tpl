@@ -1,4 +1,4 @@
-require "{{ .appName }}_client/client"
-require "{{ .appName }}_client/version"
-require "{{ .appName }}_client/{{ .appName }}_pb"
-require "{{ .appName }}_client/{{ .appName }}_services_pb"
+require "{{ .Config.Name }}_client/client"
+require "{{ .Config.Name }}_client/version"
+require "{{ .Config.Name }}_client/{{ .Config.Name }}_pb"
+require "{{ .Config.Name }}_client/{{ .Config.Name }}_services_pb"
