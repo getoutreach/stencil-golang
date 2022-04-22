@@ -1,3 +1,7 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{ file.Skip "Not a gRPC service" }}
+{{- end }}
+{{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file contains the gRPC server passthrough implementation for the
@@ -126,7 +130,7 @@ func StartServer(ctx context.Context, service api.Service, t *tollgate.Tollgate,
 	o.RegisterRPCs(s)
 
 	// Register service
-	api.Register{{- .titleName -}}Server(s, rpcserver{service})
+	api.Register{{ title .Config.Name }}Server(s, rpcserver{service})
 
 	// Register reflection
 	reflection.Register(s)

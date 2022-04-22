@@ -3,7 +3,7 @@
 # Node modules
 
 node_modules/
-{{- if (has "node" stencil.Arg "grpcClients") }}
+{{- if (has "node" (stencil.Arg "grpcClients")) }}
 api/clients/node/node_modules/
 {{- end }}
 

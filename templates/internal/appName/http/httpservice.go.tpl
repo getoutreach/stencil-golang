@@ -1,3 +1,7 @@
+{{- if not (has "http" (stencil.Arg "type")) }}
+{{ file.Skip "Not a HTTP service" }}
+{{- end }}
+{{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file exposes the private HTTP service for {{ .Config.Name }}.
@@ -40,7 +44,7 @@ func (s *HTTPService) Run(ctx context.Context) error {
 	return s.Service.Run(ctx, fmt.Sprintf("%s:%d", config.ListenHost, config.HTTPPort))
 }
 
-{{ if .http }}
+{{ if has "http" (stencil.Arg "type") }}
 // PublicHTTPService handles public http service calls
 type PublicHTTPService struct {
 	handlers.PublicService

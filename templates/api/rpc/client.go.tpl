@@ -20,10 +20,14 @@ import (
 // All calls automatically handle logging, tracing, metrics,
 // service discovery, and authn.
 func New(ctx context.Context) (api.Service, error) {
-{{- stencil.GetModuleHook "rpc.New" | indent 2}}
+{{- range stencil.GetModuleHook "rpc.New" }}
+{{ indent 2 . }}
+{{- end }}
 	return &client{
 	  grpcConn: conn,
-{{- stencil.GetModuleHook "rpc.New.client" | indent 2}}
+{{- range stencil.GetModuleHook "rpc.New.client" }}
+{{ indent 2 . }}
+{{- end }}
 	  {{ title .Config.Name }}Client: api.New{{ title .Config.Name }}Client(conn),
 	}, nil
 }
@@ -32,7 +36,9 @@ func New(ctx context.Context) (api.Service, error) {
 // a gRPC client for the {{ .Config.Name }} service as per the protobuf files.
 type client struct {
   grpcConn    *grpc.ClientConn
-{{- stencil.GetModuleHook "rpc.client" | indent 2}}
+{{- range stencil.GetModuleHook "rpc.client" }}
+{{ indent 2 . }}
+{{- end }}
 	api.{{ title .Config.Name }}Client
 	// Place your client struct data here
 }
@@ -40,7 +46,9 @@ type client struct {
 // Close is necessary to avoid potential resource leaks
 func (c client) Close(ctx context.Context) error {
 	closers := []func() error{
-{{- stencil.GetModuleHook "rpc.closers" | indent 2}}
+{{- range stencil.GetModuleHook "rpc.Close.closers" }}
+{{ indent 2 . }}
+{{- end }}
 		func() error {
 		  // close grpc connection
 			if c.grpcConn != nil {
@@ -83,4 +91,6 @@ func (c client) Pong(ctx context.Context, message string) (string, error) {
 	return resp.Message, nil
 }
 
-{{- stencil.GetModuleHook "rpc.methods" | indent 2}}
+{{- range stencil.GetModuleHook "rpc.methods" }}
+{{ indent 2 . }}
+{{- end }}

@@ -1,4 +1,21 @@
 name: github.com/getoutreach/stencil-golang
 ###Block(keys)
-
+arguments:
+  type:
+    type: string
+    description: The type of application this is, grpc, http, etc.
+  oss:
+    type: bool
+    description: Deprecated, denotes this is an open source repository.
+  commands:
+    type: list
+    description: List of CLI commands to generate for this repository
+  grpcClients:
+    type: list
+    description: List of grpc clients to generate for this gRPC service. Type must include gRPC
+  reportingTeam:
+    type: string
+  kubernetes.groups:
+    type: list
+    description: List of Kubernetes groups to generate
 ###EndBlock(keys)

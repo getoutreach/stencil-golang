@@ -22,11 +22,11 @@ import (
 // This `ForTest` client does not include service discovery.
 // It requires that the server address be explicitly specified.
 func NewForTest(ctx context.Context, server string) (api.Service, error) {
-	/// !!!! TODO: Need to split this out w/ authn, but need to model this
-	/// outside of bootstrap first.
-{{- stencil.GetModuleHook "rpc.NewForTest" | indent 2}}
+{{- range stencil.GetModuleHook "rpc.NewForTest" }}
+{{ indent 2 . }}
+{{- end }}
 
-	conn, err := grpcx.NewClientConn(ctx, server, <TODO>)
+	conn, err := grpcx.NewClientConn(ctx, server)
 	if err != nil {
 		return nil, err
 	}

@@ -80,7 +80,7 @@ func main() {
 {{- end }}
 
 {{ $root := . }}
-{{- range := stencil.Arg "commands" }}
-{{ file.Create (printf "%s.go" .) 0600 now }}
+{{- range stencil.Arg "commands" }}
+{{ file.Create (printf "cmd/%s/%s.go" . .) 0600 now }}
 {{ file.SetContents (stencil.ApplyTemplate "main-cli" (dict "Config" $root.Config "cmdName" . )) }}
 {{- end }}

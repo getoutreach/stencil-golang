@@ -76,18 +76,18 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 	acts := []async.Runner{
 		{{ $pkgName }}.NewShutdownService(),
-		&{{ $appName }.NewHTTPService(),
-		{{- if .http }}
-		&{{ $pkgName }.NewPublicHTTPService(),
+		&{{ $pkgName }}.NewHTTPService(),
+		{{- if has "http" (stencil.Arg "type") }}
+		&{{ $pkgName }}.NewPublicHTTPService(),
 		{{- end }}
-		{{- if .grpc }}
-		&{{ $pkgName }.NewGRPCService(),
+		{{- if has "grpc" (stencil.Arg "type") }}
+		&{{ $pkgName }}.NewGRPCService(),
 		{{- end }}
-		{{- if .kafka }}
-		{{ $pkgName }.NewKafkaConsumerService(),
+		{{- if has "kafka" (stencil.Arg "type") }}
+		{{ $pkgName }}.NewKafkaConsumerService(),
 		{{- end }}
-		{{- if not (empty manifest.Kubernetes.Groups) }}
-		{{ $pkgName }.NewKubernetesService(),
+		{{- if not (stencil.Arg "kubernetes.groups") }}
+		{{ $pkgName }}.NewKubernetesService(),
 		{{- end }}
 		// Place any additional ServiceActivities that your service has built here to have them handled automatically
 		///Block(services)

@@ -1,5 +1,18 @@
 {{- file.Skip "Exposes template functions" }}
 
+{{- define "toolVersions" }}
+- name: golang
+  version: 1.17.9
+# Not used for gRPC clients
+- name: nodejs
+  version: 16.13.0
+- name: terraform
+  version: 0.13.5
+{{- end }}
+
+# Registers our versions w/ stencil-base
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "toolVersions" (stencil.ApplyTemplate "toolVersions" | fromYaml) }}
+
 # Returns the currentYear in UTC
 {{- define "currentYear" }}
 {{- dateInZone "2006" (now) "UTC" }}
@@ -8,7 +21,7 @@
 # Returns a underscored version of the application's name
 # that's safe to be used in packages
 {{- define "goPackageSafeName" }}
-{{- regexReplaceAll "\W+" .Config.Name "_"  }}
+{{- regexReplaceAll "\\W+" .Config.Name "_"  }}
 {{- end }}
 
 # Returns the copyright string
@@ -18,9 +31,10 @@
 
 # Returns the import path for this application
 {{- define "appImportPath" }}
-{{- printf "github.com/%s/%s" .Runtime.Box.Org .Config.Name }}
+{{- list "github.com" .Runtime.Box.Org .Config.Name | join "/" }}
 {{- end }}
 
+# Dependencies for the service
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
@@ -36,7 +50,7 @@ go:
   version: v2.17.0
 {{- end }}
 
-{{- if .grpc }}
+{{- if has "grpc" (stencil.Arg "type") }}
 - name: github.com/getoutreach/tollmon
   version: v1.26.0
 - name: google.golang.org/grpc
@@ -45,12 +59,12 @@ go:
   version: v1.39.0
 {{- end }}
 
-{{- if stencil.Args "commands" }}
+{{- if stencil.Arg "commands" }}
 - name: github.com/urfave/cli/v2
   version: v2.3.0
 {{- end }}
 
-{{- range := stencil.GetModuleHook "go_modules" }}
+{{- range stencil.GetModuleHook "go_modules" }}
 - name: {{ .Name }}
   version: {{ .Version }}
 {{- end }}
@@ -73,7 +87,7 @@ nodejs:
     version: ^4.0.2
   - name: winston
     version: ^3.3.3
-{{- range := stencil.GetModuleHook "js_modules" }}
+{{- range stencil.GetModuleHook "js_modules" }}
   - name: {{ .Name }}
     version: {{ .Version }}
 {{- end }}
@@ -122,7 +136,7 @@ nodejs:
     version: ^4.0.5
   - name: wait-on
     version: ^5.2.0
-{{- range := stencil.GetModuleHook "js_modules_dev" }}
+{{- range stencil.GetModuleHook "js_modules_dev" }}
   - name: {{ .Name }}
     version: {{ .Version }}
 {{- end }}

@@ -354,7 +354,5 @@ profiles:
           DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
 
   ###Block(profiles)
-{{- if .profiles }}
-{{ .profiles }}
-{{- end }}
+{{ file.Block "profiles" }}
   ###EndBlock(profiles)

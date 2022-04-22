@@ -19,16 +19,16 @@
     ///Block(nodeDependencies)
 {{ file.Block "nodeDependencies" }}
     ///EndBlock(nodeDependencies)
-	{{- range $d := .bootstrap_dependencies.NodeClient.Dependencies }}
-	  "{{ $d.Name }}": "{{ $d.Version }}",
+	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.dependencies }}
+	  "{{ $d.name }}": "{{ $d.version }}",
 	{{- end }}
   },
   "devDependencies": {
     ///Block(nodeDevDependencies)
 {{ file.Block "nodeDevDependencies" }}
     ///EndBlock(nodeDevDependencies)
-	{{- range $d := .bootstrap_dependencies.NodeClient.DevDependencies }}
-	  "{{ $d.Name }}": "{{ $d.Version }}",
+	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.devDependencies }}
+	  "{{ $d.name }}": "{{ $d.version }}",
 	{{- end }}
   },
   "scripts": {

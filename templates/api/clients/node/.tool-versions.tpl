@@ -1,1 +1,1 @@
-nodejs {{ .versions.nodejs }}
+nodejs {{ .Config.Versions.nodejs }}

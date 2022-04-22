@@ -38,5 +38,5 @@ export function create{{ title .Config.Name }}Client(accessToken: string, option
     interceptors.push(...options.interceptors);
   }
 
-  return new {{ title .Config.name }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
+  return new {{ title .Config.Name }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
 }

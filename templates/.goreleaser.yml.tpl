@@ -1,3 +1,7 @@
+{{- if not (stencil.Arg "commands") }}
+{{ file.Skip "No commands defined" }}
+{{- end }}
+
 # This is an example goreleaser.yaml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
 before:
@@ -26,15 +30,3 @@ checksum:
 release:
   # We handle releasing via semantic-release
   disable: true
-env_files:
-  github_token: '~/.outreach/github.token'
-changelog:
-  sort: asc
-  filters:
-    exclude:
-    - '^(docs|test|build|chore)(\(.+?\))?:'
-release:
-  github:
-    owner: getoutreach
-    name: {{ .Config.Name }}
-{{- end }}

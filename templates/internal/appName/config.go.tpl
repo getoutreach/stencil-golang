@@ -1,3 +1,4 @@
+{{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file is the focal point of configuration that needs passed
@@ -24,13 +25,13 @@ import (
 type Config struct {
     ListenHost string `yaml:"ListenHost"`
     HTTPPort int `yaml:"HTTPPort"`
-    {{- if .http }}
+    {{- if has "http" (stencil.Arg "type") }}
     PublicHTTPPort int `yaml:"PublicHTTPPort"`
     {{- end }}
-    {{- if .grpc }}
+    {{- if has "grpc" (stencil.Arg "type") }}
     GRPCPort int `yaml:"GRPCPort"`
     {{- end }}
-    {{- if .kafka }}
+    {{- if has "kafka" (stencil.Arg "type") }}
     KafkaHosts []string `yaml:"KafkaHosts"`
     KafkaConsumerGroupID string `yaml:"KafkaConsumerGroupID"`
     KafkaConsumerTopic string `yaml:"KafkaConsumerTopic"`
@@ -43,7 +44,7 @@ type Config struct {
 // MarshalLog can be used to write config to log
 func (c *Config) MarshalLog(addfield func(key string, value interface{})) {
     ///Block(marshalconfig)
-{{ file.Block "marhsalconfig" }}
+{{ file.Block "marshalconfig" }}
 	///EndBlock(marshalconfig)
 }
 
@@ -58,15 +59,16 @@ func LoadConfig(ctx context.Context) *Config {
         // IPs on a server on the given port for the respective service.
         ListenHost: "",
         HTTPPort: 8000,
-	    {{- if .http }}
+	    {{- if has "http" (stencil.Arg "type") }}
 	    PublicHTTPPort: 8080,
 	    {{- end }}
-        {{- if .grpc }}
+        {{- if has "grpc" (stencil.Arg "type") }}
         GRPCPort: 5000,
         {{- end }}
         ///Block(defconfig)
-        {{- if .defconfig }}
-{{ DeprecationNotice (file.Block "defconfig") (printf "Configuration should be declared in deployments/%s/%s.config.jsonnet" .Config.Name .Config.Name ) }}
+        {{- if file.Block "defconfig" }}
+        {{- file.AddDeprecationNotice (printf "Configuration should be declared in deployments/%s/%s.config.jsonnet" .Config.Name .Config.Name) }}
+{{ file.Block "defconfig" }}
         {{- end }}
         ///EndBlock(defconfig)
     }
@@ -78,7 +80,7 @@ func LoadConfig(ctx context.Context) *Config {
         log.Error(ctx, "Failed to load configuration file, will use default settings", events.NewErrorInfo(err))
     }
 
-    {{- if .kafka }}
+    {{- if has "kafka" (stencil.Arg "type") }}
 	if len(c.KafkaHosts) == 0 {
 		brokerDNS, err := find.Service(ctx, find.KafkaPublishBrokers)
 		if err != nil {

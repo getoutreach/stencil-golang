@@ -1,8 +1,12 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{ file.Skip "Not a gRPC service" }}
+{{- end }}
+{{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // go:build or_int
 
-// Package {{ .Config.Name }}test implements the test suite for the {{ .Config.name }} service.
+// Package {{ .Config.Name }}test implements the test suite for the {{ .Config.Name }} service.
 package {{ stencil.ApplyTemplate "goPackageSafeName" }}test //nolint:revive // Why: We allow [-_].
 
 
