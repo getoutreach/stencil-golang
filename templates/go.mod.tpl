@@ -1,3 +1,4 @@
+{{- /* This file is "static" until we have a go extension to generate it" */}}
 {{- file.Static }}
 module github.com/{{ .Runtime.Box.Org }}/{{ .Config.Name }}
 

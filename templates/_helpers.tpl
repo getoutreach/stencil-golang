@@ -1,8 +1,14 @@
 {{- file.Skip "Exposes template functions" }}
 
+# This will be better when we rollout the versions functionality
+# in stencil later.
+{{- define "goVersion" }}
+{{ "1.17.9" }}
+{{- end }}
+
 {{- define "toolVersions" }}
 - name: golang
-  version: 1.17.9
+  version: {{ stencil.ApplyTemplate "goVersion" }}
 # Not used for gRPC clients
 - name: nodejs
   version: 16.13.0

@@ -10,7 +10,7 @@ root = "."
 cmd = "make"
 
 # Binary file yields from `cmd`.
-bin = "scripts/air-runner.sh"
+bin = ".bootstrap/shell/air-runner.sh"
 
 # Watch these filename extensions.
 include_ext = ["go", "tpl", "tmpl", "html"]
