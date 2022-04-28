@@ -3,7 +3,7 @@
 # be kept in sync with the production one.
 {{- $goVersion := semver (stencil.ApplyTemplate "goVersion") }}
 FROM gcr.io/outreach-docker/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}.{{ $goVersion.Patch }} as builder
-FROM gcr.io/outreach-docker/alpine:{{ index .versions "runtime-alpine" }}
+FROM gcr.io/outreach-docker/alpine:3.12
 WORKDIR "/app/bin"
 ENTRYPOINT ["/app/bin/{{ .Config.Name }}"]
 
