@@ -1,6 +1,4 @@
-{{- if not (has "library" (stencil.Arg "type")) }}
-{{ file.Skip "Application is a library" }}
-{{- end }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 .git/
 
 # Node modules

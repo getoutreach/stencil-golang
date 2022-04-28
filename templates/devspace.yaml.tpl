@@ -1,6 +1,4 @@
-{{- if not (has "library" (stencil.Arg "type")) }}
-{{ file.Skip "Application is a library" }}
-{{- end }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 version: v1beta11
 
 # `vars` specifies variables which may be used as ${VAR_NAME} in devspace.yaml

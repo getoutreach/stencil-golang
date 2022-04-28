@@ -31,10 +31,20 @@
 {{- $serviceTypes := (stencil.Arg "type") }}
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
 {{- if not (and (has "grpc" $serviceTypes) (has "node" $grpcClients)) }}
-{{ file.Skip "Not a gRPC service, or node client not specified in grpcClients" }}
-{{ file.Delete }}
+  {{ file.Skip "Not a gRPC service, or node client not specified in grpcClients" }}
+  {{ file.Delete }}
 {{- end }}
 {{- end }}
+
+{{- /* skipIfNotService skips the current file if we're not a service */}}
+{{- define "skipIfNotService" }}
+{{- $types := (stencil.Arg "type") }}
+{{- if not (or (has "http" $types) (or (has "grpc" $types) (or (has "kafka" $types) (has "temporal" $types)))) }}
+  {{ file.Skip "Not a service" }}
+  {{ file.Delete }}
+{{- end }}
+{{- end }}
+
 
 # Returns the copyright string
 {{- define "copyright" }}
