@@ -1,3 +1,5 @@
+{{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 # syntax=docker/dockerfile:1.0-experimental
 # This Dockerfile is used by Tilt currently. It should
 # be kept in sync with the production one.
@@ -21,9 +23,7 @@ RUN apk add --no-cache curl \
     &&  apk del --no-cache curl
 
 ###Block(afterBuild)
-{{- if .afterBuild }}
-{{ .afterBuild }}
-{{- end }}
+{{ file.Block "afterBuild"}}
 ###EndBlock(afterBuild)
 USER systemuser
 

@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
 lintroller:
-  tier: "{{ .manifest.Lintroller }}"
+  tier: "{{ stencil.Arg "lintroller" }}"
 
 severity:
   default-severity: error

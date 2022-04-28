@@ -1,3 +1,5 @@
+{{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 // Code managed by Bootstrap - modify only in the blocks
 local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
@@ -25,8 +27,8 @@ local resourcesOverride = {
     // the resources defined here.
     default: {
       ///Block(defaultResources)
-      {{- if .defaultResources }}
-{{ .defaultResources }}
+      {{- if file.Block "defaultResources" }}
+{{ file.Block "defaultResources" }}
       {{- else }}
       requests: {
         cpu: '100m',
@@ -41,9 +43,7 @@ local resourcesOverride = {
     // of the object being environment names.
     environment: {
       ///Block(environmentResources)
-      {{- if .environmentResources }}
-{{ .environmentResources }}
-      {{- end }}
+{{ file.Block "environmentResources" }}
       ///EndBlock(environmentResources)
     },
 
@@ -51,9 +51,7 @@ local resourcesOverride = {
     // the object being bento names.
     cluster: {
     	///Block(clusterResources)
-    	{{- if .clusterResources }}
-{{ .clusterResources }}
-      {{- end }}
+{{ file.Block "clusterResources" }}
     	///EndBlock(clusterResources)
     },
 
@@ -61,9 +59,7 @@ local resourcesOverride = {
     // object being bento names.
     bento: {
       ///Block(bentoResources)
-      {{- if .bentoResources }}
-{{ .bentoResources }}
-      {{- end }}
+{{ file.Block "bentoResources" }}
       ///EndBlock(bentoResources)
     }
 };

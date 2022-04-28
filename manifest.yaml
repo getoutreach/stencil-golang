@@ -18,4 +18,11 @@ arguments:
   kubernetes.groups:
     type: list
     description: List of Kubernetes groups to generate
+  lintroller:
+    type: string
+    description: lintroller level to apply to this repository
+    default: platinum
+  vaultSecrets:
+    type: list
+    description: List of secrets to consume from Vault, if Vault is enabled in the box config
 ###EndBlock(keys)

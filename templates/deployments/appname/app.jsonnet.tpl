@@ -1,4 +1,6 @@
-{{- $appName  := .Config.Name  }}
+{{- $appName  := .Config.Name }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
+{{- $_ := file.SetPath (printf "deployments/%s/%s.jsonnet" .Config.Name .Config.Name) }}
 // Code managed by {{ .Runtime.Generator }}, DO NOT MODIFY
 // MODIFY THE {{ $appName }}.override.jsonnet INSTEAD
 local ok = import 'kubernetes/outreach.libsonnet';
@@ -8,7 +10,7 @@ local resources = import './resources.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
 
-{{- if ne (len .manifest.Kubernetes.Groups) 0 }}
+{{- if not (empty (stencil.Arg "kubernetes.groups")) }}
 local k8sMetricsPort = 2019;
 local k8sMetricsName = 'k8s_' + app.name;
 {{ end }}
@@ -16,7 +18,7 @@ local k8sMetricsName = 'k8s_' + app.name;
 local sharedLabels = {
   repo: app.name,
   bento: app.bento,
-  reporting_team: '{{ .reportingTeam }}',
+  reporting_team: '{{ stencil.Arg "reportingTeam" }}',
 };
 
 local all = {
@@ -172,7 +174,7 @@ local all = {
                 send_distribution_buckets: true,
               },
             ],
-            {{- if ne (len .manifest.Kubernetes.Groups) 0 }}
+            {{- if not (empty (stencil.Arg "kubernetes.groups")) }}
             ['ad.datadoghq.com/' + k8sMetricsName + '.check_names']: '["openmetrics"]',
             ['ad.datadoghq.com/' + k8sMetricsName + '.init_configs']: '[{}]',
             ['ad.datadoghq.com/' + k8sMetricsName + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
@@ -260,7 +262,7 @@ local vaultOperatorSecrets = {
 
 // These secrets will be included in dev by default, they are fetched from vault.
 local developmentSecrets = {
-  {{- range $secretPath := (default .manifest.VaultSecrets list) }}
+  {{- range $secretPath := stencil.Arg "vaultSecrets" }}
   {{- $secretName := ($secretPath | base) }}
   'vs-{{ $secretName }}': {
     apiVersion: 'ricoberger.de/v1alpha1',
