@@ -256,12 +256,16 @@ dev:
 
 commands:
   - name: build-jsonnet
-    # Replace gcr.io/outreach-docker/game for your dev registry. This way things get replaced with the right tag automatically.
+    # The image tags get replaced by devspace automatically.
     command: ./scripts/shell-wrapper.sh build-jsonnet.sh show > deployments/${DEVENV_DEPLOY_APPNAME}.yaml
 
 hooks:
   - name: render-manifests
     command: "${DEVENV_DEVSPACE_BIN} run build-jsonnet"
+    events: ["before:deploy"]
+  - name: delete-jobs
+    command: |-
+      "$DEVENV_BIN" --skip-update k --namespace "${DEVENV_DEPLOY_NAMESPACE}" delete jobs --all
     events: ["before:deploy"]
   - name: auth-refresh
     command: "${DEVENV_BIN} --skip-update auth refresh"
@@ -344,6 +348,39 @@ profiles:
           name: kind-load-image
           command: "${DEVENV_KIND_BIN} load docker-image --name dev-environment ${runtime.images.app}"
           events: ["after:build:app"]
+
+  - name: Loft
+    description: Enables deploying to loft dev-environment. Automatically activated based on $DEVENV_TYPE var.
+    activation:
+      - vars:
+          DEVENV_TYPE: loft
+    patches:
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: add
+          path: spec.containers[0].nodeSelector
+          value:
+            cloud.google.com/gke-nodepool: devspace
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: add
+          path: spec.tolerations
+          value:
+            - key: "devspace"
+              operator: "Equal"
+              value: "true"
+              effect: "NoSchedule"
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: add
+          path: spec.securityContext
+          value:
+            runAsUser: 1000
+            fsGroup: 1000
+            runAsGroup: 1000
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.

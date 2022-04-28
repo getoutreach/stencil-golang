@@ -60,7 +60,7 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.37.0
+  version: v1.38.0
 {{- if not (stencil.Arg "oss") }}
 - name: github.com/getoutreach/mint
   version: v1.51.0

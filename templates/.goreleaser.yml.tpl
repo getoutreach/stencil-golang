@@ -1,9 +1,7 @@
 {{- if not (stencil.Arg "commands") }}
 {{ file.Skip "No commands defined" }}
 {{- end }}
-
-# This is an example goreleaser.yaml file with some sane defaults.
-# Make sure to check the documentation at http://goreleaser.com
+# Documentation for this file: http://goreleaser.com
 before:
   hooks:
     - make dep
@@ -21,6 +19,7 @@ builds:
   ldflags:
    - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ "{{" }} .Version {{ "}}" }}"'
    - '-X "main.HoneycombTracingKey={{ "{{" }} .Env.HONEYCOMB_APIKEY {{ "}}" }}"'
+   - '-X "main.TeleforkAPIKey={{ "{{" }} .Env.TELEFORK_APIKEY {{ "}}" }}"'
   env:
   - CGO_ENABLED=0
 {{- end }}
