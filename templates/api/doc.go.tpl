@@ -1,3 +1,6 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{- file.Skip "Not a gRPC service" }}
+{{- end }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file serves as package documentation for the api

@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['**/src/**'],

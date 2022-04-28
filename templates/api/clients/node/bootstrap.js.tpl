@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 const tsConfig = require('./tsconfig.json');
 const tsConfigPaths = require('tsconfig-paths');
 

@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" -}}
 PATH
   remote: .
   specs:

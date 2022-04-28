@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 import * as grpc from '@grpc/grpc-js';
 import { {{ title .Config.Name }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
 import { createAuthenticationInterceptor, createErrorLoggerInterceptor } from '@outreach/grpc-client';

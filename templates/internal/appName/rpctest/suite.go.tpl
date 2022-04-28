@@ -6,7 +6,7 @@
 
 // go:build or_int
 
-// Package {{ .Config.Name }}test implements the test suite for the {{ .Config.Name }} service.
+// Package {{ stencil.ApplyTemplate "goPackageSafeName" }}test implements the test suite for the {{ .Config.Name }} service.
 package {{ stencil.ApplyTemplate "goPackageSafeName" }}test //nolint:revive // Why: We allow [-_].
 
 

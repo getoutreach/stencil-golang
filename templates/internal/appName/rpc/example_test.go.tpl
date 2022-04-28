@@ -2,6 +2,7 @@
 {{ file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.Static }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // go:build or_int

@@ -1,3 +1,8 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{- file.Skip "Not a gRPC service" }}
+{{- end }}
+{{- $_ := file.SetPath (printf "api/%s.go" .Config.Name) }}
+{{- $_ := file.Static }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file defines the gRPC server service interface for

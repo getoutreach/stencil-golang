@@ -1,3 +1,6 @@
+{{- if not (has "library" (stencil.Arg "type")) }}
+{{ file.Skip "Application is a library" }}
+{{- end }}
 ---
 Language: Proto
 BasedOnStyle: google

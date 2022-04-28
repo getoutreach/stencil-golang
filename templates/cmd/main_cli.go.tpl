@@ -3,7 +3,7 @@
 {{- define "main-cli" }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file is the entrypoint for the {{ .Config.Name }} CLI
+// Description: This file is the entrypoint for the {{ .cmdName }} CLI
 // command for {{ .Config.Name }}.
 // Managed: true
 

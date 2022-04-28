@@ -1,3 +1,7 @@
+# {{ stencil.ApplyTemplate "copyright" }} 
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" -}}
+{{- $_ := file.SetPath (printf "api/clients/ruby/lib/%s_client/%s" .Config.Name (base file.Path)) }}
+
 require "{{ .Config.Name }}_client/{{ .Config.Name }}_pb"
 require "{{ .Config.Name }}_client/{{ .Config.Name }}_services_pb"
 

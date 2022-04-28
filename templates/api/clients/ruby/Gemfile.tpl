@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" -}}
 source 'https://rubygems.org'
 
 # Declare your gem's dependencies in github_stats.gemspec.

@@ -1,3 +1,7 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{- file.Skip "Not a gRPC service" }}
+{{- end }}
+{{- $_ := file.SetPath (printf "api/%s.proto" .Config.Name) }}
 {{- $_ := file.Static }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 // Please modify this to match the interface specified in {{ .Config.Name }}.go

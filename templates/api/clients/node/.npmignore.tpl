@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 # Logs
 logs
 *.log

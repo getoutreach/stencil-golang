@@ -1,3 +1,6 @@
+{{- if not (has "library" (stencil.Arg "type")) }}
+{{ file.Skip "Application is a library" }}
+{{- end }}
 # Config file for [Air](https://github.com/cosmtrek/air) in TOML format
 
 # Working directory

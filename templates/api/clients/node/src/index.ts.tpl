@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 export * as {{ title .Config.Name }}Types from './grpc/{{ .Config.Name }}_pb';
 export * from './client-helpers';
 

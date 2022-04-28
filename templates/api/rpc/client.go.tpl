@@ -1,3 +1,8 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{- file.Skip "Not a gRPC service" }}
+{{- end }}
+{{- $_ := file.SetPath (printf "api/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.Static }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file contains the gRPC client implementation for the

@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" }}
 module.exports = {
   extends: ['@outreach/eslint-config/node', 'plugin:jsdoc/recommended'],
   plugins: ['jsdoc', '@typescript-eslint'],

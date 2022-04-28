@@ -1,3 +1,6 @@
+{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{- file.Skip "Not a gRPC service" }}
+{{- end }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Package api is a helper package which defines the ping API

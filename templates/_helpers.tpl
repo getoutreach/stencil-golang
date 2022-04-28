@@ -24,6 +24,18 @@
 {{- regexReplaceAll "\\W+" .Config.Name "_"  }}
 {{- end }}
 
+# Skips the current file if a node client shouldn't be generated
+# {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
+{{- define "skipGrpcClient" }}
+{{- $grpcClient := . }}
+{{- $serviceTypes := (stencil.Arg "type") }}
+{{- $grpcClients := (stencil.Arg "grpcClients") }}
+{{- if not (and (has "grpc" $serviceTypes) (has "node" $grpcClients)) }}
+{{ file.Skip "Not a gRPC service, or node client not specified in grpcClients" }}
+{{ file.Delete }}
+{{- end }}
+{{- end }}
+
 # Returns the copyright string
 {{- define "copyright" }}
 {{- printf "Copyright %s Outreach Corporation. All Rights Reserved." (stencil.ApplyTemplate "currentYear") }}

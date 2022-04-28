@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {
   // This file is not automatically turned into package.json
   // In order to do so, run: `make gogenerate` in the root
