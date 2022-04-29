@@ -141,7 +141,7 @@ func (r *{{ $ctrlStruct }}) Close(ctx context.Context) error {
 {{- range $g := stencil.Arg "kubernetes.groups" }}
 {{- range $r := $g.resources }}
   {{ if $createController }}
-    {{ file.Create (printf "internal/k8s/controllers/%s/%s/%s.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
+    {{ file.Create (printf "internal/controllers/%s/%s/%s.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
     {{ file.SetContents (stencil.ApplyTemplate "internal/k8s/controller" (dict "Config" $root.Config "group" $g "resource" $r)) }}
   {{ end }}
 {{- end }}

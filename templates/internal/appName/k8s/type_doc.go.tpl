@@ -15,11 +15,11 @@ package {{ .version }}
 
 {{- range $g := stencil.Arg "kubernetes.groups" }}
   {{ if $createController }}
-    {{ file.Create (printf "internal/k8s/controllers/%s/%s/doc.go" $g.package $g.version) 0600 now }}
+    {{ file.Create (printf "internal/controllers/%s/%s/doc.go" $g.package $g.version) 0600 now }}
     {{ file.SetContents (stencil.ApplyTemplate "internal/k8s/doc" $g) }}
   {{ end }}
   {{ if $createMutatingWebhook }}
-    {{ file.Create (printf "internal/k8s/webhooks/%s/%s/doc.go" $g.package $g.version) 0600 now }}
+    {{ file.Create (printf "internal/webhooks/%s/%s/doc.go" $g.package $g.version) 0600 now }}
     {{ file.SetContents (stencil.ApplyTemplate "internal/k8s/doc" $g) }}
   {{ end }}
 {{- end }}
