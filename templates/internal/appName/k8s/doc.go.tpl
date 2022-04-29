@@ -1,3 +1,4 @@
+{{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
