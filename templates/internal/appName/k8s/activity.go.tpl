@@ -1,5 +1,5 @@
-{{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 {{- $_ := file.SetPath (printf "internal/%s/kubernetes.go" .Config.Name) }}
+{{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 {{- $root := . }}
 {{- $createController := (eq (stencil.ApplyTemplate "kubernetes.createController") "true") }}
 {{- $createMutatingWebhook := (eq (stencil.ApplyTemplate "kubernetes.createMutatingWebhook") "true") }}
