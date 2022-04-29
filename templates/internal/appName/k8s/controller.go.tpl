@@ -98,8 +98,6 @@ func (r *{{ $ctrlStruct }}) Reconcile(
 	return rr
 }
 
-erro
-
 // NotFound callback is called when resource is detected as Not Found (e.g. deleted). Be careful
 // handling deleted database resources, accidental delete of the CR can lead to a total data loss!
 //nolint:unparam // Why: ctx or other params might be ignored.
