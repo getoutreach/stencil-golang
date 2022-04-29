@@ -7,7 +7,7 @@
 
 // Description: This file implements a kubernetes controller or webhook for {{ .Config.Name }}.
 
-package {{ stencil.ApplyTemplate "goPackageSafeName" }}test //nolint:revive // Why: We allow [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 
 import (
 	"context"
