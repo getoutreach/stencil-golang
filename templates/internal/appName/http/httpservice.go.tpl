@@ -51,7 +51,7 @@ type PublicHTTPService struct {
 }
 
 // Run starts the HTTP service at the host/port specified in the config
-func (s *PublicHTTPService) Run(ctx context.Context) error {
+func (s *PublicHTTPService) Run(ctx context.Context, config *Config) error {
 	// set your public handler here.
 	///Block(publichandler)
 	{{- if file.Block "publichandler" }}
