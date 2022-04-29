@@ -14,7 +14,7 @@ import (
 	{{- range $g := stencil.Arg "kubernetes.groups" }}
 	{{ $pv := printf "%s_%s" $g.Package $g.Version }}
 	api_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/api/k8s/{{if not (empty $g.Package)}}{{ $g.Package }}/{{end}}{{ $g.Version }}"
-	{{- if $createControllers }}
+	{{- if $createController }}
 	ctrl_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/internal/controllers/{{if not (empty $g.Package)}}{{ $g.Package }}/{{end}}{{ $g.Version }}"
 	{{- end }}
 	{{- if $createMutatingWebhook }}
