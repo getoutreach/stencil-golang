@@ -99,8 +99,8 @@ go:
 {{- end }}
 
 {{- range stencil.GetModuleHook "go_modules" }}
-- name: {{ .Name }}
-  version: {{ .Version }}
+- name: {{ .name }}
+  version: {{ .version }}
 {{- end }}
 
 nodejs:
@@ -122,8 +122,8 @@ nodejs:
   - name: winston
     version: ^3.3.3
 {{- range stencil.GetModuleHook "js_modules" }}
-  - name: {{ .Name }}
-    version: {{ .Version }}
+  - name: {{ .name }}
+    version: {{ .version }}
 {{- end }}
   devDependencies:
   - name: "@outreach/eslint-config"
@@ -171,7 +171,7 @@ nodejs:
   - name: wait-on
     version: ^5.2.0
 {{- range stencil.GetModuleHook "js_modules_dev" }}
-  - name: {{ .Name }}
-    version: {{ .Version }}
+  - name: {{ .name }}
+    version: {{ .version }}
 {{- end }}
 {{- end }}

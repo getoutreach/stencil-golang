@@ -3,19 +3,19 @@
 {{- define "api/kubernetes/type" }}
 {{- $g := .group }}
 {{- $r := .resource }}
-{{- $isCustomResource := contains "." $g.Group }}
+{{- $isCustomResource := contains "." $g.group }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file stores type information
 
-package {{ $g.Version }}
+package {{ $g.version }}
 
 import (
 	"github.com/getoutreach/gobox/pkg/log"
 	{{- if $isCustomResource }}
 	"github.com/getoutreach/services/pkg/k8s/resources"
 	{{- else }}
-	{{ $g.Group | lower }}{{ $g.Version }} "k8s.io/api/{{ $g.Group | default "core" | lower }}/{{ $g.Version }}"
+	{{ $g.group | lower }}{{ $g.version }} "k8s.io/api/{{ $g.group | default "core" | lower }}/{{ $g.version }}"
 	{{- end }}
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -27,8 +27,8 @@ import (
 
 {{- if $isCustomResource }}
 
-// {{ $r.Kind }}Spec holds the spec metadata for {{ $r.Kind }} resource.
-type {{ $r.Kind }}Spec struct {
+// {{ $r.kind }}Spec holds the spec metadata for {{ $r.kind }} resource.
+type {{ $r.kind }}Spec struct {
 	///Block(spec)
 {{ file.Block "spec" }}
 	///EndBlock(spec)
@@ -37,12 +37,12 @@ type {{ $r.Kind }}Spec struct {
 // Hash returns the hash of all the spec fields, it is used to detect changes in the spec.
 // If spec's hash does not change, Reconcile can (and should) be skipped to ensure controller does not
 // loop on status-only events.
-func (s *{{ $r.Kind }}Spec) Hash() (string, error) {
+func (s *{{ $r.kind }}Spec) Hash() (string, error) {
 	return resources.Hash(s)
 }
 
-// {{ $r.Kind }}Status holds the status metadata for {{ $r.Kind }} resource.
-type {{ $r.Kind }}Status struct {
+// {{ $r.kind }}Status holds the status metadata for {{ $r.kind }} resource.
+type {{ $r.kind }}Status struct {
   resources.ResourceStatus
 
 	///Block(status)
@@ -50,18 +50,18 @@ type {{ $r.Kind }}Status struct {
 	///EndBlock(status)
 }
 
-// {{ $r.Kind }} is the schema for the {{ $r.Kind }} resource.
+// {{ $r.kind }} is the schema for the {{ $r.kind }} resource.
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-type {{ $r.Kind }} struct {
+type {{ $r.kind }} struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
   // Spec holds the CR's full spec.
- 	Spec {{ $r.Kind }}Spec   `json:"spec"`
+ 	Spec {{ $r.kind }}Spec   `json:"spec"`
 
 	// Status holds CR's status fields.
-	Status {{ $r.Kind }}Status   `json:"status"`
+	Status {{ $r.kind }}Status   `json:"status"`
 
 	///Block(crFields)
 {{ file.Block "crFields" }}
@@ -70,34 +70,34 @@ type {{ $r.Kind }} struct {
 
 // GetSpec allows reconciler to perform generic operations on
 // the spec, such as Hash.
-func (r *{{ $r.Kind }}) GetSpec() resources.ResourceSpec {
+func (r *{{ $r.kind }}) GetSpec() resources.ResourceSpec {
 	return &r.Spec
 }
 
 // GetStatus returns the emdedded ResourceStatus portion of the status.
-func (r *{{ $r.Kind }}) GetStatus() *resources.ResourceStatus {
+func (r *{{ $r.kind }}) GetStatus() *resources.ResourceStatus {
 	return &r.Status.ResourceStatus
 }
 
-// {{ $r.Kind }}List allows list definition of the {{ $r.Kind }} resources.
+// {{ $r.kind }}List allows list definition of the {{ $r.kind }} resources.
 // +kubebuilder:object:root=true
-type {{ $r.Kind }}List struct {
+type {{ $r.kind }}List struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []{{ $r.Kind }} `json:"items"`
+	Items           []{{ $r.kind }} `json:"items"`
 }
 {{- else }}
-// {{ $r.Kind }} is an alias to {{ $g.Group | lower }}{{ $g.Version }}.{{ $r.Kind }}
+// {{ $r.kind }} is an alias to {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}
 // +kubebuilder:object:root=true
-type {{ $r.Kind }} {{ $g.Group | lower }}{{ $g.Version }}.{{ $r.Kind }}
+type {{ $r.kind }} {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}
 
-// {{ $r.Kind }}List is an alias to {{ $g.Group | lower }}{{ $g.Version }}.{{ $r.Kind }}List
+// {{ $r.kind }}List is an alias to {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}List
 // +kubebuilder:object:root=true
-type {{ $r.Kind }}List {{ $g.Group | lower }}{{ $g.Version }}.{{ $r.Kind }}List
+type {{ $r.kind }}List {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}List
 {{- end }}
 
 // MarshalLog can be used to add resource fields to log, satisfies resources.Resource interface.
-func (r *{{ $r.Kind }}) MarshalLog(addfield func(key string, value interface{})) {
+func (r *{{ $r.kind }}) MarshalLog(addfield func(key string, value interface{})) {
 	addfield("resource.name", r.Name)
 	addfield("resource.namespace", r.Namespace)
 }
@@ -114,13 +114,13 @@ func init() { //nolint:gochecknoinits // Why: used for registering
 {{ file.Block "registerTypes" }}
 	///EndBlock(registerTypes)
 
-	SchemeBuilder.Register(&{{ $r.Kind }}{}, &{{ $r.Kind }}List{})
+	SchemeBuilder.Register(&{{ $r.kind }}{}, &{{ $r.kind }}List{})
 }
 {{- end }}
 
 {{- range $g := stencil.Arg "kubernetes.groups" }}
 {{- range $r := $g.Resources }}
-{{ file.Create (printf "api/k8s/%s/%s/%s_types.go" $g.Package $g.Version ($r.Kind | lower)) 0600 now }}
+{{ file.Create (printf "api/k8s/%s/%s/%s_types.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
 {{ file.SetContents (stencil.ApplyTemplate "api/kubernetes/groupversion_info" (dict "group" $g "resource" $r)) }}
 {{- end }}
 {{- end }}

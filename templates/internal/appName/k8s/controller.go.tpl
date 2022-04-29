@@ -3,14 +3,14 @@
 {{- define "internal/k8s/controller" }}
 {{- $g := .group }}
 {{- $r := .resource }}
-{{- $isCustomResource := contains "." $g.Group }}
-{{- $ctrlStruct := printf "%sReconciler" $r.Kind }}
+{{- $isCustomResource := contains "." $g.group }}
+{{- $ctrlStruct := printf "%sReconciler" $r.kind }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
-// Description: This file defines a kubernetes controller for {{ $g.Version }}/{{ $r.Kind }}.
+// Description: This file defines a kubernetes controller for {{ $g.version }}/{{ $r.kind }}.
 // Managed: true
 
-package {{ $g.Version }}
+package {{ $g.version }}
 
 import (
 	"context"
@@ -23,14 +23,14 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	api{{ $g.Version }} "github.com/getoutreach/{{ .Config.Name }}/api/k8s/{{if not (empty $g.Package)}}{{ $g.Package }}/{{end}}{{ $g.Version }}"
+	api{{ $g.version }} "github.com/getoutreach/{{ .Config.Name }}/api/k8s/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 
 	///Block(imports)
 {{ file.Block "imports" }}
 	///EndBlock(imports)
 )
 
-// {{ $ctrlStruct }} is a controller for {{ $r.Kind }} resources.
+// {{ $ctrlStruct }} is a controller for {{ $r.kind }} resources.
 type {{ $ctrlStruct }} struct {
 	*controllers.Reconciler
 
@@ -41,25 +41,25 @@ type {{ $ctrlStruct }} struct {
 }
 
 // New{{ $ctrlStruct }} creates a new instance of {{ $ctrlStruct }}
-// to serve "{{ $r.Kind }}" CRs.
+// to serve "{{ $r.kind }}" CRs.
 func New{{ $ctrlStruct }} (cl client.Client) *{{ $ctrlStruct }} {
 	ctrl := &{{ $ctrlStruct }} {}
 	// use the controller as the Handler for Reconciler
-	ctrl.Reconciler = controllers.NewReconciler(cl, "{{ $r.Kind }}", "{{ $g.Version }}", ctrl)
+	ctrl.Reconciler = controllers.NewReconciler(cl, "{{ $r.kind }}", "{{ $g.version }}", ctrl)
 	return ctrl
 }
 
-// CreateResource returns new, empty {{ $r.Kind }} object, it implements controllers.Handler.
+// CreateResource returns new, empty {{ $r.kind }} object, it implements controllers.Handler.
 func (r *{{ $ctrlStruct }}) CreateResource() resources.Resource {
 	{{- if $isCustomResource }}
 	// To ensure proper custom status handling, force the conversion
 	// of the CR type to the resources.CustomResource interface before serving it to the Reconciler.
 	// If the input does not fully satisfies the CustomResource interface, the Reconciler silently
 	// ignores custom status presence.
-	var cr resources.CustomResource = &api{{ $g.Version }}.{{ $r.Kind }}{}
+	var cr resources.CustomResource = &api{{ $g.version }}.{{ $r.kind }}{}
 	return cr
 	{{- else }}
-	return &api{{ $g.Version }}.{{ $r.Kind }}{}
+	return &api{{ $g.version }}.{{ $r.kind }}{}
 	{{- end }}
 }
 
@@ -73,12 +73,12 @@ func (r *{{ $ctrlStruct }}) EndReconcile(
 	///EndBlock(endReconcile)
 }
 
-// Reconcile is invoked when controller receives {{ $r.Kind }} resource CR that hasn't been applied yet.
+// Reconcile is invoked when controller receives {{ $r.kind }} resource CR that hasn't been applied yet.
 //nolint:unparam // Why: ctx or other params might be ignored.
 func (r *{{ $ctrlStruct }}) Reconcile(
 	ctx context.Context, inRes resources.Resource, req *logging.ReconcileRequest) controllers.ReconcileResult {
 	// inRes was created by CreateResource, cast is totally safe
-	in := inRes.(*api{{ $g.Version }}.{{ $r.Kind }})
+	in := inRes.(*api{{ $g.version }}.{{ $r.kind }})
 	rr := controllers.ReconcileResult{}
 
 	logger := log.With(req, &rr)
@@ -97,6 +97,8 @@ func (r *{{ $ctrlStruct }}) Reconcile(
 	logger.Info(ctx, "Reconcile completed.")
 	return rr
 }
+
+erro
 
 // NotFound callback is called when resource is detected as Not Found (e.g. deleted). Be careful
 // handling deleted database resources, accidental delete of the CR can lead to a total data loss!
@@ -141,7 +143,7 @@ func (r *{{ $ctrlStruct }}) Close(ctx context.Context) error {
 {{- range $g := stencil.Arg "kubernetes.groups" }}
 {{- range $r := $g.Resources }}
   {{ if $createController }}
-    {{ file.Create (printf "internal/controllers/%s/%s/%s.go" $g.Package $g.Version ($r.Kind | lower)) 0600 now }}
+    {{ file.Create (printf "internal/controllers/%s/%s/%s.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
     {{ file.SetContents (stencil.ApplyTemplate "internal/k8s/controller" (dict "Config" $root.Config "group" $g "resource" $r)) }}
   {{ end }}
 {{- end }}

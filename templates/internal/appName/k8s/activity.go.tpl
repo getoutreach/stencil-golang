@@ -13,13 +13,13 @@ import (
 	"context"
 
 	{{- range $g := stencil.Arg "kubernetes.groups" }}
-	{{ $pv := printf "%s_%s" $g.Package $g.Version }}
-	api_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/api/k8s/{{if not (empty $g.Package)}}{{ $g.Package }}/{{end}}{{ $g.Version }}"
+	{{ $pv := printf "%s_%s" $g.package $g.version }}
+	api_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/api/k8s/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 	{{- if $createController }}
-	ctrl_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/internal/controllers/{{if not (empty $g.Package)}}{{ $g.Package }}/{{end}}{{ $g.Version }}"
+	ctrl_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/internal/controllers/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 	{{- end }}
 	{{- if $createMutatingWebhook }}
-	wh_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/internal/webhooks/{{if not (empty $g.Package)}}{{ $g.Package }}/{{end}}{{ $g.Version }}"
+	wh_{{ $pv }} "github.com/getoutreach/{{ $root.Config.Name }}/internal/webhooks/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 	{{- end }}
 	{{- end }}
 	"github.com/getoutreach/{{ .Config.Name }}/internal/k8s"
@@ -97,15 +97,15 @@ func (s *KubernetesService) Run(ctx context.Context, cfg *Config) error { //noli
   // Declare the resources.
 	{{- range $g := stencil.Arg "kubernetes.groups" }}
 	{{- range $r := $g.Resources }}
-	{{ $pv := printf "%s_%s" $g.Package  $g.Version }}
-	{{ $var := printf "%s%s" $r.Kind ($g.Version | title ) }}
+	{{ $pv := printf "%s_%s" $g.package  $g.version }}
+	{{ $var := printf "%s%s" $r.kind ($g.version | title ) }}
 
 	{{- if $r.Generate.Webhook }}
-	wh{{ $var }} := &wh_{{ $pv }}.{{ $r.Kind }}Webhook{}
+	wh{{ $var }} := &wh_{{ $pv }}.{{ $r.kind }}Webhook{}
 	s.resources = append(s.resources, wh{{ $var }})
 	{{- end }}
 	{{- if $r.Generate.Controller }}
-	ctrl{{ $var }} := ctrl_{{ $pv }}.New{{ $r.Kind }}Reconciler(
+	ctrl{{ $var }} := ctrl_{{ $pv }}.New{{ $r.kind }}Reconciler(
 		mgr.GetClient(),
 		// Other fields should be initialized in initResources block (see below).
 	)
@@ -121,7 +121,7 @@ func (s *KubernetesService) Run(ctx context.Context, cfg *Config) error { //noli
 
 	for _, r := range s.resources {
 		if err := r.Setup(mgr); err != nil {
-			return errors.Wrapf(err, "failed to setup a resource for %s/%s", r.Version(), r.Kind())
+			return errors.Wrapf(err, "failed to setup a resource for %s/%s", r.version(), r.kind())
 		}
 	}
 
@@ -141,14 +141,14 @@ func (s *KubernetesService) registerSchemes() {
 	{{- /* Only register core types if we're not a core type, otherwise we collide */}}
 	{{ $wrote := false }}
 	{{- range $g := stencil.Arg "kubernetes.groups" }}
-	{{- if and (not $wrote) (not (empty $g.Group)) }}
+	{{- if and (not $wrote) (not (empty $g.group)) }}
 	utilruntime.Must(clientgoscheme.AddToScheme(s.scheme))
 	{{- $wrote = true }}
 	{{- end }}
 	{{- end }}
 
 	{{- range $g := stencil.Arg "kubernetes.groups" }}
-	utilruntime.Must(api_{{ $g.Package }}_{{ $g.Version }}.AddToScheme(s.scheme))
+	utilruntime.Must(api_{{ $g.package }}_{{ $g.version }}.AddToScheme(s.scheme))
 	{{- end }}
 
 	///Block(extraSchemes)
