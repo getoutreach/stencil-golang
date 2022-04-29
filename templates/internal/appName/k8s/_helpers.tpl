@@ -1,5 +1,13 @@
 {{ file.Skip "Helper functions for kubernetes templates" }}
 
+# kubernetes.skipIfNot skips the current file if it's not
+# a kubernetes service
+{{- define "kubernetes.skipIfNot" }}
+{{- if empty (stencil.Arg "kubernetes.groups") }}
+{{- file.Skip "Not a Kubernetes service (kubernetes.groups is empty)" }}
+{{- end }}
+{{- end }}
+
 # kubernetes.getSettings is hack to share logic between createController
 # and createMutatingWebhook because of how variables are scoped in templates.
 {{- define "kubernetes.getSettings" }}

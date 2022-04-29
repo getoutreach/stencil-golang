@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file defines the Resouce interface for controllers/webhooks

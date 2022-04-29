@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file contains the package documentation for the k8s package.
