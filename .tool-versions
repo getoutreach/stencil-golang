@@ -5,6 +5,4 @@ nodejs 16.14.2
 # CAREFUL with this. If you override a standard version you are
 # reducing compatibility guarantees.
 ###Block(toolver)
-golang 1.18.1
-nodejs 16.14.2
 ###EndBlock(toolver)
