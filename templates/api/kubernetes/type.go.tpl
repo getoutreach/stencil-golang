@@ -119,9 +119,9 @@ func init() { //nolint:gochecknoinits // Why: used for registering
 {{- end }}
 
 {{- $root := . }}
-{{- range $g := stencil.Arg "kubernetes.groups" }}
-{{- range $r := $g.resources }}
+{{- range $_, $g := stencil.Arg "kubernetes.groups" }}
+{{- range $_, $r := $g.resources }}
 {{ file.Create (printf "api/k8s/%s/%s/%s_types.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
-{{ file.SetContents (stencil.ApplyTemplate "api/kubernetes/groupversion_info" (dict "Config" $root.Config "group" $g "resource" $r)) }}
+{{ file.SetContents (stencil.ApplyTemplate "api/kubernetes/groupversion_info" (dict "group" $g "resource" $r)) }}
 {{- end }}
 {{- end }}

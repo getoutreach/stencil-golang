@@ -29,7 +29,7 @@ var (
 )
 {{- end -}}
 
-{{- range $g := stencil.Arg "kubernetes.groups" }}
+{{- range $_, $g := stencil.Arg "kubernetes.groups" }}
 {{ file.Create (printf "api/k8s/%s/%s/groupversion_info.go" $g.package $g.version) 0600 now }}
 {{ file.SetContents (stencil.ApplyTemplate "api/kubernetes/groupversion_info" $g) }}
 {{- end }}
