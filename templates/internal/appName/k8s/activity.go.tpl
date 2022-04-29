@@ -121,7 +121,7 @@ func (s *KubernetesService) Run(ctx context.Context, cfg *Config) error { //noli
 
 	for _, r := range s.resources {
 		if err := r.Setup(mgr); err != nil {
-			return errors.Wrapf(err, "failed to setup a resource for %s/%s", r.version(), r.kind())
+			return errors.Wrapf(err, "failed to setup a resource for %s/%s", r.Version(), r.Kind())
 		}
 	}
 
