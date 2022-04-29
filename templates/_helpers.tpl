@@ -17,6 +17,9 @@
 # Just in case bundler/etc needs to be used in the root.
 - name: ruby
   version: 2.6.6
+# Used in CI
+- name: protoc
+  version: 3.19.1
 {{- end }}
 
 # Registers our versions w/ stencil-base
