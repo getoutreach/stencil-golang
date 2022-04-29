@@ -84,7 +84,7 @@ func (r *{{ $webhookStruct }}) Close(ctx context.Context) error {
 {{- range $g := stencil.Arg "kubernetes.groups" }}
 {{- range $r := $g.resources }}
   {{ if $createMutatingWebhook }}
-    {{ file.Create (printf "internal/webhooks/%s/%s/doc.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
+    {{ file.Create (printf "internal/webhooks/%s/%s/doc.go" $g.package $g.version) 0600 now }}
     {{ file.SetContents (stencil.ApplyTemplate "internal/k8s/webhook" (dict "Config" $root.Config "group" $g "resource" $r)) }}
   {{ end }}
 {{- end }}
