@@ -14,6 +14,9 @@
   version: 16.13.0
 - name: terraform
   version: 0.13.5
+# Just in case bundler/etc needs to be used in the root.
+- name: ruby
+  version: 2.6.6
 {{- end }}
 
 # Registers our versions w/ stencil-base
