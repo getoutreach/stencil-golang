@@ -14,7 +14,7 @@
 {{- $createMutatingWebhook := false }}
 {{- $createController := false }}
 {{- range $g := stencil.Arg "kubernetes.groups" }}
-  {{- range $r := $g.Resources }}
+  {{- range $r := $g.resources }}
     {{- if $r.Generate.Webhook }}
 createMutatingWebhook: true
     {{- end }}

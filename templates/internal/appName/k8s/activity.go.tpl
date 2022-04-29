@@ -96,7 +96,7 @@ func (s *KubernetesService) Run(ctx context.Context, cfg *Config) error { //noli
 
   // Declare the resources.
 	{{- range $g := stencil.Arg "kubernetes.groups" }}
-	{{- range $r := $g.Resources }}
+	{{- range $r := $g.resources }}
 	{{ $pv := printf "%s_%s" $g.package  $g.version }}
 	{{ $var := printf "%s%s" $r.kind ($g.version | title ) }}
 
