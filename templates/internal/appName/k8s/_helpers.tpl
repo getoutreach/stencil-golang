@@ -15,10 +15,10 @@
 {{- $createController := false }}
 {{- range $g := stencil.Arg "kubernetes.groups" }}
   {{- range $r := $g.resources }}
-    {{- if $r.Generate.Webhook }}
+    {{- if $r.generate.webhook }}
 createMutatingWebhook: true
     {{- end }}
-    {{- if $r.Generate.Controller }}
+    {{- if $r.generate.controller }}
 createController: true
     {{- end }}
   {{- end }}

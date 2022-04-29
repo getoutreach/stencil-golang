@@ -100,11 +100,11 @@ func (s *KubernetesService) Run(ctx context.Context, cfg *Config) error { //noli
 	{{ $pv := printf "%s_%s" $g.package  $g.version }}
 	{{ $var := printf "%s%s" $r.kind ($g.version | title ) }}
 
-	{{- if $r.Generate.Webhook }}
+	{{- if $r.generate.webhook }}
 	wh{{ $var }} := &wh_{{ $pv }}.{{ $r.kind }}Webhook{}
 	s.resources = append(s.resources, wh{{ $var }})
 	{{- end }}
-	{{- if $r.Generate.Controller }}
+	{{- if $r.generate.controller }}
 	ctrl{{ $var }} := ctrl_{{ $pv }}.New{{ $r.kind }}Reconciler(
 		mgr.GetClient(),
 		// Other fields should be initialized in initResources block (see below).
