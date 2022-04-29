@@ -284,7 +284,7 @@ local configuration = import './{{ $appName }}.config.jsonnet';
 
 local mixins = [
   {{- range $mixin := concat (stencil.Arg "mixins") (stencil.GetModuleHook "mixins") }}
-  './mixins/{{ $mixin }}.jsonnet',
+  import './mixins/{{ $mixin }}.jsonnet',
   {{- end }}
 ];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});

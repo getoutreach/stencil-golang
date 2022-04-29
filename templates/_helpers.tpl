@@ -17,6 +17,9 @@
 # Just in case bundler/etc needs to be used in the root.
 - name: ruby
   version: 2.6.6
+# Used in CI
+- name: protoc
+  version: 3.19.1
 {{- end }}
 
 # Registers our versions w/ stencil-base
@@ -96,8 +99,8 @@ go:
 {{- end }}
 
 {{- range stencil.GetModuleHook "go_modules" }}
-- name: {{ .Name }}
-  version: {{ .Version }}
+- name: {{ .name }}
+  version: {{ .version }}
 {{- end }}
 
 nodejs:
@@ -119,8 +122,8 @@ nodejs:
   - name: winston
     version: ^3.3.3
 {{- range stencil.GetModuleHook "js_modules" }}
-  - name: {{ .Name }}
-    version: {{ .Version }}
+  - name: {{ .name }}
+    version: {{ .version }}
 {{- end }}
   devDependencies:
   - name: "@outreach/eslint-config"
@@ -168,7 +171,7 @@ nodejs:
   - name: wait-on
     version: ^5.2.0
 {{- range stencil.GetModuleHook "js_modules_dev" }}
-  - name: {{ .Name }}
-    version: {{ .Version }}
+  - name: {{ .name }}
+    version: {{ .version }}
 {{- end }}
 {{- end }}

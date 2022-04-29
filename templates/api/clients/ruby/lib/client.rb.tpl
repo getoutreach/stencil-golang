@@ -1,8 +1,9 @@
-# {{ stencil.ApplyTemplate "copyright" }} 
+# {{ stencil.ApplyTemplate "copyright" }}
 {{- if not (has "grpc" (stencil.Arg "type")) }}
 {{ file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "api/clients/ruby/lib/%s_client.rb" .Config.Name) }}
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" -}}
 
 require "{{ .Config.Name }}_client/client"
 require "{{ .Config.Name }}_client/version"
