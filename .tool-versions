@@ -1,2 +1,7 @@
-golang 1.18
-nodejs 16.14.2
+# This file contains tool versions for use with asdf
+# Note: Versions in this block override the above. Be EXTREMELY
+# CAREFUL with this. If you override a standard version you are
+# reducing compatibility guarantees.
+###Block(toolver)
+golang 1.18.1
+###EndBlock(toolver)

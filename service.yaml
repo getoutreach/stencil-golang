@@ -7,3 +7,5 @@ modules:
     version: v0.2.1-rc.1
 arguments:
   reportingTeam: fnd-dtss
+  releaseOptions:
+    enablePrereleases: true
