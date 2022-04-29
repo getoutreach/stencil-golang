@@ -2,13 +2,15 @@
 
 {{- $createMutatingWebhook := false }}
 {{- $createController := false }}
-{{- range $r := $g.Resources }}
-{{- if $r.Generate.Webhook }}
-{{- $createMutatingWebhook = true }}
-{{- end }}
-{{- if $r.Generate.Controller }}
-{{- $createController = true }}
-{{- end }}
+{{- range $g := stencil.Arg "kubernetes.groups" }}
+  {{- range $r := $g.Resources }}
+    {{- if $r.Generate.Webhook }}
+      {{- $createMutatingWebhook = true }}
+    {{- end }}
+    {{- if $r.Generate.Controller }}
+      {{- $createController = true }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 # kubernetes.createController returns if we should create a controller or not
