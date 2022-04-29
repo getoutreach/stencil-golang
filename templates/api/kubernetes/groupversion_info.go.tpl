@@ -1,5 +1,5 @@
 {{ file.Skip "Virtual file to generate kubernetes gvk files" }}
-{{- define "api/kubernetes/groupversion_info" }}
+{{- define "api/kubernetes/groupversion_info" -}}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This files stores group information
@@ -27,7 +27,7 @@ var (
 	// AddToScheme adds the types in this group-version to the given scheme.
 	AddToScheme = SchemeBuilder.AddToScheme
 )
-{{- end }}
+{{- end -}}
 
 {{- range $g := stencil.Arg "kubernetes.groups" }}
 {{ file.Create (printf "api/k8s/%s/%s/groupversion_info.go" $g.package $g.version) 0600 now }}

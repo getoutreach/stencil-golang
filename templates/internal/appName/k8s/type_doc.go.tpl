@@ -1,6 +1,6 @@
 {{ file.Skip "Virtual file to create kubernetes webhook/controller doc.go" }}
 
-{{- define "internal/k8s/doc" }}
+{{- define "internal/k8s/doc" -}}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file is docs for {{ .group }}/{{ .version }}.
@@ -8,7 +8,7 @@
 
 // Package {{ .version }} implements controllers or webhooks in this group.
 package {{ .version }}
-{{- end }}
+{{- end -}}
 
 {{- $createController := (eq (stencil.ApplyTemplate "kubernetes.createController") "true") }}
 {{- $createMutatingWebhook := (eq (stencil.ApplyTemplate "kubernetes.createMutatingWebhook") "true") }}

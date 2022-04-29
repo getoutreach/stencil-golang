@@ -1,6 +1,6 @@
 {{ file.Skip "Virtual file to create kubernetes controller" }}
 
-{{- define "internal/k8s/controller" }}
+{{- define "internal/k8s/controller" -}}
 // {{ stencil.ApplyTemplate "copyright" }} 
 {{- $g := .group }}
 {{- $r := .resource }}
@@ -136,7 +136,7 @@ func (r *{{ $ctrlStruct }}) Close(ctx context.Context) error {
 ///Block(controllerAddons)
 {{ file.Block "controllerAddons" }}
 ///EndBlock(controllerAddons)
-{{- end }}
+{{- end -}}
 
 {{- $root := . }}
 {{- $createController := (eq (stencil.ApplyTemplate "kubernetes.createController") "true") }}

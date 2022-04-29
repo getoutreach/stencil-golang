@@ -1,6 +1,6 @@
 {{ file.Skip "Virtual file to generate CLIs" }}
 
-{{- define "main-cli" }}
+{{- define "main-cli" -}}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file is the entrypoint for the {{ .cmdName }} CLI
@@ -81,7 +81,7 @@ func main() {
 	gcli.HookInUrfaveCLI(ctx, cancel, &app, log, HoneycombTracingKey, HoneycombDataset)
 }
 
-{{- end }}
+{{- end -}}
 
 {{ $root := . }}
 {{- range stencil.Arg "commands" }}

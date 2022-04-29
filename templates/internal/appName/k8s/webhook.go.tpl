@@ -1,6 +1,6 @@
 {{ file.Skip "Virtual file to create kubernetes webhook" }}
 
-{{- define "internal/k8s/webhook" }}
+{{- define "internal/k8s/webhook" -}}
 // {{ stencil.ApplyTemplate "copyright" }} 
 {{- $g := .group }}
 {{- $r := .resource }}
@@ -77,7 +77,7 @@ func (r *{{ $webhookStruct }}) Close(ctx context.Context) error {
 ///Block(webhookAddons)
 {{ file.Block "webhookAddons"}}
 ///EndBlock(webhookAddons)
-{{- end }}
+{{- end -}}
 
 {{- $root := . }}
 {{- $createMutatingWebhook := (eq (stencil.ApplyTemplate "kubernetes.createMutatingWebhook") "true") }}
