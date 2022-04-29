@@ -19,7 +19,7 @@ const GroupName = "{{ .group }}"
 // Contains declarations for interacting with this group
 var (
 	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.groupVersion{Group: GroupName, Version: "{{ .version }}"}
+	GroupVersion = schema.GroupVersion{Group: GroupName, Version: "{{ .version }}"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
