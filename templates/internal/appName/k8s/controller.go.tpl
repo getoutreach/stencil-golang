@@ -1,11 +1,11 @@
 {{ file.Skip "Virtual file to create kubernetes controller" }}
 
 {{- define "internal/k8s/controller" }}
+// {{ stencil.ApplyTemplate "copyright" }} 
 {{- $g := .group }}
 {{- $r := .resource }}
 {{- $isCustomResource := contains "." $g.group }}
 {{- $ctrlStruct := printf "%sReconciler" $r.kind }}
-// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file defines a kubernetes controller for {{ $g.version }}/{{ $r.kind }}.
 // Managed: true

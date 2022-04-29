@@ -1,10 +1,10 @@
 {{ file.Skip "Virtual file to create kubernetes webhook" }}
 
 {{- define "internal/k8s/webhook" }}
+// {{ stencil.ApplyTemplate "copyright" }} 
 {{- $g := .group }}
 {{- $r := .resource }}
 {{- $webhookStruct := printf "%sWebhook" $r.kind }}
-// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file defines a kubernetes webhook for {{ $g.version }}/{{ $r.kind }}.
 // Managed: true

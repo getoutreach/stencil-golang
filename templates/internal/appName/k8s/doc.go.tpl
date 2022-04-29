@@ -1,6 +1,6 @@
+// {{ stencil.ApplyTemplate "copyright" }} 
 {{- $_ := file.SetPath (printf "internal/k8s/%s" (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
-// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file contains the package documentation for the k8s package.
 // Managed: true

@@ -1,10 +1,10 @@
 {{ file.Skip "Virtual file to generate kubernetes type files" }}
 
 {{- define "api/kubernetes/type" }}
+// {{ stencil.ApplyTemplate "copyright" }} 
 {{- $g := .group }}
 {{- $r := .resource }}
 {{- $isCustomResource := contains "." $g.group }}
-// {{ stencil.ApplyTemplate "copyright" }} 
 
 // Description: This file stores type information
 
