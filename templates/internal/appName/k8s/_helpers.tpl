@@ -22,7 +22,7 @@ createController: true
 #   {{ stencil.ApplyTemplate "kubernetes.createController" }}
 #
 #  Check if truthy:
-#   {{ (eq stencil.ApplyTemplate "kubernetes.createController" "true") }}
+#   {{ (eq (stencil.ApplyTemplate "kubernetes.createController") "true") }}
 {{- define "kubernetes.createController" }}
 {{- (stencil.ApplyTemplate "kubernetes.getSettings" | fromYaml).createController }}
 {{- end }}
@@ -32,7 +32,7 @@ createController: true
 #   {{ stencil.ApplyTemplate "kubernetes.createMutatingWebhook" }}
 #
 #  Check if truthy:
-#   {{ (eq stencil.ApplyTemplate "kubernetes.createMutatingWebhook" "true") }}
+#   {{ (eq (stencil.ApplyTemplate "kubernetes.createMutatingWebhook") "true") }}
 {{- define "kubernetes.createMutatingWebhook" }}
 {{- (stencil.ApplyTemplate "kubernetes.getSettings" | fromYaml).createMutatingWebhook }}
 {{- end }}
