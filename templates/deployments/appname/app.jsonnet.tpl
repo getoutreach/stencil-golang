@@ -282,8 +282,11 @@ local developmentSecrets = {
 local override = import './{{ $appName }}.override.jsonnet';
 local configuration = import './{{ $appName }}.config.jsonnet';
 
-// TODO(jaredallard): Need to load mixins
-local mixins = [];
+local mixins = [
+  {{- range $mixin := concat (stencil.Arg "mixins") (stencil.GetModuleHook "mixins") }}
+  './mixins/{{ $mixin }}.jsonnet',
+  {{- end }}
+];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});
 
 ok.FilteredList() {

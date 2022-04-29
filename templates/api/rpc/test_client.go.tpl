@@ -1,6 +1,7 @@
 {{- if not (has "grpc" (stencil.Arg "type")) }}
 {{- file.Skip "Not a gRPC service" }}
 {{- end }}
+{{- $_ := file.Static }}
 {{- $_ := file.SetPath (printf "api/%s/%s" .Config.Name (base file.Path)) }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
@@ -17,7 +18,6 @@ import (
 
 	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/services/pkg/grpcx"
-
 	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
 )
 
