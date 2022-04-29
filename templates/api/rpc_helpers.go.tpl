@@ -3,6 +3,8 @@
 {{- end }}
 // {{ stencil.ApplyTemplate "copyright" }} 
 
+// Description: This file contains generic RPC helpers
+
 // Package api is a helper package which defines the ping API
 //
 // This package is not meant to be used directly.  Clients should use
