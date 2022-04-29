@@ -1,5 +1,9 @@
 name: stencil-golang
 modules:
   - name: github.com/getoutreach/stencil-template-base
+  - name: github.com/getoutreach/stencil-circleci
+    version: v0.1.4-rc.1
+  - name: github.com/getoutreach/stencil-base
+    version: v0.2.1-rc.1
 arguments:
   reportingTeam: fnd-dtss
