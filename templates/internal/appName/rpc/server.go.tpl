@@ -13,7 +13,6 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
-	"github.com/getoutreach/mint/pkg/authn"
 )
 
 // Server is the actual server implementation of the API.
@@ -31,18 +30,10 @@ func NewServer(ctx context.Context, cfg *Config) (*Server, error) {
 
 // Place any GRPC handler functions for your service here.
 func (s *Server) Ping(ctx context.Context, message string) (string, error) {
-	// example authn check is shown here
-	if email := authn.CurrentUserEmail(ctx); string(email) != "" {
-		return "pong:" + message + " " + string(email), nil
-	}
 	return "pong:" + message, nil
 }
 
 func (s *Server) Pong(ctx context.Context, message string) (string, error) {
-	// example authn check is shown here
-	if email := authn.CurrentUserEmail(ctx); string(email) != "" {
-		return "pong:" + message + " " + string(email), nil
-	}
 	return "ping:" + message, nil
 }
 

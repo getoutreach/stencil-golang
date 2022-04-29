@@ -13,7 +13,6 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 import (
 	"context"
 
-	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/services/pkg/grpcx"
 
 	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
@@ -23,7 +22,7 @@ import (
 //
 // The client is concurrency safe and handles reconnecting.
 // All calls automatically handle logging, tracing, metrics,
-// service discovery, and authn.
+// and service discovery.
 func New(ctx context.Context) (api.Service, error) {
 {{- range stencil.GetModuleHook "rpc.New" }}
 {{ indent 2 . }}

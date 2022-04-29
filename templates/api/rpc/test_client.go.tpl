@@ -16,7 +16,6 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 import (
 	"context"
 
-	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/services/pkg/grpcx"
 	"{{ stencil.ApplyTemplate "appImportPath" }}/api"
 )
