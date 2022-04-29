@@ -1,4 +1,4 @@
-{{- if not (has "http" (stencil.Arg "type")) }}
+{{- if not (has "http" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a HTTP service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
@@ -44,7 +44,7 @@ func (s *HTTPService) Run(ctx context.Context, config *Config) error {
 	return s.Service.Run(ctx, fmt.Sprintf("%s:%d", config.ListenHost, config.HTTPPort))
 }
 
-{{ if has "http" (stencil.Arg "type") }}
+{{ if has "http" (stencil.Arg "serviceActivities") }}
 // PublicHTTPService handles public http service calls
 type PublicHTTPService struct {
 	handlers.PublicService

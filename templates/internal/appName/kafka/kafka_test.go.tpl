@@ -1,4 +1,4 @@
-{{- if not (has "kafka" (stencil.Arg "type")) }}
+{{- if not (has "kafka" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a Kafka service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}

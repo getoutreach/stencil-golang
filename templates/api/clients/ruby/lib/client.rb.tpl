@@ -1,5 +1,5 @@
-# {{ stencil.ApplyTemplate "copyright" }}
-{{- if not (has "grpc" (stencil.Arg "type")) }}
+# {{ stencil.ApplyTemplate "copyright" }} 
+{{- if not (has "grpc" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "api/clients/ruby/lib/%s_client.rb" .Config.Name) }}

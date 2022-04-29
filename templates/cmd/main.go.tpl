@@ -77,13 +77,13 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	acts := []async.Runner{
 		{{ $pkgName }}.NewShutdownService(),
 		&{{ $pkgName }}.NewHTTPService(),
-		{{- if has "http" (stencil.Arg "type") }}
+		{{- if has "http" (stencil.Arg "serviceActivities") }}
 		&{{ $pkgName }}.NewPublicHTTPService(),
 		{{- end }}
-		{{- if has "grpc" (stencil.Arg "type") }}
+		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
 		&{{ $pkgName }}.NewGRPCService(),
 		{{- end }}
-		{{- if has "kafka" (stencil.Arg "type") }}
+		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewKafkaConsumerService(),
 		{{- end }}
 		{{- if not (stencil.Arg "kubernetes.groups") }}

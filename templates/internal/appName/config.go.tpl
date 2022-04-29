@@ -26,13 +26,13 @@ import (
 type Config struct {
     ListenHost string `yaml:"ListenHost"`
     HTTPPort int `yaml:"HTTPPort"`
-    {{- if has "http" (stencil.Arg "type") }}
+    {{- if has "http" (stencil.Arg "serviceActivities") }}
     PublicHTTPPort int `yaml:"PublicHTTPPort"`
     {{- end }}
-    {{- if has "grpc" (stencil.Arg "type") }}
+    {{- if has "grpc" (stencil.Arg "serviceActivities") }}
     GRPCPort int `yaml:"GRPCPort"`
     {{- end }}
-    {{- if has "kafka" (stencil.Arg "type") }}
+    {{- if has "kafka" (stencil.Arg "serviceActivities") }}
     KafkaHosts []string `yaml:"KafkaHosts"`
     KafkaConsumerGroupID string `yaml:"KafkaConsumerGroupID"`
     KafkaConsumerTopic string `yaml:"KafkaConsumerTopic"`
@@ -60,10 +60,10 @@ func LoadConfig(ctx context.Context) *Config {
         // IPs on a server on the given port for the respective service.
         ListenHost: "",
         HTTPPort: 8000,
-	    {{- if has "http" (stencil.Arg "type") }}
+	    {{- if has "http" (stencil.Arg "serviceActivities") }}
 	    PublicHTTPPort: 8080,
 	    {{- end }}
-        {{- if has "grpc" (stencil.Arg "type") }}
+        {{- if has "grpc" (stencil.Arg "serviceActivities") }}
         GRPCPort: 5000,
         {{- end }}
         ///Block(defconfig)
@@ -81,7 +81,7 @@ func LoadConfig(ctx context.Context) *Config {
         log.Error(ctx, "Failed to load configuration file, will use default settings", events.NewErrorInfo(err))
     }
 
-    {{- if has "kafka" (stencil.Arg "type") }}
+    {{- if has "kafka" (stencil.Arg "serviceActivities") }}
 	if len(c.KafkaHosts) == 0 {
 		brokerDNS, err := find.Service(ctx, find.KafkaPublishBrokers)
 		if err != nil {
