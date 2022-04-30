@@ -40,7 +40,7 @@ local all = {
       sessionAffinity: 'None',
       type: 'ClusterIP',
       ports_:: {
-        {{- if (has "grpc" (stencil.Arg "type")) }}
+        {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
         grpc: {
           port: 5000,
           targetPort: 'grpc',
@@ -50,7 +50,7 @@ local all = {
           port: 8000,
           targetPort: 'http-prom',
         },
-        {{- if (has "http" (stencil.Arg "type")) }}
+        {{- if (has "http" (stencil.Arg "serviceActivities")) }}
         http: {
           port: 8080,
           targetPort: 'http',
@@ -147,7 +147,7 @@ local all = {
       replicas: if isDev then 1 else 2,
       template+: {
         metadata+: {
-          {{- if (has "grpc" (stencil.Arg "type")) }}
+          {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
           labels+: sharedLabels {
             'tollgate.outreach.io/scrape': 'true'
           },
@@ -155,7 +155,7 @@ local all = {
           labels+: sharedLabels,
           {{- end }}
           annotations+: {
-            {{- if (has "grpc" (stencil.Arg "type")) }}
+            {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
             'tollgate.outreach.io/group': app.name,
             'tollgate.outreach.io/port': '5000',
             {{- end }}
@@ -221,11 +221,11 @@ local all = {
                 },
               },
               ports_+:: {
-                {{- if (has "grpc" (stencil.Arg "type")) }}
+                {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
                 grpc: { containerPort: 5000 },
                 {{- end }}
                 'http-prom': { containerPort: 8000 },
-                {{- if (has "http" (stencil.Arg "type")) }}
+                {{- if (has "http" (stencil.Arg "serviceActivities")) }}
                 http: { containerPort: 8080 },
                 {{- end }}
               },

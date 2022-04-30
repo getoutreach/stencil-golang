@@ -123,10 +123,10 @@ dev:
       namespace: ${DEVENV_DEPLOY_NAMESPACE}
       forward:
         - port: 8000
-{{- if (has "grpc" (stencil.Arg "type")) }}
+{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
         - port: 5000
 {{- end }}
-{{- if (has "http" (stencil.Arg "type")) }}
+{{- if (has "http" (stencil.Arg "serviceActivities")) }}
         - port: 8080
 {{- end }}
         # Remote debugging port

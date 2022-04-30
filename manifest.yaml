@@ -1,9 +1,12 @@
 name: github.com/getoutreach/stencil-golang
 ###Block(keys)
 arguments:
-  type:
-    type: string
-    description: The type of application this is, grpc, http, etc.
+  service:
+    type: bool
+    description: Whether or not this application is a runnable service. This flag provides the service activity interface and everything necessary for releasing and deploying a service.
+  serviceActivities:
+    type: list
+    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, and `kafka`.
   oss:
     type: bool
     description: Deprecated, denotes this is an open source repository.

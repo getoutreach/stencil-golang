@@ -1,4 +1,4 @@
-{{- if not (has "http" (stencil.Arg "type")) }}
+{{- if not (has "http" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a HTTP service" }}
 {{- end }}
 {{- $_ := file.Static }}

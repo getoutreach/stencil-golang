@@ -1,5 +1,9 @@
 {{- file.Skip "Exposes template functions" }}
 
+{{- if and (not (stencil.Arg "service")) (not (empty (stencil.Arg "serviceActivities"))) }}
+{{ fail "service has to be set to \"true\" in order to supply \"serviceActivites\"" }}
+{{- end }}
+
 # This will be better when we rollout the versions functionality
 # in stencil later.
 {{- define "goVersion" }}
@@ -40,9 +44,9 @@
 # {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {{- define "skipGrpcClient" }}
 {{- $grpcClient := . }}
-{{- $serviceTypes := (stencil.Arg "type") }}
+{{- $serviceActivities := (stencil.Arg "serviceActivites") }}
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
-{{- if not (and (has "grpc" $serviceTypes) (has "node" $grpcClients)) }}
+{{- if not (and (has "grpc" $serviceActivities) (has "node" $grpcClients)) }}
   {{ file.Skip "Not a gRPC service, or node client not specified in grpcClients" }}
   {{ file.Delete }}
 {{- end }}
@@ -50,8 +54,7 @@
 
 {{- /* skipIfNotService skips the current file if we're not a service */}}
 {{- define "skipIfNotService" }}
-{{- $types := (stencil.Arg "type") }}
-{{- if not (or (has "http" $types) (or (has "grpc" $types) (or (has "kafka" $types) (has "temporal" $types)))) }}
+{{- if not (stencil.Arg "service") }}
   {{ file.Skip "Not a service" }}
   {{ file.Delete }}
 {{- end }}
@@ -84,7 +87,7 @@ go:
   version: v2.17.0
 {{- end }}
 
-{{- if has "grpc" (stencil.Arg "type") }}
+{{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: github.com/getoutreach/tollmon
   version: v1.26.0
 - name: google.golang.org/grpc

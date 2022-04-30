@@ -1,4 +1,4 @@
-{{- if not (has "grpc" (stencil.Arg "type")) }}
+{{- if not (has "grpc" (stencil.Arg "serviceActivities")) }}
 {{- file.Skip "Not a gRPC service" }}
 {{- end }}
 // {{ stencil.ApplyTemplate "copyright" }} 
