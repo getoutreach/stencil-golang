@@ -66,9 +66,11 @@ func LoadConfig(ctx context.Context) *Config {
         {{- if has "grpc" (stencil.Arg "serviceActivities") }}
         GRPCPort: 5000,
         {{- end }}
+        /// !!! DEPRECATED: This block is deprecated and will be removed in an upcoming release.
+        /// All configuration should be defined in deployments/{{ .Config.Name }}/{{.Config.Name}}.config.jsonnet.
+        ///
         ///Block(defconfig)
         {{- if file.Block "defconfig" }}
-        {{- file.AddDeprecationNotice (printf "Configuration should be declared in deployments/%s/%s.config.jsonnet" .Config.Name .Config.Name) }}
 {{ file.Block "defconfig" }}
         {{- end }}
         ///EndBlock(defconfig)
