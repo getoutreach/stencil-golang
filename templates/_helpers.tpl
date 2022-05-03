@@ -1,7 +1,7 @@
 {{- file.Skip "Exposes template functions" }}
 
 {{- if and (not (stencil.Arg "service")) (not (empty (stencil.Arg "serviceActivities"))) }}
-{{ fail "service has to be set to \"true\" in order to supply \"serviceActivites\"" }}
+{{ fail "service has to be set to \"true\" in order to supply \"serviceActivities\"" }}
 {{- end }}
 
 # This will be better when we rollout the versions functionality
@@ -44,7 +44,7 @@
 # {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {{- define "skipGrpcClient" }}
 {{- $grpcClient := . }}
-{{- $serviceActivities := (stencil.Arg "serviceActivites") }}
+{{- $serviceActivities := (stencil.Arg "serviceActivities") }}
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
 {{- if not (and (has "grpc" $serviceActivities) (has "node" $grpcClients)) }}
   {{ file.Skip "Not a gRPC service, or node client not specified in grpcClients" }}
