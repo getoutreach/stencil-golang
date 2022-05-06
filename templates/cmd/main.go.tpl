@@ -76,9 +76,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 	acts := []async.Runner{
 		{{ $pkgName }}.NewShutdownService(),
-		{{- if stencil.Arg "service" }}
 		&{{ $pkgName }}.NewHTTPService(),
-		{{- end }}
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
 		&{{ $pkgName }}.NewPublicHTTPService(),
 		{{- end }}
