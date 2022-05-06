@@ -1,4 +1,4 @@
-{{- if not (stencil.Arg "service")) }}
+{{- if not (stencil.Arg "service") }}
 {{ file.Skip "Not a service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
