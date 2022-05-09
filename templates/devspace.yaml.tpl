@@ -382,6 +382,14 @@ profiles:
             fsGroup: 1000
             runAsGroup: 1000
 
+  - name: skipPortForwarding
+    activation:
+      - vars:
+          DEVENV_DEV_SKIP_PORTFORWARDING: "true"
+    patches:
+      - op: remove
+        path: dev.ports
+
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
   # You get to choose from them which app you want to substitute with the dev container.
