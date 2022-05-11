@@ -4,6 +4,13 @@
 {{ fail "service has to be set to \"true\" in order to supply \"serviceActivities\"" }}
 {{- end }}
 
+# Checks that kafka has an accompanying resource defined
+{{- if and (has "kafka" (stencil.Arg "serviceActivities")) (not (stencil.Arg "skipResourcesCheck")) }}
+  {{- if not (stencil.Arg "resources.kafka") }}
+    {{ fail "Kafka used without automatic resource provisioning with resources.kafka. See https://github.com/getoutreach/stencil-circleci for full setup details. If you are provisioning Kafka manually or using a module that does not follow the resources convention, disable this check by setting skipResourcesCheck." }}
+  {{- end }}
+{{- end }}
+
 # This will be better when we rollout the versions functionality
 # in stencil later.
 {{- define "goVersion" }}
