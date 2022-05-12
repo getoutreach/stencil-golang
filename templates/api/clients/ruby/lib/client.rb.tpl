@@ -3,7 +3,7 @@
 {{ file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "api/clients/ruby/lib/%s_client.rb" .Config.Name) }}
-{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" -}}
+{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" }}
 
 require "{{ .Config.Name }}_client/client"
 require "{{ .Config.Name }}_client/version"
