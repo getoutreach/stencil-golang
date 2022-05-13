@@ -1,6 +1,6 @@
 {{ file.Skip "Virtual file to generate kubernetes gvk files" }}
 {{- define "api/kubernetes/groupversion_info" -}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This files stores group information
 

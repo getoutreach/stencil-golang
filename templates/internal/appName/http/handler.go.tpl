@@ -3,7 +3,7 @@
 {{ file.Skip "Not a HTTP service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file exposes the public HTTP service for {{ .Config.Name }}.
 

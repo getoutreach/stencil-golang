@@ -1,7 +1,7 @@
 {{- if not (has "grpc" (stencil.Arg "serviceActivities")) }}
 {{- file.Skip "Not a gRPC service" }}
 {{- end }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file contains generic RPC helpers
 

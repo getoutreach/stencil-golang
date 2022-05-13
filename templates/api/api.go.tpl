@@ -3,7 +3,7 @@
 {{- end }}
 {{- $_ := file.SetPath (printf "api/%s.go" .Config.Name) }}
 {{- $_ := file.Static }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file defines the gRPC server service interface for
 // {{ .Config.Name }}.

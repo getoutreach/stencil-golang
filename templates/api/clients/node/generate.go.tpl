@@ -1,5 +1,5 @@
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file generates the node gRPC client using a gogenerate directive.
 

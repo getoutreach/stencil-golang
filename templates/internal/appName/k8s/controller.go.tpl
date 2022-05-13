@@ -1,7 +1,7 @@
 {{ file.Skip "Virtual file to create kubernetes controller" }}
 
 {{- define "internal/k8s/controller" -}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 {{- $g := .group }}
 {{- $r := .resource }}
 {{- $isCustomResource := contains "." $g.group }}

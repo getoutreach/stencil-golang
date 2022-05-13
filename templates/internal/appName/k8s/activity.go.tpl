@@ -1,4 +1,4 @@
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 {{- $_ := file.SetPath (printf "internal/%s/kubernetes.go" .Config.Name) }}
 {{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 {{- $root := . }}
