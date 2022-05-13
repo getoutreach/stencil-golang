@@ -2,7 +2,7 @@
 {{ file.Skip "Not a Kafka service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is responsible for creating consumers of kafka streams.
 // Managed: true

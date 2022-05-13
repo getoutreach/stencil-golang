@@ -1,7 +1,7 @@
 {{ file.Skip "Virtual file to create kubernetes webhook/controller doc.go" }}
 
 {{- define "internal/k8s/doc" -}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is docs for {{ .group }}/{{ .version }}.
 // Managed: true

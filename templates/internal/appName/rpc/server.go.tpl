@@ -3,7 +3,7 @@
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
 {{- $_ := file.Static }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file contains the gRPC server implementation for the {{ .Config.Name }}
 // API defined in api/{{ .Config.Name }}.proto. This implementation is used in the

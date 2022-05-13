@@ -1,7 +1,7 @@
 {{ file.Skip "Virtual file to generate CLIs" }}
 
 {{- define "main-cli" -}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is the entrypoint for the {{ .cmdName }} CLI
 // command for {{ .Config.Name }}.

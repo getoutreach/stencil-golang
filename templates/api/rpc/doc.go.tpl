@@ -2,7 +2,7 @@
 {{- file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "api/%s/%s" .Config.Name (base file.Path)) }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file contains the package documentation for the gRPC
 // client service interface package for {{ .Config.Name }}.

@@ -1,6 +1,6 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is the focal point of configuration that needs passed
 // to various parts of the service.

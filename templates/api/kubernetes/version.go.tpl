@@ -1,7 +1,7 @@
 {{ file.Skip "Virtual file to generate kubernetes version files" }}
 
 {{- define "api/kubernetes/version" -}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file triggers generation of the types
 

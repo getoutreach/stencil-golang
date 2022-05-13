@@ -1,4 +1,4 @@
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 {{- $_ := file.SetPath (printf "internal/k8s/%s" (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 

@@ -1,6 +1,6 @@
 {{- file.Skip "Using bootstrap main.go for now" }}
 {{- /* Breaking changes are required for clerk, temporal, and tollmon integration currently */}}
-// {{ stencil.ApplyTemplate "copyright" }} 
+// {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is the entrypoint for {{ .Config.Name }}.
 // Managed: true
