@@ -1,8 +1,8 @@
 {{- if not (has "http" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a HTTP service" }}
 {{- end }}
-{{- $_ := file.Static }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.Static }}
 // {{ stencil.ApplyTemplate "copyright" }}
 
 package {{ stencil.ApplyTemplate "goPackageSafeName" }}_test //nolint:revive // Why: We allow [-_].
