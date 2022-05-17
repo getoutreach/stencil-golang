@@ -46,7 +46,7 @@
 {{- $grpcClient := . }}
 {{- $serviceActivities := (stencil.Arg "serviceActivities") }}
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
-{{- if not (and (has "grpc" $serviceActivities) (has "node" $grpcClients)) }}
+{{- if not (and (has "grpc" $serviceActivities) (has $grpcClient $grpcClients)) }}
   {{ file.Skip "Not a gRPC service, or node client not specified in grpcClients" }}
   {{ file.Delete }}
 {{- end }}
