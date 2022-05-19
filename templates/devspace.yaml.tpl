@@ -45,6 +45,13 @@ vars:
   - name: DEVENV_DEV_TERMINAL
     source: env
     default: "false"
+  - name: DEVENV_DEV_SKIP_PORTFORWARDING
+    source: env
+    default: "false"
+  - name: DEVENV_DEV_DEPLOYMENT_PROFILE
+    source: env
+    default: deployment__{{ .Config.Name }}
+  
 
   # devenv passes in paths to binaries it uses (ensuring the supported versions are used)
   # devenv bin that triggered devspace
@@ -396,7 +403,7 @@ profiles:
   - name: deployment__{{ .Config.Name }}
     description: Default app profile. This doesn't change configuration, because it's set by default.
     activation:
-      - env:
+      - vars:
           DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
 
   ###Block(profiles)
