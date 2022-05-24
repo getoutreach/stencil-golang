@@ -31,4 +31,10 @@ arguments:
   mixins:
     type: list
     description: "Deprecated: List of mixins to also import. Set in override.jsonnet instead"
+  skipResourcesCheck:
+    type: bool
+    description: Whether or not to check for resources related to `serviceActivities`.
+  resources.kafka:
+    type: string
+    description: Kafka version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
 ###EndBlock(keys)
