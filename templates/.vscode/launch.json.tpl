@@ -23,7 +23,7 @@
       ///Block(vscodeRemoteDebug)
 {{- if file.Block "vscodeRemoteDebug" }}
 {{ file.Block "vscodeRemoteDebug" }}
-{{ else }}
+{{- else }}
       "host": "127.0.0.1",
       "port": 42097,
 {{- end }}
