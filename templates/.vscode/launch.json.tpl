@@ -27,7 +27,6 @@
       "host": "127.0.0.1",
       "port": 42097,
 {{- end }}
-{{ file.Block "" }}
     ///EndBlock(vscodeRemoteDebug)
       "substitutePath": [
         {
