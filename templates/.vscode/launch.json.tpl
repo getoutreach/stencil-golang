@@ -20,8 +20,15 @@
       "debugAdapter": "dlv-dap",
       "request": "attach",
       "mode": "remote",
-      "port": 42097,
+      ///Block(vscodeRemoteDebug)
+{{- if file.Block "vscodeRemoteDebug" }}
+{{ file.Block "vscodeRemoteDebug" }}
+{{ else }}
       "host": "127.0.0.1",
+      "port": 42097,
+{{- end }}
+{{ file.Block "" }}
+    ///EndBlock(vscodeRemoteDebug)
       "substitutePath": [
         {
           "from": "${workspaceRoot}",
