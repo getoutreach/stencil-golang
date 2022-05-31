@@ -11,5 +11,5 @@ Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for guidelines on de
 ## High-level Overview
 
 <!--- Block(overview) -->
-
+See [the docs](./docs/intro.md) for more information
 <!--- EndBlock(overview) -->
