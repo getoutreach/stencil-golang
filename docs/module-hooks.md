@@ -5,6 +5,7 @@ stencil-golang exposes a few module hooks to allow for integration with other mo
 ### `go_modules`
 
 **Type**: `{ name string, version string }`
+
 **File**: `_helpers.tpl`
 
 Add a dependency to this service. This dependency will be ignored by dependency management tools like `dependabot` in favor of the dependency specified in `go_modules`.
@@ -16,6 +17,7 @@ Add a dependency to this service. This dependency will be ignored by dependency 
 ### `js_modules`
 
 **Type**: `{ name string, version string }`
+
 **File**: `_helpers.tpl`
 
 Equivalent `go_modules` but for JavaScript (node).
@@ -23,6 +25,7 @@ Equivalent `go_modules` but for JavaScript (node).
 ### `js_modules_dev`
 
 **Type**: `{ name string, version string }`
+
 **File**: `_helpers.tpl`
 
 Equivalent `go_modules` but for JavaScript (node), dev dependencies.
@@ -30,6 +33,7 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 ### `private.env.envVars`
 
 **Type**: `[key, value]`
+
 **File**: `.vscode/private.env.tpl`
 
 Environment variables to write out to `private.env` for VSCode to use while running tests.
@@ -41,6 +45,7 @@ Environment variables to write out to `private.env` for VSCode to use while runn
 ### `api.Service`
 
 **Type**: `string`
+
 **File**: `api/api.go.tpl`
 
 Extra interface methods to add to the `Service` interface.
@@ -53,6 +58,7 @@ Extra interface methods to add to the `Service` interface.
 ### `api.proto.message`
 
 **Type**: `string`
+
 **File**: `api/api.proto.tpl`
 
 Extra message types to add to the `api.proto` file.
@@ -67,6 +73,7 @@ Extra message types to add to the `api.proto` file.
 ### `api.proto.service`
 
 **Type**: `string`
+
 **File**: `api/api.proto.tpl`
 
 Extra service rpcs to add to the `api.proto` file.
@@ -79,6 +86,7 @@ Extra service rpcs to add to the `api.proto` file.
 ### `mixins`
 
 **Type**: `string`
+
 **File**: `deployments/appname/app.jsonnet.tpl`
 
 Extra mixin files in `deployments/appname/mixins` to include in the jsonnet deployments.
