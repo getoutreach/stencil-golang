@@ -21,6 +21,18 @@ There's a few requirements for using `stencil-golang` at the moment.
  * Kubernetes, we welcome contributions to support other deployment toolchains though!
  * CircleCI, we don't support other CI/CD providers currently but we're open to contributions and likely may provide support for Github Actions soon.
 
+## Structure
+
+The structure of a stencil-golang repository starts by following the [best practices for a go repository](https://github.com/golang-standards/project-layout). It's recommend to check out that link for more information, but for brevity it's listed below:
+
+ * `api` - contains the API clients / definitions
+ * `cmd` - contains the CLI commands, if present, and the main service entrypoint
+ * `deployments` - contains the deployment manifests and Dockerfile
+ * `internal` - contains internal code that should not be used by users
+ * `scripts` - contains scripts
+
+We also currently config `make` to build/test and other tasks for the service. A full list of make targets and their usage can be found via `make help`
+
 ## Using stencil-golang
 
 Using `stencil-golang` requires `stencil` to be installed. For information on how to install `stencil` see the [docs](https://engineering.outreach.io/stencil).
