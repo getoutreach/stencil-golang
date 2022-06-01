@@ -1,6 +1,6 @@
 # Service Activity Framework
 
-The service activity framework is a simple framework allowing plugin-able go-routine powered extension points. All of the features of `stencil-golang` are implemented using this framework (`grpc`, `http`, etc).
+The service activity framework is a simple framework allowing pluggable go-routine powered extension points. All of the features of `stencil-golang` are implemented using this framework (`grpc`, `http`, etc).
 
 ## How it Works
 
