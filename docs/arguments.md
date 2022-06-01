@@ -46,7 +46,7 @@ commands:
 **Default**: `[]`
 **Options**: `['node', 'ruby']`
 
-A list of gRPC clients to generate for this application.
+A list of gRPC clients to generate for this application. Requires `grpc` to be in the `serviceActivities` list.
 
 **Note**: A golang client is _always_ created.
 
