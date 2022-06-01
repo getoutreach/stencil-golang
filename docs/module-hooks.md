@@ -11,7 +11,12 @@ stencil-golang exposes a few module hooks to allow for integration with other mo
 Add a dependency to this service. This dependency will be ignored by dependency management tools like `dependabot` in favor of the dependency specified in `go_modules`.
 
 ```yaml
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "name" "a" "version "1.0.0")) }}
+{{- define "deps" -}}
+- name: a-module
+  version: 1.0.0
+{{- end -}}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "go_modules" (stencil.ApplyTemplate "deps") }}
+```
 ```
 
 ### `js_modules`
@@ -32,14 +37,14 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 
 ### `private.env.envVars`
 
-**Type**: `[key, value]`
+**Type**: `map[string]interface{}`
 
 **File**: `.vscode/private.env.tpl`
 
 Environment variables to write out to `private.env` for VSCode to use while running tests.
 
 ```yaml
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (list "MY_ENV_VAR" "my-value")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "MY_ENV_VAR" "my-value")) }}
 ```
 
 ### `api.Service`
@@ -52,7 +57,7 @@ Extra interface methods to add to the `Service` interface.
 
 ```tpl
 {{ $myInterface := "MyServiceMethod(ctx context.Context) error" }}
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list $myInterface) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "api.Service" (list $myInterface) }}
 ```
 
 ### `api.proto.message`
@@ -67,7 +72,7 @@ Extra message types to add to the `api.proto` file.
 
 ```tpl
 {{ $myMessage := "message MyMessage { string my_field = 1; }" }}
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list $myMessage) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "api.proto.message" (list $myMessage) }}
 ```
 
 ### `api.proto.service`
@@ -80,7 +85,7 @@ Extra service rpcs to add to the `api.proto` file.
 
 ```tpl
 {{ $myService := "rpc MyMethod (MyMessage) returns (MyMessage) {}" }}
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list $myService) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "api.proto.service" (list $myService) }}
 ```
 
 ### `mixins`
@@ -94,5 +99,5 @@ Extra mixin files in `deployments/appname/mixins` to include in the jsonnet depl
 ```tpl
 # deployments/appname/mixins/my-mixin.jsonnet
 {{ $myMixin := "my-mixin" }}
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list $myMixin) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "mixins" (list $myMixin) }}
 ```

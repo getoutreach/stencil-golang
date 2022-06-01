@@ -8,6 +8,8 @@ stencil-golang is a stencil module for Golang applications. Primarily designed f
  * E2E Testing Framework
  * Kubernetes Manifests (via [kubecfg](https://github.com/anguslees/kubecfg))
  * Kubernetes [devenv](https://github.com/getoutreach/devenv) support
+ * Docker
+ * Releasing / Versioning via [semantic-release](https://github.com/semantic-release/semantic-release)
  * Service Activity framework enabling an easy extension framework.
  * Vault integration
 
