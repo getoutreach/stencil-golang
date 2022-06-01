@@ -19,7 +19,7 @@ service: true
 **Default**: `[]`
 **Options**: `['grpc', 'http', 'kafka']`
 
-A list of service activities that should be generated when `service` is `true`.
+A list of service activities that should be generated. Requires `service` to be set to `true`.
 
 ```yaml
 serviceActivities:
