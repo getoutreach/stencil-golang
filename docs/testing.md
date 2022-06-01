@@ -3,10 +3,9 @@
 stencil-golang supports three methods of writing tests:
 
  * unit tests
- * integration tests (deprecated)
  * e2e tests
 
-The integration test framework relied on running docker containers to access resources, and is currently deprecated in favor of the E2E framework. The E2E framework can be thought of as running in a live environment with dependencies running. This is the preferred method of writing feature tests. Unit tests run with no dependencies and are good for isolated components of logic.
+The E2E framework can be thought of as running in a live environment with dependencies running. This is the preferred method of writing feature tests. Unit tests run with no dependencies and are good for testing isolated components of logic.
 
 ## Linting
 
