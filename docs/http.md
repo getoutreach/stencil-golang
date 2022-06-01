@@ -2,7 +2,7 @@
 
 **Note**: All services (`service: true`) have a HTTP server by default. This is a private endpoint uses for health/readiness probes as well as service prometheus metrics. This document refers to the public HTTP endpoint.
 
-A HTTP service can be created by adding `http` to the `arguments.serviceActivities` list, for example a partial `service.yaml` would look like so:
+A public HTTP service can be created by adding `http` to the `arguments.serviceActivities` list, for example a partial `service.yaml` would look like so:
 
 ```yaml
 arguments:
