@@ -1,6 +1,6 @@
 # Arguments
 
-Below is a list of all of the arguments that `stencil-golang` supports.
+Below is a list of all of the arguments that `stencil-golang` supports. Other options from [stencil-base](TODO) are also used here.
 
 ## `service`
 

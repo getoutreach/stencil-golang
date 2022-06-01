@@ -19,7 +19,7 @@ When a HTTP service is created a few additional files will be created, the most 
 
 ## Adding a New Handler
 
-Adding a new HTTP handler is pretty simple. The `handler.go` file is currently a static file which means you can change any of it as needed. By default we use [mux](TODO) to route HTTP requests. Let's add a sample handler to the `handler.go` file:
+Adding a new HTTP handler is pretty simple. The `handler.go` file is currently a static file which means you can change any of it as needed. By default we use [mux](https://github.com/gorilla/mux) to route HTTP requests. Let's add a sample handler to the `handler.go` file:
 
 ```go
 // Handler returns the main http handler for this service

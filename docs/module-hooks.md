@@ -1,5 +1,7 @@
 # Module Hooks
 
+**Note**: Stencil module hooks are documented in the [module docs](https://engineering.outreach.io/stencil/reference/template-module/#module-hooks).
+
 stencil-golang exposes a few module hooks to allow for integration with other modules. These docs will go over them at a _highlevel_, but note this is **not** and exhaustive list of hooks or how to use them. For more information it's suggested to look at the hooks in context of the file you're trying to modify.
 
 ### `go_modules`
