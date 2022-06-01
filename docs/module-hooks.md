@@ -15,7 +15,7 @@ Add a dependency to this service. This dependency will be ignored by dependency 
 - name: a-module
   version: 1.0.0
 {{- end -}}
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "go_modules" (stencil.ApplyTemplate "deps") }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "go_modules" (stencil.ApplyTemplate "deps" | fromYaml) }}
 ```
 ```
 
