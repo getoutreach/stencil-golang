@@ -10,6 +10,7 @@ arguments:
   oss:
     type: bool
     description: Deprecated, denotes this is an open source repository.
+    deprecated: true
   commands:
     type: list
     description: List of CLI commands to generate for this repository
@@ -34,7 +35,9 @@ arguments:
   skipResourcesCheck:
     type: bool
     description: Whether or not to check for resources related to `serviceActivities`.
+    deprecated: true
   resources.kafka:
     type: string
     description: Kafka version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
+    deprecated: true
 ###EndBlock(keys)
