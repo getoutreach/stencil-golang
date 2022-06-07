@@ -12,10 +12,9 @@ arguments:
 
 When a HTTP service is created a few additional files will be created, the most important ones are:
 
- * `internal/<name>/httpservice.go` - contains the HTTP service code, currently contains both the public and private handlers.
- * `internal/<name>/handler.go` - contains the handler code, this is where you'll want to add your own handlers as needed.
- * `internal/<name>/handler_test.go.tpl` - test code for testing handlers
-
+- `internal/<name>/httpservice.go` - contains the HTTP service code, currently contains both the public and private handlers.
+- `internal/<name>/handler.go` - contains the handler code, this is where you'll want to add your own handlers as needed.
+- `internal/<name>/handler_test.go.tpl` - test code for testing handlers
 
 ## Adding a New Handler
 
@@ -38,7 +37,6 @@ func Handler() http.Handler {
 
 We can see that the routing logic is in the `Handler` function in `handler.go`, so that's where we added our route for `/users`. Now we'll want to create the handler function. This is done by attaching to the `service` struct.
 
-  
 ```go
 // users returns ...
 func (s *service) users(w http.ResponseWriter, r *http.Request) {

@@ -7,5 +7,7 @@ modules:
     version: v0.2.1-rc.1
 arguments:
   reportingTeam: fnd-dtss
+  description: Stencil Module for Golang Applications
   releaseOptions:
     enablePrereleases: true
+    allowMajorVersions: true

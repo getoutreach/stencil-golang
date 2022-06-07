@@ -2,8 +2,8 @@
 
 stencil-golang supports three methods of writing tests:
 
- * unit tests
- * e2e tests
+- unit tests
+- e2e tests
 
 The E2E framework can be thought of as running in a live environment with dependencies running. This is the preferred method of writing feature tests. Unit tests run with no dependencies and are good for testing isolated components of logic.
 

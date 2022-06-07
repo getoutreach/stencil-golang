@@ -1,4 +1,4 @@
-# gRPC 
+# gRPC
 
 A gRPC service can be created by adding `grpc` to the `arguments.serviceActivities` list, for example a partial `service.yaml` would look like so:
 
@@ -10,9 +10,9 @@ arguments:
 
 When a gRPC service is created a few additional files will be created, the most important ones are:
 
- * `api/<name>.go` - contains the interface for the client and server
- * `api/<name>.proto` - contains the protobuf definition for the service
- * `internal/<name>/server.go` - contains the rpc implementation
+- `api/<name>.go` - contains the interface for the client and server
+- `api/<name>.proto` - contains the protobuf definition for the service
+- `internal/<name>/server.go` - contains the rpc implementation
 
 gRPC, by default, exposes prometheus metrics and traces with the [grpcx](https://github.com/getoutreach/grpcx) package. Through this package we also enable reflection by default.
 

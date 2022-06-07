@@ -4,6 +4,8 @@
 [![Generated via Bootstrap](https://img.shields.io/badge/Outreach-Bootstrap-%235951ff)](https://github.com/getoutreach/bootstrap)
 [![Coverage Status](https://coveralls.io/repos/github/getoutreach/stencil-golang/badge.svg?branch=main)](https://coveralls.io/github//getoutreach/stencil-golang?branch=main)
 
+Stencil Module for Golang Applications
+
 ## Contributing
 
 Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for guidelines on developing and contributing changes.
@@ -11,5 +13,7 @@ Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for guidelines on de
 ## High-level Overview
 
 <!--- Block(overview) -->
+
 See [the docs](./docs/intro.md) for more information
+
 <!--- EndBlock(overview) -->
