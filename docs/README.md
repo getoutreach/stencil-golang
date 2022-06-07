@@ -4,32 +4,32 @@ stencil-golang is a stencil module for Golang applications. Primarily designed f
 
 ## What's Included
 
- * CircleCI (via [stencil-circleci](https://github.com/getoutreach/stencil-circleci))
- * E2E Testing Framework
- * Kubernetes Manifests (via [kubecfg](https://github.com/anguslees/kubecfg))
- * Kubernetes [devenv](https://github.com/getoutreach/devenv) support
- * Docker
- * Releasing / Versioning via [semantic-release](https://github.com/semantic-release/semantic-release)
- * Service Activity framework enabling an easy extension framework.
- * Vault integration
+- CircleCI (via [stencil-circleci](https://github.com/getoutreach/stencil-circleci))
+- E2E Testing Framework
+- Kubernetes Manifests (via [kubecfg](https://github.com/anguslees/kubecfg))
+- Kubernetes [devenv](https://github.com/getoutreach/devenv) support
+- Docker
+- Releasing / Versioning via [semantic-release](https://github.com/semantic-release/semantic-release)
+- Service Activity framework enabling an easy extension framework.
+- Vault integration
 
 ## Requirements
 
 There's a few requirements for using `stencil-golang` at the moment.
 
- * Github, currently we only support Github for tooling. Other VCS providers may work but they are not supported.
- * Kubernetes, we welcome contributions to support other deployment toolchains though!
- * CircleCI, we don't support other CI/CD providers currently but we're open to contributions and likely may provide support for Github Actions soon.
+- Github, currently we only support Github for tooling. Other VCS providers may work but they are not supported.
+- Kubernetes, we welcome contributions to support other deployment toolchains though!
+- CircleCI, we don't support other CI/CD providers currently but we're open to contributions and likely may provide support for Github Actions soon.
 
 ## Structure
 
 The structure of a stencil-golang repository starts by following the [best practices for a go repository](https://github.com/golang-standards/project-layout). It's recommend to check out that link for more information, but for brevity it's listed below:
 
- * `api` - contains the API clients / definitions
- * `cmd` - contains the CLI commands, if present, and the main service entrypoint
- * `deployments` - contains the deployment manifests and Dockerfile
- * `internal` - contains internal code that should not be used by users
- * `scripts` - contains scripts
+- `api` - contains the API clients / definitions
+- `cmd` - contains the CLI commands, if present, and the main service entrypoint
+- `deployments` - contains the deployment manifests and Dockerfile
+- `internal` - contains internal code that should not be used by users
+- `scripts` - contains scripts
 
 We also currently config `make` to build/test and other tasks for the service. A full list of make targets and their usage can be found via `make help`
 
@@ -50,8 +50,8 @@ From there you can open up the `service.yaml` with your favorite editor and inse
 # name should equal the name of your repository
 name: my-application
 modules:
-# This inserts stencil-golang to be used in the stencil invocation
-- name: github.com/getoutreach/stencil-golang
+  # This inserts stencil-golang to be used in the stencil invocation
+  - name: github.com/getoutreach/stencil-golang
 # For a complete list of arguments, see the arguments.md file in the docs.
 arguments: {}
 ```

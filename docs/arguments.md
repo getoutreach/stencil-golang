@@ -52,8 +52,8 @@ A list of gRPC clients to generate for this application. Requires `grpc` to be i
 
 ```yaml
 grpcClients:
-- node
-- ruby
+  - node
+  - ruby
 ```
 
 ## `reportingTeam`

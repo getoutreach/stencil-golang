@@ -19,7 +19,8 @@ Add a dependency to this service. This dependency will be ignored by dependency 
 {{- end -}}
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "go_modules" (stencil.ApplyTemplate "deps" | fromYaml) }}
 ```
-```
+
+````
 
 ### `js_modules`
 
@@ -47,7 +48,7 @@ Environment variables to write out to `private.env` for VSCode to use while runn
 
 ```yaml
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "MY_ENV_VAR" "my-value")) }}
-```
+````
 
 ### `api.Service`
 
