@@ -59,8 +59,12 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	app.SetName("{{ .Config.Name }}")
 	defer setMaxProcs(ctx)()
 
-	cfg := {{ $pkgName }}.LoadConfig(ctx)
-
+	cfg, err := {{ $pkgName }}.LoadConfig(ctx)
+	if err != nil {
+		log.Error(ctx, "failed to load config", events.NewErrorInfo(err))
+		return
+	}
+	
 	if err := trace.InitTracer(ctx, "{{ .Config.Name }}"); err != nil {
 		log.Error(ctx, "tracing failed to start", events.NewErrorInfo(err))
 		return
