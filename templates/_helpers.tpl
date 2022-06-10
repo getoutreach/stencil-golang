@@ -78,6 +78,22 @@
 {{- list "github.com" .Runtime.Box.Org .Config.Name | join "/" }}
 {{- end }}
 
+# Add requested required dependencies that weren't already programmatically added by
+# another stencil module (to the devenv.dependencies.required module hook).
+{{- range (stencil.Arg "dependencies.required") }}
+	{{- if not (has . (stencil.GetModuleHook "devenv.dependencies.required")) }}
+		{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devenv.dependencies.required" (list .) }}
+	{{- end }}
+{{- end }}
+
+# Add requested optional dependencies that weren't already programmatically added by
+# another stencil module (to the devenv.dependencies.optional module hook).
+{{- range (stencil.Arg "dependencies.optional") }}
+	{{- if not (has . (stencil.GetModuleHook "devenv.dependencies.optional")) }}
+		{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devenv.dependencies.optional" (list .) }}
+	{{- end }}
+{{- end }}
+
 # Dependencies for the service
 {{- define "dependencies" }}
 go:
