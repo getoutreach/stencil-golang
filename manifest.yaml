@@ -40,4 +40,10 @@ arguments:
     type: string
     description: Kafka version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
     deprecated: true
+  dependencies.optional:
+    type: list
+    description: Dependencies your repository needs, but not always (e.g. E2E tests).
+  dependencies.required:
+    type: list
+    description: Dependencies your repository requires to run successfully no matter what.
 ###EndBlock(keys)
