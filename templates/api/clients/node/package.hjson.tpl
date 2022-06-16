@@ -42,7 +42,7 @@
     "lint": "eslint src --ext .ts",
     "lint-fix": "eslint src --ext .ts --fix",
     "pre-commit": "npm-run-all pretty lint",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "yarn install; yarn build",
     "pretty": "prettier -l \"src/**/*.ts\"",
     "pretty-fix": "prettier --write \"src/**/*.ts\"",
     "test": "NODE_ENV=test jest --watch \"./src/\"",
