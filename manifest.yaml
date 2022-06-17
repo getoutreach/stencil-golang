@@ -27,7 +27,8 @@ arguments:
     description: lintroller level to apply to this repository
     default: platinum
   metrics:
-    type: string
+    schema: 
+      type: string
     descriptions: Metrics collector to use (supports opentelemetry and datadog)
     default: datadog
   vaultSecrets:
