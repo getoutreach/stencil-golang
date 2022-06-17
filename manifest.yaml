@@ -26,6 +26,11 @@ arguments:
     type: string
     description: lintroller level to apply to this repository
     default: platinum
+  metrics:
+    schema: 
+      type: string
+    descriptions: Metrics collector to use (supports opentelemetry and datadog)
+    default: datadog
   vaultSecrets:
     type: list
     description: List of secrets to consume from Vault, if Vault is enabled in the box config

@@ -149,10 +149,17 @@ local all = {
         metadata+: {
           {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
           labels+: sharedLabels {
-            'tollgate.outreach.io/scrape': 'true'
+            'tollgate.outreach.io/scrape': 'true',
+            {{- if (eq "opentelemetry" (stencil.Arg "metrics")) }}
+            'opentelemetry.io/scrape': 'true',
+            {{- end }}
           },
           {{- else }}
-          labels+: sharedLabels,
+          labels+: sharedLabels {
+            {{- if (eq "opentelemetry" (stencil.Arg "metrics")) }}
+            'opentelemetry.io/scrape': 'true',
+            {{- end }}
+          },
           {{- end }}
           annotations+: {
             {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
@@ -160,6 +167,7 @@ local all = {
             'tollgate.outreach.io/port': '5000',
             {{- end }}
             'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            {{- if (eq "datadog" (stencil.Arg "metrics")) }}
             // https://docs.datadoghq.com/integrations/openmetrics/
             ['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
             ['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
@@ -186,6 +194,7 @@ local all = {
                 send_distribution_buckets: true,
               },
             ],
+            {{- end }}
             {{- end }}
           },
         },
