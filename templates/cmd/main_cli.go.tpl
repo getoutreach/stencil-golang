@@ -13,7 +13,6 @@ import (
 	"context"
 
 	oapp "github.com/getoutreach/gobox/pkg/app"
-	"github.com/getoutreach/gobox/pkg/exec"
 	"github.com/sirupsen/logrus"
 	gcli "github.com/getoutreach/gobox/pkg/cli"
 	"github.com/urfave/cli/v2"
