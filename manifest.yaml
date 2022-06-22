@@ -1,5 +1,7 @@
 name: github.com/getoutreach/stencil-golang
 ###Block(keys)
+modules:
+  - name: github.com/getoutreach/stencil-discovery
 arguments:
   service:
     type: bool
@@ -29,6 +31,9 @@ arguments:
   metrics:
     schema:
       type: string
+      enum:
+        - datadog
+        - opentelemetry
     description: Metrics collector to use (supports opentelemetry and datadog)
     default: datadog
   tracing:
@@ -36,10 +41,6 @@ arguments:
       type: string
     descriptions: Tracing backend to send traces to (support opentelemetry and honeycomb)
     default: honeycomb
-  bentos:
-    schema:
-      type: array
-    description: List of bentos the service will be deployed to
   slack:
     schema:
       type: string
@@ -128,4 +129,21 @@ arguments:
     schema:
       type: integer
     description: Overrides the min available replica count in the "available_pods_low" alert in terraform module in monitoring/datadog.tf.
+  deployTo.serviceDomain:
+    description: The service domain that the service is needs deployed to.
+    schema:
+      type: string
+      enum:
+        - bento
+        - shared-service
+  deployTo.environments:
+    description: A list of environments that the service is deployed to.
+    schema:
+      type: array
+      items:
+        type: string
+        enum:
+          - ops
+          - staging
+          - production
 ###EndBlock(keys)

@@ -328,8 +328,9 @@ resource "datadog_service_level_objective" "grpc_p99_latency" {
   tags = local.ddTags
   monitor_ids = [module.grpc_latency_high.high_traffic_id]
   groups = [
-    {{- range $b := stencil.Arg "bentos" }}
-    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b }}",
+    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployTo.environments") (stencil.Arg "deployTo.serviceDomain")}}
+    {{- range $b := $bentos }}
+    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
     {{- end }}
   ]
   thresholds {
