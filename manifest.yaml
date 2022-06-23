@@ -31,6 +31,11 @@ arguments:
       type: string
     descriptions: Metrics collector to use (supports opentelemetry and datadog)
     default: datadog
+  tracing:
+    schema:
+      type: string
+    descriptions: Tracing backend to send traces to (support opentelemetry and honeycomb)
+    default: honeycomb
   vaultSecrets:
     type: list
     description: List of secrets to consume from Vault, if Vault is enabled in the box config

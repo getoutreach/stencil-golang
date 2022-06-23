@@ -98,14 +98,21 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.38.0
+  version: v1.42.0
 {{- if not (stencil.Arg "oss") }}
 - name: github.com/getoutreach/mint
   version: v1.51.0
+{{- if eq "honeycomb" (stencil.Arg "tracing") }}
 - name: github.com/getoutreach/httpx
-  version: v1.12.1
+  version: v1.13.1
 - name: github.com/getoutreach/services
-  version: v1.79.1
+  version: v1.95.2
+{{- else }}
+- name: github.com/getoutreach/httpx
+  version: v1.14.0
+- name: github.com/getoutreach/services
+  version: v1.96.0
+{{- end }}
 - name: github.com/getoutreach/datastores/v2
   version: v2.17.0
 {{- end }}
