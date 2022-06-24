@@ -1,3 +1,4 @@
+service: {{ stencil.Arg "service" }}
 dependencies:
 {{- if gt (len (stencil.GetModuleHook "devenv.dependencies.optional")) 0 }}
   optional:
