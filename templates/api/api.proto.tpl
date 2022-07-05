@@ -10,7 +10,7 @@ syntax = "proto3";
 package {{ stencil.ApplyTemplate "goPackageSafeName" }}.api;
 
 option go_package = "{{ stencil.ApplyTemplate "appImportPath" }}/api";
-option ruby_package = "{{ .Config.Name | title }}Client";
+option ruby_package = "{{ regexReplaceAllLiteral "\\W+" .Config.Name " " | title | replace " " "" }}Client";
 
 // Define your grpc service structures here
 // PingRequest is the request for ping
@@ -37,8 +37,12 @@ message PongResponse {
 {{- . | indent 2}}
 {{- end }}
 
-// {{ .Config.Name | title }} is the {{ .Config.Name }} service.
-service {{ .Config.Name | title }} {
+{{- /* Service names may have hyphens in them, but Golang structs and Protobuf
+Services may NOT have hyphens in their name. To keep generated code valid,
+convert the service name 'example-service' into 'ExampleService' for
+compatibility. */ -}}
+// {{ regexReplaceAllLiteral "\\W+" .Config.Name " " | title | replace " " "" }} is the {{ .Config.Name }} service.
+service {{ regexReplaceAllLiteral "\\W+" .Config.Name " " | title | replace " " "" }} {
   rpc Ping(PingRequest) returns (PingResponse) {}
   rpc Pong(PongRequest) returns (PongResponse) {}
 {{- range stencil.GetModuleHook "api.proto.service" }}
