@@ -14,7 +14,7 @@ import (
 	"context"
 )
 
-// Service is the {{ .Config.Name | title }} server interface
+// Service is the {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }} server interface
 //
 // This interface is implemented by the server and the rpc client
 type Service interface {

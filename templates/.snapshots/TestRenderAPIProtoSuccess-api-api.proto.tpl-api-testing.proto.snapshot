@@ -1,0 +1,37 @@
+(*codegen.File)(<nil>
+// Copyright 2022 Outreach Corporation. All Rights Reserved.
+// Please modify this to match the interface specified in testing.go
+syntax = "proto3";
+
+package testing.api;
+
+option go_package = "github.com/getoutreach/testing/api";
+option ruby_package = "TestingClient";
+
+// Define your grpc service structures here
+// PingRequest is the request for ping
+message PingRequest {
+  string message = 1;
+}
+
+// PingResponse is the response for echo.
+message PingResponse {
+  string message = 1;
+}
+
+// PongRequest is the request for ping
+message PongRequest {
+  string message = 1;
+}
+
+// PongResponse is the response for echo.
+message PongResponse {
+  string message = 1;
+}
+
+// Testing is the testing service.
+service Testing {
+  rpc Ping(PingRequest) returns (PingResponse) {}
+  rpc Pong(PongRequest) returns (PongResponse) {}
+}
+)
