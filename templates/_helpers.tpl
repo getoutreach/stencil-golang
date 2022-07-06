@@ -73,9 +73,13 @@
 {{- printf "Copyright %s Outreach Corporation. All Rights Reserved." (stencil.ApplyTemplate "currentYear") }}
 {{- end }}
 
-# Returns the import path for this application
+# Returns the import path for this application. Right now, it hardcodes the Org
+# to be "getoutreach" because using .Runtime.Box.Org requires a file
+# "$HOME/.outreach/.config/box" to have a '.config.org' of "getoutreach", a
+# piece of state which is not there in our CI environments, so will always be
+# "", causing this to always render incorrectly in CI.
 {{- define "appImportPath" }}
-{{- list "github.com" .Runtime.Box.Org .Config.Name | join "/" }}
+{{- list "github.com" "getoutreach" .Config.Name | join "/" }}
 {{- end }}
 
 # Service names may have hyphens in them, but Golang structs and Protobuf
