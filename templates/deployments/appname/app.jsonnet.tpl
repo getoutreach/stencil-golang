@@ -60,6 +60,13 @@ local all = {
       ports: ok.mapToNamedList(this.ports_),
     },
   },
+  nodeport_service: ok.Service(app.name + '-alb', app.namespace) {
+    target_pod:: $.deployment.spec.template,
+    spec+: {
+      type: 'NodePort',
+      ports: $.service.spec.ports,
+    },
+  },
   pdb: ok.PodDisruptionBudget(app.name, app.namespace) {
     metadata+: {
       labels: sharedLabels,
