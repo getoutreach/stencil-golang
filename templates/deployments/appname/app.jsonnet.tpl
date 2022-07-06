@@ -62,6 +62,9 @@ local all = {
   },
   nodeport_service: ok.Service(app.name + '-alb', app.namespace) {
     target_pod:: $.deployment.spec.template,
+    metadata+: {
+      labels+: sharedLabels,
+    },
     spec+: {
       type: 'NodePort',
       ports: $.service.spec.ports,
