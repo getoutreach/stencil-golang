@@ -78,6 +78,15 @@
 {{- list "github.com" .Runtime.Box.Org .Config.Name | join "/" }}
 {{- end }}
 
+# Service names may have hyphens in them, but Golang structs and Protobuf
+# services may NOT have hyphens in their name. To keep generated code valid,
+# convert the service name 'example-service' into 'ExampleService' for
+# compatibility.
+{{- define "serviceNameLanguageSafe" }}
+{{- regexReplaceAllLiteral "\\W+" .Config.Name " " | title | replace " " "" }}
+{{- end }}
+
+
 # Add requested required dependencies that weren't already programmatically added by
 # another stencil module (to the devenv.dependencies.required module hook).
 {{- range (stencil.Arg "dependencies.required") }}
