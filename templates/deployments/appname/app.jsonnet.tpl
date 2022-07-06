@@ -60,7 +60,7 @@ local all = {
       ports: ok.mapToNamedList(this.ports_),
     },
   },
-  nodeport_service: ok.Service(app.name + '-alb', app.namespace) {
+  alb_service: ok.Service(app.name + '-alb', app.namespace) {
     target_pod:: $.deployment.spec.template,
     metadata+: {
       labels+: sharedLabels,
