@@ -181,7 +181,7 @@ nodejs:
   - name: "@typescript-eslint/eslint-plugin"
     version: ^2.33.0
   - name: "@typescript-eslint/parser"
-    version: ^2.33.0
+    version: ^4.1.1
   - name: eslint
     version: ^7.13.0
   - name: eslint-config-prettier
