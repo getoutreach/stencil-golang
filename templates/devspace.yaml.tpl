@@ -397,6 +397,26 @@ profiles:
       - op: remove
         path: dev.ports
 
+  - name: e2e
+    activation:
+      - env:
+          E2E: "true"
+    patches:
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: replace
+          path: spec.serviceAccountName
+          value: "{{ .Config.Name }}-e2e-client-svc"
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: add
+          path: spec.containers[0].env
+          value:
+            name: E2E
+            value: "true"
+
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
   # You get to choose from them which app you want to substitute with the dev container.
