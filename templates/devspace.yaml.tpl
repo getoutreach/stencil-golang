@@ -310,8 +310,15 @@ profiles:
       - op: add
         path: hooks
         value:
-          name: reset-dev
+          name: reset-dev-interrupt
           events: ["devCommand:interrupt"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev-error
+          events: ["error:sync:app"]
           command: |-
             "${DEVENV_DEVSPACE_BIN}" reset pods -s
       - op: add
