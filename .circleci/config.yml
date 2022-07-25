@@ -1,7 +1,7 @@
 # Please re-run stencil after any changes to this file.
 version: 2.1
 orbs:
-  shared: getoutreach/shared@1.60.0
+  shared: getoutreach/shared@2.2.0
 
 # Extra contexts to expose to all jobs below
 contexts: &contexts
