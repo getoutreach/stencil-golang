@@ -1,5 +1,7 @@
 name: github.com/getoutreach/stencil-golang
 ###Block(keys)
+modules:
+  - name: github.com/getoutreach/stencil-discovery
 arguments:
   service:
     type: bool
@@ -27,15 +29,22 @@ arguments:
     description: lintroller level to apply to this repository
     default: platinum
   metrics:
-    schema: 
+    schema:
       type: string
-    descriptions: Metrics collector to use (supports opentelemetry and datadog)
+      enum:
+        - datadog
+        - opentelemetry
+    description: Metrics collector to use (supports opentelemetry and datadog)
     default: datadog
   tracing:
     schema:
       type: string
     descriptions: Tracing backend to send traces to (support opentelemetry and honeycomb)
     default: honeycomb
+  slack:
+    schema:
+      type: string
+    description: Slack channel to send deployment messages into.
   vaultSecrets:
     type: list
     description: List of secrets to consume from Vault, if Vault is enabled in the box config
@@ -56,4 +65,85 @@ arguments:
   dependencies.required:
     type: list
     description: Dependencies your repository requires to run successfully no matter what.
+  terraform.datadog.grpc.tags:
+    schema:
+      type: array
+    description: Filter metrics used to create monitors and alerts in Datadog for gRPC related events.
+  terraform.datadog.grpc.evaluationWindow:
+    schema:
+      type: string
+    description: The window of time to evaluate metrics related to gRPC events for each monitor and alert.
+  terraform.datadog.grpc.lowTrafficCountThreshold:
+    schema:
+      type: integer
+    description: Overrides the low count threshold in the "grpc_latency_high" & "grpc_success_rate_low" terraform modules in monitoring/datadog.tf.
+  terraform.datadog.grpc.latency.percentiles.lowTraffic:
+    schema:
+      type: integer
+    description: Overrides the low traffic percentile in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.grpc.latency.percentiles.highTraffic:
+    schema:
+      type: integer
+    description: Overrides the high traffic percentile in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.grpc.latency.thresholds.lowTraffic:
+    schema:
+      type: integer
+    description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.grpc.latency.thresholds.highTraffic:
+    schema:
+      type: integer
+    description: Overrides the high traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.grpc.qos.thresholds.lowTraffic:
+    schema:
+      type: integer
+    description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.grpc.qos.thresholds.highTraffic:
+    schema:
+      type: integer
+    description: Overrides the high traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.evaluationWindow:
+    schema:
+      type: string
+    description: The window of time to evaluate metrics related to HTTP events for each monitor and alert.
+  terraform.datadog.http.percentiles.lowTraffic:
+    schema:
+      type: integer
+    description: Overrides the low traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.percentiles.highTraffic:
+    schema:
+      type: integer
+    description: Overrides the high traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.thresholds.lowCount:
+    schema:
+      type: integer
+    description: Overrides the low count threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.thresholds.lowTraffic:
+    schema:
+      type: integer
+    description: Overrides the low traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.thresholds.highTraffic:
+    schema:
+      type:  integer
+    description: Overrides the high traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
+  terraform.datadog.pods.thresholds.availableLowCount:
+    schema:
+      type: integer
+    description: Overrides the min available replica count in the "available_pods_low" alert in terraform module in monitoring/datadog.tf.
+  deployTo.serviceDomain:
+    description: The service domain that the service is needs deployed to.
+    schema:
+      type: string
+      enum:
+        - bento
+        - shared-service
+  deployTo.environments:
+    description: A list of environments that the service is deployed to.
+    schema:
+      type: array
+      items:
+        type: string
+        enum:
+          - ops
+          - staging
+          - production
 ###EndBlock(keys)
