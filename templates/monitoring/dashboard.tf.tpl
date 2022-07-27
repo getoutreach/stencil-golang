@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 # This file is managed by {{  .Runtime.Generator }}.  Changes outside of `Block`s will be
 # clobbered next time it is run.
 

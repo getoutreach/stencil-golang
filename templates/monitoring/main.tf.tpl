@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 terraform {
   backend "s3" {
     bucket               = "outreach-terraform"
