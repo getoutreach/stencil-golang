@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 # Fill these in with DataDog users/integrations to notify
 ///Block(tfNotificationPriorities)
 {{- if file.Block "tfNotificationPriorities" }}

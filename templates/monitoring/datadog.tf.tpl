@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 variable P1_notify {
   type = list(string)
   default = []

@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 terraform {
   # This is a top-level project, so we pin to specific versions.  All child
   # modules should use versions ">=" version specifiers for maximum flexibility.
