@@ -123,7 +123,7 @@ arguments:
     description: Overrides the low traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.thresholds.highTraffic:
     schema:
-      type:  integer
+      type: integer
     description: Overrides the high traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.pods.thresholds.availableLowCount:
     schema:
