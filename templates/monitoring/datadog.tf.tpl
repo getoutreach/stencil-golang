@@ -210,7 +210,7 @@ resource "datadog_service_level_objective" "http_p99_latency" {
   groups = [
     {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployTo.environments") (stencil.Arg "deployTo.serviceDomain")}}
     {{- range $b := $bentos }}
-    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b }}",
+    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
     {{- end }}
   ]
   thresholds {
