@@ -310,8 +310,15 @@ profiles:
       - op: add
         path: hooks
         value:
-          name: reset-dev
+          name: reset-dev-interrupt
           events: ["devCommand:interrupt"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev-error
+          events: ["error:sync:app"]
           command: |-
             "${DEVENV_DEVSPACE_BIN}" reset pods -s
       - op: add
@@ -396,6 +403,26 @@ profiles:
     patches:
       - op: remove
         path: dev.ports
+
+  - name: e2e
+    activation:
+      - env:
+          E2E: "true"
+    patches:
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: replace
+          path: spec.serviceAccountName
+          value: "{{ .Config.Name }}-e2e-client-svc"
+      - op: add
+        path: dev.replacePods.name=app.patches
+        value:
+          op: add
+          path: spec.containers[0].env
+          value:
+            name: E2E
+            value: "true"
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
