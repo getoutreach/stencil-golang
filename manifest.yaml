@@ -4,28 +4,58 @@ modules:
   - name: github.com/getoutreach/stencil-discovery
 arguments:
   service:
-    type: bool
+    schema:
+      type: boolean
     description: Whether or not this application is a runnable service. This flag provides the service activity interface and everything necessary for releasing and deploying a service.
   serviceActivities:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
+        enum:
+          - http
+          - grpc
+          - temporal
+          - kafka
     description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, and `kafka`.
   oss:
-    type: bool
+    schema:
+      type: boolean
     description: Deprecated, denotes this is an open source repository.
     deprecated: true
   commands:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
     description: List of CLI commands to generate for this repository
   grpcClients:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
+        enum:
+          - node
+          - ruby
     description: List of grpc clients to generate for this gRPC service. Type must include gRPC
   reportingTeam:
-    type: string
+    schema:
+      type: string
+    description: ID of team that that manages the repository
   kubernetes.groups:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
     description: List of Kubernetes groups to generate
   lintroller:
-    type: string
+    schema:
+      type: string
+      enum:
+        - platinum
+        - gold
+        - silver
+        - bronze
     description: lintroller level to apply to this repository
     default: platinum
   metrics:
@@ -46,28 +76,45 @@ arguments:
       type: string
     description: Slack channel to send deployment messages into.
   vaultSecrets:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
     description: List of secrets to consume from Vault, if Vault is enabled in the box config
   mixins:
-    type: list
-    description: "Deprecated: List of mixins to also import. Set in override.jsonnet instead"
+    schema:
+      type: array
+      items:
+        type: string
+    description: "List of mixins to also import. Set in override.jsonnet instead"
+    deprecated: true
   skipResourcesCheck:
-    type: bool
+    schema:
+      type: boolean
     description: Whether or not to check for resources related to `serviceActivities`.
     deprecated: true
   resources.kafka:
-    type: string
+    schema:
+      type: string
     description: Kafka version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
     deprecated: true
   dependencies.optional:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
     description: Dependencies your repository needs, but not always (e.g. E2E tests).
   dependencies.required:
-    type: list
+    schema:
+      type: array
+      items:
+        type: string
     description: Dependencies your repository requires to run successfully no matter what.
   terraform.datadog.grpc.tags:
     schema:
       type: array
+      items:
+        type: string
     description: Filter metrics used to create monitors and alerts in Datadog for gRPC related events.
   terraform.datadog.grpc.evaluationWindow:
     schema:
@@ -75,31 +122,31 @@ arguments:
     description: The window of time to evaluate metrics related to gRPC events for each monitor and alert.
   terraform.datadog.grpc.lowTrafficCountThreshold:
     schema:
-      type: integer
+      type: number
     description: Overrides the low count threshold in the "grpc_latency_high" & "grpc_success_rate_low" terraform modules in monitoring/datadog.tf.
   terraform.datadog.grpc.latency.percentiles.lowTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the low traffic percentile in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
   terraform.datadog.grpc.latency.percentiles.highTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the high traffic percentile in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
   terraform.datadog.grpc.latency.thresholds.lowTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
   terraform.datadog.grpc.latency.thresholds.highTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the high traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
   terraform.datadog.grpc.qos.thresholds.lowTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
   terraform.datadog.grpc.qos.thresholds.highTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the high traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.evaluationWindow:
     schema:
@@ -107,27 +154,27 @@ arguments:
     description: The window of time to evaluate metrics related to HTTP events for each monitor and alert.
   terraform.datadog.http.percentiles.lowTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the low traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.percentiles.highTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the high traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.thresholds.lowCount:
     schema:
-      type: integer
+      type: number
     description: Overrides the low count threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.thresholds.lowTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the low traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.thresholds.highTraffic:
     schema:
-      type: integer
+      type: number
     description: Overrides the high traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.pods.thresholds.availableLowCount:
     schema:
-      type: integer
+      type: number
     description: Overrides the min available replica count in the "available_pods_low" alert in terraform module in monitoring/datadog.tf.
   deployTo.serviceDomain:
     description: The service domain that the service is needs deployed to.
