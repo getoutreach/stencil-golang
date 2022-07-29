@@ -166,6 +166,10 @@ variable http_success_rate_evaluation_window {
   default = {{ stencil.Arg "terraform.datadog.http.evaluationWindow" | default "last_15m" | quote }}
 }
 
+locals {
+	http_request_seconds = local.prefix ? "{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds" : "http_request_seconds" 
+}
+
 module "http_success_rate_low" {
   source = "git@github.com:getoutreach/monitoring-terraform.git//modules/alerts/datadog/low-traffic-composite-monitor"
   name = "{{ .Config.Name | title }} HTTP Success Rate Low (P${var.http_success_rate_high_traffic_percentile}H/P${var.http_success_rate_low_traffic_percentile}L)"
@@ -179,9 +183,9 @@ module "http_success_rate_low" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(${var.http_success_rate_evaluation_window}):count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{!status:5xx,!env:development} by {kube_namespace}.as_count() < ${var.http_success_rate_low_count_threshold}"
-  low_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * ( count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{!status:5xx,!env:development} by {kube_namespace}.as_count() / count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_low_traffic_percentile}"
-  high_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * ( count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{!status:5xx,!env:development} by {kube_namespace}.as_count() / count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_high_traffic_percentile}"
+  low_count_query = "sum(${var.http_success_rate_evaluation_window}):count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_success_rate_low_count_threshold}"
+  low_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_low_traffic_percentile}"
+  high_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.http_success_rate_high_traffic_percentile}"
 }
 
 module "http_latency_high" {
@@ -196,9 +200,9 @@ module "http_latency_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(last_15m):count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{*, !env:development} by {kube_namespace}.as_count() < 1000"
-  low_traffic_query = "avg(last_15m):p90:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{*, !env:development} by {kube_namespace} > 2"
-  high_traffic_query = "avg(last_15m):p99:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{*, !env:development} by {kube_namespace} > 2"
+  low_count_query = "sum(last_15m):count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < 1000"
+  low_traffic_query = "avg(last_15m):p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > 2"
+  high_traffic_query = "avg(last_15m):p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > 2"
 }
 
 resource "datadog_service_level_objective" "http_p99_latency" {
@@ -226,8 +230,8 @@ resource "datadog_service_level_objective" "http_success" {
   description = "Comparing 5xx responses to all requests as a ratio, broken out by bento."
   tags = local.ddTags
   query {
-    numerator   = "count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{!status:5xx, !env:development} by {kube_namespace}.as_count()"
-    denominator = "count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds{*, !env:development} by {kube_namespace}.as_count()"
+    numerator   = "count:${local.http_request_seconds}{!status:5xx, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()"
+    denominator = "count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()"
   }
   thresholds {
     timeframe = "7d"
@@ -268,6 +272,10 @@ variable grpc_qos_high_traffic_threshold {
   default = {{ stencil.Arg "terraform.datadog.grpc.qos.thresholds.highTraffic" | default 99 }}
 }
 
+locals {
+	grpc_request_source = local.prefix ? "{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}" : "${var.grpc_request_source}" 
+}
+
 module "grpc_success_rate_low" {
   source = "git@github.com:getoutreach/monitoring-terraform.git//modules/alerts/datadog/low-traffic-composite-monitor"
   name = "{{ .Config.Name | title }} GRPC Success Rate Low"
@@ -281,9 +289,9 @@ module "grpc_success_rate_low" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(${var.grpc_evaluation_window}):count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold}"
-  low_traffic_query = "sum(${var.grpc_evaluation_window}):default_zero(100 * (count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)},statuscategory:categoryservererror} by {kube_namespace}.as_count() / count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace}.as_count())) >= ${var.grpc_qos_low_traffic_threshold}"
-  high_traffic_query = "sum(${var.grpc_evaluation_window}):100 * ( count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}, !statuscategory:categoryservererror} by {kube_namespace}.as_count() / count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace}.as_count() ) < ${var.grpc_qos_high_traffic_threshold}"
+  low_count_query = "sum(${var.grpc_evaluation_window}):count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold}"
+  low_traffic_query = "sum(${var.grpc_evaluation_window}):default_zero(100 * (count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }},statuscategory:categoryservererror} by {kube_namespace}.as_count() / count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count())) >= ${var.grpc_qos_low_traffic_threshold}"
+  high_traffic_query = "sum(${var.grpc_evaluation_window}):100 * ( count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count() / count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.grpc_qos_high_traffic_threshold}"
 }
 
 variable grpc_latency_low_traffic_percentile {
@@ -318,9 +326,9 @@ module "grpc_latency_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(${var.grpc_evaluation_window}):count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold}"
-  low_traffic_query = "avg(${var.grpc_evaluation_window}):p${var.grpc_latency_low_traffic_percentile}:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace} > ${var.grpc_latency_low_traffic_threshold}"
-  high_traffic_query = "avg(${var.grpc_evaluation_window}):p${var.grpc_latency_high_traffic_percentile}:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace} > ${var.grpc_latency_high_traffic_threshold}"
+  low_count_query = "sum(${var.grpc_evaluation_window}):count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold}"
+  low_traffic_query = "avg(${var.grpc_evaluation_window}):p${var.grpc_latency_low_traffic_percentile}:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.grpc_latency_low_traffic_threshold}"
+  high_traffic_query = "avg(${var.grpc_evaluation_window}):p${var.grpc_latency_high_traffic_percentile}:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.grpc_latency_high_traffic_threshold}"
 }
 
 resource "datadog_service_level_objective" "grpc_p99_latency" {
@@ -348,8 +356,8 @@ resource "datadog_service_level_objective" "grpc_success" {
   description = "Comparing (status:ok) responses to all requests as a ratio, broken out by bento."
   tags = local.ddTags
   query {
-    numerator   = "count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}, !statuscategory:categoryservererror} by {kube_namespace}.as_count()"
-    denominator = "count:{{ stencil.ApplyTemplate "goPackageSafeName" }}.${var.grpc_request_source}{${join(", ", var.grpc_tags)}} by {kube_namespace}.as_count()"
+    numerator   = "count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count()"
+    denominator = "count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()"
   }
   thresholds {
     timeframe = "7d"
