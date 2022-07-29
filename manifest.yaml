@@ -64,6 +64,7 @@ arguments:
       enum:
         - datadog
         - opentelemetry
+        - dual
     description: Metrics collector to use (supports opentelemetry and datadog)
     default: datadog
   tracing:

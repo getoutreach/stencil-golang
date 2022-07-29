@@ -87,6 +87,14 @@ module "deployment" {
   deployment = "{{ $deployment }}"
 }
 
+locals {
+  {{- if or (eq "dual" (stencil.Arg "metrics")) (eq "datadog" (stencil.Arg "metrics")) }}
+	prefix = true
+	{{- else }}
+	prefix = false
+  {{- end }}
+}
+
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 
 # NOTE: applies for most of the gRPC sections below.
@@ -116,9 +124,17 @@ module "deployment" {
 # - RPM, timeseries
 
 module "grpc_load" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/load"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "grpc_load_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/load"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
 
 # This section shows performance/latency of calls.
 #
@@ -147,9 +163,19 @@ variable Latency_yellow_line_ms {
 }
 
 module "grpc_performance" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/perf?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/perf"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "grpc_performance_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/perf"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
+
+
 
 # This section shows QoS and rate of successfully finished calls.
 #
@@ -175,43 +201,83 @@ variable Qos_yellow_line {
 }
 
 module "grpc_qos" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/qos?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/qos"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "grpc_qos_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/qos"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
 
 # This section shows calls activity per bento.
 # It also highlights anomalies in call patterns compared to the metrics
 # reported in the past.
 
 module "grpc_bento_activity" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/activity?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/activity"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "grpc_bento_activity_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/grpc/activity"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
 {{- end }}
 
 {{- if has "temporal" (stencil.Arg "serviceActivities") }}
 module "temporal_qos" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/qos?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/qos"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "temporal_qos_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/qos"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
 
 module "temporal_activity" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/activity?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/activity"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "temporal_activity_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/activity"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
 
 module "temporal_latency" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/latency?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/latency"
   deployment = "{{ $deployment }}"
 }
 
 module "temporal_workflow" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/workflow?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/workflow"
   deployment = "{{ $deployment }}"
+	prefix     = local.prefix
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "temporal_workflow_otel" {
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/workflow"
+  deployment = "{{ $deployment }}"
+	prefix     = false
+}
+{{- end }}
 
 module "temporal_resources" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/resources?ref=v1.1.0"
+  source     = "../../bootstrap-terraform/monitoring/datadog/section/temporal/resources"
   deployment = "{{ $deployment }}"
 }
 {{- end }}
@@ -259,6 +325,28 @@ module "dashboard" {
 ///EndBlock(sectionReferences)
   ]
 }
+{{- if eq "dual" (stencil.Arg "metrics") }}
+module "dashboard_otel" {
+  source = "git@github.com:getoutreach/monitoring-terraform.git//modules/dd-dashboards"
+  name = "Terraform: {{ .Config.Name | title }} OTEL"
+  description = "Managed by terraform in github.com/getoutreach/{{ .Config.Name }}"
+
+  parameters = local.dashboard_parameters
+  sections = [
+    local.header_section,
+{{- if has "grpc" (stencil.Arg "serviceActivities") }}
+    module.grpc_load_otel.rendered,
+    module.grpc_performance_otel.rendered,
+    module.grpc_qos_otel.rendered,
+    module.grpc_bento_activity_otel.rendered,
+{{- end }}
+    module.deployment.rendered,
+///Block(sectionReferences)
+{{ file.Block "sectionReferences" }}
+///EndBlock(sectionReferences)
+  ]
+}
+{{- end }}
 
 {{- if has "temporal" (stencil.Arg "serviceActivities") }}
 module "temporaldashboard" {
@@ -279,4 +367,24 @@ module "temporaldashboard" {
   ]
 }
 {{- end }}
+{{- if eq "dual" (stencil.Arg "metrics") }}
+{{- if has "temporal" (stencil.Arg "serviceActivities") }}
+module "temporaldashboard_otel" {
+  source      = "git@github.com:getoutreach/monitoring-terraform.git//modules/dd-dashboards"
+  name        = "Terraform: {{ .Config.Name | title }} Temporal OTEL"
+  description = "Managed by terraform in github.com/getoutreach/{{ .Config.Name }}"
 
+  parameters = local.dashboard_parameters
+  sections = [
+    module.temporal_qos_otel.rendered,
+    module.temporal_activity_otel.rendered,
+    module.temporal_latency.rendered,
+    module.temporal_workflow_otel.rendered,
+    module.temporal_resources.rendered,
+///Block(sectionTemporalReferences)
+{{ file.Block "sectionTemporalReferences" }}
+///EndBlock(sectionTemporalReferences)
+  ]
+}
+{{- end }}
+{{- end }}
