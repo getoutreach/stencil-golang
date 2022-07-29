@@ -46,7 +46,7 @@ arguments:
     schema:
       type: array
       items:
-        type: string
+        type: object
     description: List of Kubernetes groups to generate
   lintroller:
     schema:
