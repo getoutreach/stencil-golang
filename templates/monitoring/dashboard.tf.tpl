@@ -341,9 +341,9 @@ module "dashboard_otel" {
     module.grpc_bento_activity_otel.rendered,
 {{- end }}
     module.deployment.rendered,
-///Block(sectionReferences)
-{{ file.Block "sectionReferences" }}
-///EndBlock(sectionReferences)
+///Block(sectionReferencesOtel)
+{{ file.Block "sectionReferencesOtel" }}
+///EndBlock(sectionReferencesOtel)
   ]
 }
 {{- end }}
@@ -381,9 +381,9 @@ module "temporaldashboard_otel" {
     module.temporal_latency.rendered,
     module.temporal_workflow_otel.rendered,
     module.temporal_resources.rendered,
-///Block(sectionTemporalReferences)
-{{ file.Block "sectionTemporalReferences" }}
-///EndBlock(sectionTemporalReferences)
+///Block(sectionTemporalReferencesOtel)
+{{ file.Block "sectionTemporalReferencesOtel" }}
+///EndBlock(sectionTemporalReferencesOtel)
   ]
 }
 {{- end }}
