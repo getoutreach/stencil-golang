@@ -6,6 +6,35 @@ before:
   hooks:
     - make dep
 builds:
+{{- range stencil.GetModuleHook "goreleaser_builds" }}
+- main: {{ .main }}
+	id: &name {{ .id }}
+	binary: *name
+	{{- if gt (len .goos) 0 }}
+	goos:
+	{{- range .goos }}
+		- {{ . }}
+	{{- end }}
+	{{- end }}
+	{{- if gt (len .goarch) 0 }}
+	goarch:
+	{{- range .goarch }}
+		- {{ . }}
+	{{- end }}
+	{{- end }}
+	{{- if gt (len .ldflags) 0 }}
+	ldflags:
+	{{- range .ldflags }}
+		- {{ . }}
+	{{- end }}
+	{{- end }}
+	{{- if gt (len .env) 0 }}
+	env:
+	{{- range .env }}
+		- {{ . }}
+	{{- end }}
+	{{- end }}
+{{- end }}
 {{- range $cmdName := stencil.Arg "commands" }}
 - main: ./cmd/{{ $cmdName }}
   id: &name {{ $cmdName }}
