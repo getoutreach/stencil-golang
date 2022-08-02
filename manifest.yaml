@@ -177,21 +177,12 @@ arguments:
     schema:
       type: number
     description: Overrides the min available replica count in the "available_pods_low" alert in terraform module in monitoring/datadog.tf.
-  deployTo.serviceDomain:
+  deployment.serviceDomain:
     description: The service domain that the service is needs deployed to.
     schema:
       type: string
-      enum:
-        - bento
-        - shared-service
-  deployTo.environments:
+  deployment.environments:
     description: A list of environments that the service is deployed to.
     schema:
       type: array
-      items:
-        type: string
-        enum:
-          - ops
-          - staging
-          - production
 ###EndBlock(keys)
