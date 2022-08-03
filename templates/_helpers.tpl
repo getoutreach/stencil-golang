@@ -75,7 +75,7 @@
 
 # Returns the import path for this application.
 {{- define "appImportPath" }}
-{{- list "github.com" (.Runtime.Box.Org | default "no-org-configured") .Config.Name | join "/" }}
+{{- list "github.com" .Runtime.Box.Org .Config.Name | join "/" }}
 {{- end }}
 
 # Service names may have hyphens in them, but Golang structs and Protobuf

@@ -16,15 +16,5 @@ func TestRenderAPIGoSuccess(t *testing.T) {
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
 	// why this test does not verify correct handling of odd service names.
 	st := stenciltest.New(t, "api/api.go.tpl", requiredtmpls...)
-	st.Args(map[string]interface{}{
-		"appImportPath":           "github.com/getoutreach/testing/api",
-		"copyright":               "Copyright 1337 Outreach Corporation. All Rights Reserved.",
-		"serviceNameLanguageSafe": "ExampleService",
-	})
-	st.Run(false)
-}
-
-func TestRenderAPIProtoSuccess(t *testing.T) {
-	st := stenciltest.New(t, "api/api.proto.tpl", requiredtmpls...)
 	st.Run(false)
 }
