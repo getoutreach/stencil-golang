@@ -163,13 +163,13 @@ variable Latency_yellow_line_ms {
 }
 
 module "grpc_performance" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/perf?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = local.prefix
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
 module "grpc_performance_otel" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/perf?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = false
 }
@@ -201,13 +201,13 @@ variable Qos_yellow_line {
 }
 
 module "grpc_qos" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/qos?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = local.prefix
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
 module "grpc_qos_otel" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/qos?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = false
 }
@@ -218,13 +218,13 @@ module "grpc_qos_otel" {
 # reported in the past.
 
 module "grpc_bento_activity" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/activity?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = local.prefix
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
 module "grpc_bento_activity_otel" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/activity?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = false
 }
@@ -233,51 +233,51 @@ module "grpc_bento_activity_otel" {
 
 {{- if has "temporal" (stencil.Arg "serviceActivities") }}
 module "temporal_qos" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/qos?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = local.prefix
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
 module "temporal_qos_otel" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/qos?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = false
 }
 {{- end }}
 
 module "temporal_activity" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/activity?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = local.prefix
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
 module "temporal_activity_otel" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/activity?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = false
 }
 {{- end }}
 
 module "temporal_latency" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/latency?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 }
 
 module "temporal_workflow" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/workflow?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = local.prefix
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
 module "temporal_workflow_otel" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/workflow?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 	prefix     = false
 }
 {{- end }}
 
 module "temporal_resources" {
-  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/grpc/load?ref=v1.3.0"
+  source     = "git@github.com:getoutreach/bootstrap-terraform.git//monitoring/datadog/section/temporal/resources?ref=v1.3.0"
   deployment = "{{ $deployment }}"
 }
 {{- end }}
