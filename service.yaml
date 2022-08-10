@@ -9,3 +9,4 @@ arguments:
   releaseOptions:
     enablePrereleases: true
     allowMajorVersions: true
+    prereleasesBranch: rc

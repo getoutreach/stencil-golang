@@ -1,12 +1,12 @@
-version: v1.22.0
-generated: 2022-08-03T23:20:51.56765Z
+version: v1.22.1
+generated: 2022-08-10T15:13:38.625505Z
 modules:
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
-      version: v0.5.0
+      version: v0.6.0-rc.4
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
-      version: v1.2.1
+      version: v1.2.2-rc.1
     - name: github.com/getoutreach/stencil-template-base
       url: https://github.com/getoutreach/stencil-template-base
       version: v0.3.3
@@ -52,13 +52,13 @@ files:
       module: github.com/getoutreach/stencil-base
     - name: _helpers
       template: _helpers.tpl
-      module: github.com/getoutreach/stencil-circleci
-    - name: _helpers
-      template: _helpers.tpl
       module: github.com/getoutreach/stencil-template-base
     - name: _helpers
       template: _helpers.tpl
       module: github.com/getoutreach/stencil-base
+    - name: _helpers
+      template: _helpers.tpl
+      module: github.com/getoutreach/stencil-circleci
     - name: bootstrap.lock
       template: bootstrap.lock.tpl
       module: github.com/getoutreach/stencil-template-base
