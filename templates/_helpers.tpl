@@ -14,7 +14,7 @@
 # This will be better when we rollout the versions functionality
 # in stencil later.
 {{- define "goVersion" }}
-{{- "1.17.9" }}
+{{ stencil.Arg "versions.go" }}
 {{- end }}
 
 {{- define "toolVersions" }}
