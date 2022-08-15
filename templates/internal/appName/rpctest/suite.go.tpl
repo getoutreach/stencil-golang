@@ -20,11 +20,11 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-// Run{{- .underscoreTitleAppName -}}Tests runs a set of tests on the generic service
+// Run{{- stencil.ApplyTemplate "goPackageSafeName" -}}Tests runs a set of tests on the generic service
 //
 // Specific implementations are expected to be server implementations
 // and rpc-based client implementations.
-func Run{{- .underscoreTitleAppName -}}Tests(t *testing.T, s api.Service) {
+func Run{{- stencil.ApplyTemplate "goPackageSafeName" -}}Tests(t *testing.T, s api.Service) {
 	shuffler.Run(t, suite{s})
 }
 
