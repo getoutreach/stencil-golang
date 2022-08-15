@@ -14,12 +14,12 @@
 # This will be better when we rollout the versions functionality
 # in stencil later.
 {{- define "goVersion" }}
-{{- "1.17.9" }}
+{{- stencil.Arg "versions.go" -}}
 {{- end }}
 
 {{- define "toolVersions" }}
 - name: golang
-  version: {{ stencil.ApplyTemplate "goVersion" }}
+  version: {{ stencil.ApplyTemplate "goVersion" | trim | squote }}
 # Not used for gRPC clients
 - name: nodejs
   version: 16.13.0

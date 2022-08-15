@@ -185,4 +185,11 @@ arguments:
     description: A list of environments that the service is deployed to.
     schema:
       type: array
+  versions.go:
+    description: Go version to use
+    default: 1.19
+    schema:
+      type:
+        - string
+        - number
 ###EndBlock(keys)
