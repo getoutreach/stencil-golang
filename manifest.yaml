@@ -70,7 +70,11 @@ arguments:
   tracing:
     schema:
       type: string
-    descriptions: Tracing backend to send traces to (support opentelemetry and honeycomb)
+      enum:
+        - honeycomb
+        - opentelemetry
+        - lightstep
+    descriptions: Tracing backend to send traces to
     default: honeycomb
   slack:
     schema:
