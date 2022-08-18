@@ -107,7 +107,7 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.42.0
+  version: v1.49.1
 {{- if not (stencil.Arg "oss") }}
 - name: github.com/getoutreach/mint
   version: v1.51.0
@@ -118,9 +118,9 @@ go:
   version: v1.95.2
 {{- else }}
 - name: github.com/getoutreach/httpx
-  version: v1.14.0
+  version: v1.16.0
 - name: github.com/getoutreach/services
-  version: v1.96.0
+  version: v1.101.0
 {{- end }}
 - name: github.com/getoutreach/datastores/v2
   version: v2.17.0

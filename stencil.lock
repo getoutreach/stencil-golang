@@ -1,12 +1,12 @@
 version: v1.24.0
-generated: 2022-08-15T22:05:36.704326Z
+generated: 2022-08-18T14:51:22.106889Z
 modules:
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
       version: v0.6.0-rc.4
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
-      version: v1.2.1
+      version: v1.3.0-rc.1
     - name: github.com/getoutreach/stencil-template-base
       url: https://github.com/getoutreach/stencil-template-base
       version: v0.4.0
