@@ -4,7 +4,7 @@ module github.com/getoutreach/stencil-golang
 
 go 1.17
 
-require github.com/getoutreach/stencil v1.24.0
+require github.com/getoutreach/stencil v1.25.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.5 // indirect

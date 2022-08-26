@@ -1,12 +1,11 @@
-version: v1.24.0
-generated: 2022-08-18T14:51:22.106889Z
+version: v1.25.1
 modules:
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
-      version: v0.6.0-rc.4
+      version: v0.5.0
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
-      version: v1.3.0-rc.1
+      version: v1.3.0
     - name: github.com/getoutreach/stencil-template-base
       url: https://github.com/getoutreach/stencil-template-base
       version: v0.4.0
@@ -26,9 +25,6 @@ files:
     - name: .gitignore
       template: .gitignore.tpl
       module: github.com/getoutreach/stencil-base
-    - name: .goreleaser.yml
-      template: .goreleaser.yml.tpl
-      module: github.com/getoutreach/stencil-template-base
     - name: .releaserc.yaml
       template: .releaserc.yaml.tpl
       module: github.com/getoutreach/stencil-base
@@ -37,9 +33,6 @@ files:
       module: github.com/getoutreach/stencil-base
     - name: CONTRIBUTING.md
       template: CONTRIBUTING.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: LICENSE
-      template: LICENSE.tpl
       module: github.com/getoutreach/stencil-base
     - name: LICENSE.txt
       template: LICENSE.txt.tpl
@@ -50,63 +43,9 @@ files:
     - name: README.md
       template: README.md.tpl
       module: github.com/getoutreach/stencil-base
-    - name: _helpers
-      template: _helpers.tpl
-      module: github.com/getoutreach/stencil-template-base
-    - name: _helpers
-      template: _helpers.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: _helpers
-      template: _helpers.tpl
-      module: github.com/getoutreach/stencil-circleci
     - name: bootstrap.lock
       template: bootstrap.lock.tpl
       module: github.com/getoutreach/stencil-template-base
-    - name: documentation/README.md
-      template: documentation/README.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/SLOs.md
-      template: documentation/SLOs.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/deployments.md
-      template: documentation/deployments.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/disaster-recovery.md
-      template: documentation/disaster-recovery.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/rollout-plan.md
-      template: documentation/rollout-plan.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbook.md
-      template: documentation/runbook.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/available-pods-low.md
-      template: documentation/runbooks/available-pods-low.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/grpc-latency-high.md
-      template: documentation/runbooks/grpc-latency-high.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/grpc-success-rate-low.md
-      template: documentation/runbooks/grpc-success-rate-low.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/http-latency-high.md
-      template: documentation/runbooks/http-latency-high.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/http-success-rate-low.md
-      template: documentation/runbooks/http-success-rate-low.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/pod-cpu.md
-      template: documentation/runbooks/pod-cpu.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/pod-memory.md
-      template: documentation/runbooks/pod-memory.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/pod-restarts.md
-      template: documentation/runbooks/pod-restarts.md.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: documentation/runbooks/service-panics.md
-      template: documentation/runbooks/service-panics.md.tpl
-      module: github.com/getoutreach/stencil-base
     - name: go.mod
       template: go.mod.tpl
       module: github.com/getoutreach/stencil-template-base
@@ -115,9 +54,6 @@ files:
       module: github.com/getoutreach/stencil-template-base
     - name: package.json
       template: package.json.tpl
-      module: github.com/getoutreach/stencil-base
-    - name: scripts/bootstrap-lib.sh
-      template: scripts/bootstrap-lib.sh.tpl
       module: github.com/getoutreach/stencil-base
     - name: scripts/devbase.sh
       template: scripts/devbase.sh.tpl
@@ -128,6 +64,3 @@ files:
     - name: scripts/shell-wrapper.sh
       template: scripts/shell-wrapper.sh.tpl
       module: github.com/getoutreach/stencil-base
-    - name: templates/main_test.go
-      template: templates/main_test.go.tpl
-      module: github.com/getoutreach/stencil-template-base
