@@ -72,7 +72,7 @@ resource "datadog_monitor" "pod_restarts_high" {
 resource "datadog_monitor" "pod_cpu_high" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Pod CPU > ${var.cpu_high_threshold}% of request last ${var.cpu_high_window}m"
-  query = "avg(last_${var.cpu_high_window}m):100 * (default_zero(avg:kubernetes.cpu.usage.total{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}) / 1000000000) / avg:kubernetes.cpu.requests{app:{{ .Config.Name }},!env:development} by {kube_namespace} >= ${var.cpu_high_threshold}"
+  query = "avg(last_${var.cpu_high_window}m):100 * (default_zero(avg:kubernetes.cpu.usage.total{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}) / 1000000000) / avg:kubernetes.cpu.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace} >= ${var.cpu_high_threshold}"
   tags = local.ddTags
   message = <<EOF
   One of the service's pods has been using over ${var.cpu_high_threshold}% of its requested CPU on average for the last ${var.cpu_high_window} minutes.  This almost certainly means that the service needs more CPU to function properly and is being throttled in its current form.
