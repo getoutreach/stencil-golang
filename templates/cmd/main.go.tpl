@@ -1,4 +1,5 @@
 {{ $_ := file.SetPath (printf "cmd/%s/%s" .Config.Name (base file.Path)) }}
+{{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
 // {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is the entrypoint for {{ .Config.Name }}.
@@ -33,18 +34,18 @@ import (
 )
 
 // Place any customized code for your service in this block
+//
 ///Block(customized)
 {{ file.Block "customized" }}
 ///EndBlock(customized)
 
-{{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
+// main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	env.ApplyOverrides()
 	app.SetName("{{ .Config.Name }}")
-	defer setMaxProcs(ctx)()
 
 	cfg, err := {{ $pkgName }}.LoadConfig(ctx)
 	if err != nil {
@@ -64,7 +65,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 	// Code inserted by modules
 		{{- range $preInitializationBlock  }}
-		{{ . }}
+	{{ . }}
 		{{- end }}
 	// End code inserted by modules
 	{{- end }}
@@ -78,7 +79,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 	// Code inserted by modules
 		{{- range $postInitializationBlock  }}
-		{{ . }}
+	{{ . }}
 		{{- end }}
 	// End code inserted by modules
 	{{- end }}
@@ -86,18 +87,18 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	acts := []async.Runner{
 		shutdown.New(),
 		gomaxprocs.New(),
-		{{ printf "&%s" $pkgName }}.NewHTTPService(),
+		{{ $pkgName }}.NewHTTPService(cfg),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
-		{{ printf "&%s" $pkgName }}.NewPublicHTTPService(),
+		{{ $pkgName }}.NewPublicHTTPService(cfg),
 		{{- end }}
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
-		{{ printf "&%s" $pkgName }}.NewGRPCService(),
+		{{ $pkgName }}.NewGRPCService(cfg),
 		{{- end }}
 		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewKafkaConsumerService(),
+		{{ $pkgName }}.NewKafkaConsumerService(cfg),
 		{{- end }}
 		{{- if stencil.Arg "kubernetes.groups" }}
-		{{ $pkgName }}.NewKubernetesService(),
+		{{ $pkgName }}.NewKubernetesService(cfg),
 		{{- end }}
 		{{- $svcActs := stencil.GetModuleHook "serviceActivities" }}
 		{{- if $svcActs }}
@@ -110,12 +111,14 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		{{- end }}
 
 		// Place any additional ServiceActivities that your service has built here to have them handled automatically
+		//
 		///Block(services)
 {{ file.Block "services" }}
 		///EndBlock(services)
 	}
 
 	// Place any code for your service to run during startup in this block
+	//
 	///Block(startup)
 {{ file.Block "startup" }}
 	///EndBlock(startup)

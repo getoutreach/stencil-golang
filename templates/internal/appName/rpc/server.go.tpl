@@ -23,16 +23,17 @@ type Server struct{
 	// Place any handler state for your service here.
 }
 
-// Define a `NewServer` function for your service here.
+// NewServer creates a new server instance.
 func NewServer(ctx context.Context, cfg *Config) (*Server, error) {
 	return &Server{}, nil
 }
 
-// Place any GRPC handler functions for your service here.
+// Ping is a simple ping endpoint that returns "pong" + message when called
 func (s *Server) Ping(ctx context.Context, message string) (string, error) {
 	return "pong:" + message, nil
 }
 
+// Pong is a unary RPC that returns a pong message.
 func (s *Server) Pong(ctx context.Context, message string) (string, error) {
 	return "ping:" + message, nil
 }
