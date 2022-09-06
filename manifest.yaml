@@ -75,7 +75,7 @@ arguments:
         - opentelemetry
         - lightstep
     descriptions: Tracing backend to send traces to
-    default: honeycomb
+    default: opentelemetry
   slack:
     schema:
       type: string
