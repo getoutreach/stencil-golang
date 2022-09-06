@@ -1,5 +1,5 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
-{{- $_ := file.SetPath (printf "deployments/%s/mixins/%s.jsonnet" .Config.Name (base file.Path)) }}
+{{- $_ := file.SetPath (printf "deployments/%s/mixins/%s" .Config.Name (base file.Path)) }}
 local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
 
