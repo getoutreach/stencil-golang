@@ -1,15 +1,13 @@
-{{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
-{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
-// {{ stencil.ApplyTemplate "copyright" }}
+(*codegen.File)(// Copyright 2022 Outreach Corporation. All Rights Reserved.
 //
 // Managed: true
 
 local ok = import 'kubernetes/outreach.libsonnet';
-local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
+local app = (import 'kubernetes/app.libsonnet').info('testing');
 
 // Put custom global variables here
 ///Block(globalVars)
-{{ file.Block "globalVars" }}
+
 ///EndBlock(globalVars)
 
 // Configuration override for various environments go here.
@@ -25,7 +23,7 @@ local configurationOverride = {
 				data_+:: {
 					ListenHost: '127.0.0.1',
 					///Block(localDevelopmentConfig)
-{{ file.Block "localDevelopmentConfig" }}
+
 					///EndBlock(localDevelopmentConfig)
 				},
 			},
@@ -34,39 +32,30 @@ local configurationOverride = {
 			configmap+: {
 				data_+:: {
 					///Block(developmentConfig)
-{{ file.Block "developmentConfig" }}
+
 					///EndBlock(developmentConfig)
 				},
 			},
 		},
 		///Block(environmentConfig)
-{{ file.Block "environmentConfig" }}
+
 		///EndBlock(environmentConfig)
 	},
 
 	// Bento level configuration override goes here.
 	bento: {
 		///Block(bentoConfig)
-{{ file.Block "bentoConfig" }}
+
 		///EndBlock(bentoConfig)
 	},
 
 	// Default configuration for all environments and bentos.
 	default: {
 		///Block(defaultConfig)
-		{{- if file.Block "defaultConfig" }}
-{{ file.Block "defaultConfig" }}
-		{{- else }}
 		configmap+: {
 			data_+:: {
-			{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-				// Change these as needed
-				KafkaConsumerGroupID: "{{ .Config.Name | lower | snakecase }}",
-				KafkaConsumerTopic: "{{ .Config.Name | lower | snakecase }}",
-			{{- end }}
 			},
 		},
-		{{- end }}
 		///EndBlock(defaultConfig)
 	},
 };
@@ -78,3 +67,4 @@ local bento_config = if std.objectHas(configurationOverride.bento, app.bento) th
 // configuration is the computed value of this service's
 // configuration block.
 (configurationOverride.default + env_config + bento_config)
+)
