@@ -1,6 +1,6 @@
 {
   // Please consider contributing back all added
-  // settings to bootstrap!
+  // settings to stencil!
   ///Block(settings)
 {{ file.Block "settings" }}
   ///EndBlock(settings)

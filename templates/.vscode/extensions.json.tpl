@@ -16,7 +16,7 @@
     {{- end }}
 
     // Please consider contributing back all recommended
-    // extensions to bootstrap!
+    // extensions to stencil!
     ///Block(extensions)
 {{ file.Block "extensions" }}
     ///EndBlock(extensions)
