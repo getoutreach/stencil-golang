@@ -44,7 +44,7 @@ func (s *HTTPService) Run(ctx context.Context) error {
 	///Block(privatehandler)
 {{ file.Block "privatehandler" | default "s.App = http.NotFoundHandler()" }}
 	///EndBlock(privatehandler)
-	return s.Service.Run(ctx, fmt.Sprintf("%s:%d", config.ListenHost, config.HTTPPort))
+	return s.Service.Run(ctx, fmt.Sprintf("%s:%d", s.cfg.ListenHost, s.cfg.HTTPPort))
 }
 
 {{- if has "http" (stencil.Arg "serviceActivities") }}
