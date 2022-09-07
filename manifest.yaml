@@ -93,21 +93,6 @@ arguments:
         type: string
     description: "List of mixins to also import. Set in override.jsonnet instead"
     deprecated: true
-  skipResourcesCheck:
-    schema:
-      type: boolean
-    description: Whether or not to check for resources related to `serviceActivities`.
-    deprecated: true
-  resources.postgres:
-    schema:
-      type: string
-    description: Postgres version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
-    deprecated: true
-  resources.kafka:
-    schema:
-      type: string
-    description: Kafka version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
-    deprecated: true
   dependencies.optional:
     schema:
       type: array

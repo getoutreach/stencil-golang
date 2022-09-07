@@ -16,7 +16,7 @@ local isDev = (app.environment == 'development' || app.environment == 'local_dev
 {{ file.Block "globalVars" }}
 ///EndBlock(globalVars)
 
-// Objects stores kubernetes objects (or resources) that should be created in
+// Objects contains kubernetes objects (or resources) that should be created in
 // all environments.
 local objects = {
 	///Block(override)
@@ -32,9 +32,9 @@ local dev_objects = {
 	///EndBlock(devoverride)
 };
 
+// overrideMixins contains a list of files to include as mixins into
+// the override file.
 local overrideMixins = [
-	// DEPRECATED: Mixins are automatically included when they exist in the mixins/ directory.
-	// if there are more custom jsonnet files, mix them in here
 	///Block(overrideMixins)
 {{ file.Block "overrideMixins" }}
 	///EndBlock(overrideMixins)
