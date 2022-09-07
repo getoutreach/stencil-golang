@@ -2,6 +2,7 @@
 {{- file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "api/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.Static }}
 {{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
 // {{ stencil.ApplyTemplate "copyright" }}
 
