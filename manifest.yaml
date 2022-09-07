@@ -181,14 +181,14 @@ arguments:
       type: array
   versions.go:
     description: Go version to use
-    default: 1.19
+    default: "1.19"
     schema:
       type:
         - string
         - number
   versions.alpine:
     description: Alpine version to use
-    default: 3.16
+    default: "3.16"
     schema:
       type:
         - string

@@ -52,6 +52,7 @@ COPY --from=builder /src/bin/{{ .Config.Name }} /usr/local/bin/{{ .Config.Name }
 # Begin afterBuild module hook entries
 {{- range $afterBuildHook }}
 {{ . }}
+
 {{- end }}
 # End afterBuild module hook entries
 
