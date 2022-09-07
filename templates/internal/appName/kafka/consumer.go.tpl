@@ -42,6 +42,7 @@ type KafkaMessageHandler func(context.Context, kafka.Message, ...log.Marshaler) 
 
 // KafkaConsumerService provides a polling abstraction for kafka messages
 type KafkaConsumerService struct {
+	cfg *Config
 	reader interface{
 		io.Closer
 		FetchMessage(context.Context) (kafka.Message, error)
@@ -61,8 +62,8 @@ type KafkaConsumerService struct {
 }
 
 // NewKafkaConsumerService initializes and returns a KafkaConsumerService instance
-func NewKafkaConsumerService() *KafkaConsumerService {
-	svc := KafkaConsumerService{}
+func NewKafkaConsumerService(cfg *Config) *KafkaConsumerService {
+	svc := KafkaConsumerService{cfg: cfg}
 
 	// initialize your consumer here
 	///Block(initialization)
@@ -80,10 +81,10 @@ func (s *KafkaConsumerService) MarshalLog(addfield func(key string, value interf
 
 // Run helps to implements the ServiceActivity interface for KafkaConsumerService and
 // ultimately serves as entrypoint for the the KafkaConsumerService service activity.
-func (s *KafkaConsumerService) Run(ctx context.Context, cfg *Config) error {
-	s.hosts = cfg.KafkaHosts
-	s.topic = cfg.KafkaConsumerTopic
-	s.groupID = cfg.KafkaConsumerGroupID
+func (s *KafkaConsumerService) Run(ctx context.Context) error {
+	s.hosts = s.cfg.KafkaHosts
+	s.topic = s.cfg.KafkaConsumerTopic
+	s.groupID = s.cfg.KafkaConsumerGroupID
 
 	s.reader = kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  s.hosts,
