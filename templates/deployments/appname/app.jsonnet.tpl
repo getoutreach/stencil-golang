@@ -69,7 +69,7 @@ local all = {
 		},
 		spec+: { maxUnavailable: 1 },
 	},
-	// Default configuration for the service, managed by bootstrap.
+	// Default configuration for the service, managed by stencil.
 	// all other configuration should be done in the
 	// {{ $appName }}.config.jsonnet file
 	configmap: ok.ConfigMap('config', app.namespace) {

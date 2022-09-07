@@ -45,3 +45,13 @@ func TestRenderDeploymentDockerfile(t *testing.T) {
 	})
 	st.Run(false)
 }
+
+func TestRenderDependabot(t *testing.T) {
+	st := stenciltest.New(t, ".github/dependabot.yml.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"service":           true,
+		"serviceActivities": []interface{}{"grpc"},
+		"grpcClients":       []interface{}{"node"},
+	})
+	st.Run(false)
+}
