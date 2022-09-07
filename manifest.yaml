@@ -98,6 +98,11 @@ arguments:
       type: boolean
     description: Whether or not to check for resources related to `serviceActivities`.
     deprecated: true
+  resources.postgres:
+    schema:
+      type: string
+    description: Postgres version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
+    deprecated: true
   resources.kafka:
     schema:
       type: string
@@ -192,6 +197,13 @@ arguments:
   versions.go:
     description: Go version to use
     default: 1.19
+    schema:
+      type:
+        - string
+        - number
+  versions.alpine:
+    description: Alpine version to use
+    default: 3.16
     schema:
       type:
         - string
