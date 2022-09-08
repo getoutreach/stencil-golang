@@ -212,7 +212,7 @@ resource "datadog_service_level_objective" "http_p99_latency" {
   tags = local.ddTags
   monitor_ids = [module.http_latency_high.high_traffic_id]
   groups = [
-    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomain")}}
+    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomains")}}
     {{- range $b := $bentos }}
     "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
     {{- end }}
