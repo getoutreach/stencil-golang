@@ -70,7 +70,7 @@ local configMixins = [
 
 // config merges the mixins together, and then merges the configurationOverride ontop.
 // then env_config is merged ontop, with bento being merged last. The final result is then returned.
-local config = (std.foldl(function(x, y) (x + y), configMixins, {}) + configurationOverride)
+local config = (std.foldl(function(x, y) (x + y), configMixins, {}) + configurationOverride);
 local env_config = if std.objectHas(config.environment, app.environment) then config.environment[app.environment] else {};
 local bento_config = if std.objectHas(config.bento, app.bento) then config.bento[app.bento] else {};
 
