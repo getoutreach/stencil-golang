@@ -5,11 +5,11 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-    interval: "daily"
+      interval: "daily"
     # stencil-golang managed dependencies
     ignore:
 {{- range $d := $deps.go }}
-	- dependency-name: {{ $d.name }}
+      - dependency-name: {{ $d.name }}
 {{- end }}
 
   # Ignore semantic-release, this code is only executed in CI.
@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: "daily"
     ignore:
-    - dependency-name: "*"
+      - dependency-name: "*"
 
 {{- if and (has "grpc" (stencil.Arg "serviceActivities")) (has "node" (stencil.Arg "grpcClients")) }}
   # Node client for gRPC services
@@ -29,7 +29,7 @@ updates:
     # stencil-golang managed dependencies
     ignore:
 {{- range $d := (concat $deps.nodejs.dependencies $deps.nodejs.devDependencies) }}
-    - dependency-name: {{ $d.name | quote }}
+      - dependency-name: {{ $d.name | quote }}
 {{- end }}
 {{- end }}
 
