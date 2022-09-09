@@ -71,7 +71,7 @@ locals {
     "bento",
     "cluster_name",
     "env",
-    "outreach_team",
+    "reporting_team",
     "pod_name",
     "region",
   ]
