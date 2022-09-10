@@ -1,4 +1,4 @@
-{{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.SetPath (printf "deployments/%s/%s.override.jsonnet" .Config.Name .Config.Name) }}
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 // {{ stencil.ApplyTemplate "copyright" }}
 //
