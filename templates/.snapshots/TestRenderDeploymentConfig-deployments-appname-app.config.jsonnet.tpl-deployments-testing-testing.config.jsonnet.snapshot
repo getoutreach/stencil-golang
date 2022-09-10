@@ -1,0 +1,78 @@
+(*codegen.File)(// Copyright 2022 Outreach Corporation. All Rights Reserved.
+//
+// Managed: true
+
+local ok = import 'kubernetes/outreach.libsonnet';
+local app = (import 'kubernetes/app.libsonnet').info('testing');
+
+// Put custom global variables here
+///Block(globalVars)
+
+///EndBlock(globalVars)
+
+// Configuration override for various environments go here.
+local configurationOverride = {
+	local this = self,
+	// Environment level configuration override goes here.
+	// Note: `development` and `local_development` refer to different
+	// environments. `development` is _inside_ your local k8s cluster
+	// while local_development is read by `devconfig.sh`
+	environment: {
+		local_development: self.development {
+			configmap+: {
+				data_+:: {
+					ListenHost: '127.0.0.1',
+					///Block(localDevelopmentConfig)
+
+					///EndBlock(localDevelopmentConfig)
+				},
+			},
+		},
+		development: {
+			configmap+: {
+				data_+:: {
+					///Block(developmentConfig)
+
+					///EndBlock(developmentConfig)
+				},
+			},
+		},
+		///Block(environmentConfig)
+
+		///EndBlock(environmentConfig)
+	},
+
+	// Bento level configuration override goes here.
+	bento: {
+		///Block(bentoConfig)
+
+		///EndBlock(bentoConfig)
+	},
+
+	// Default configuration for all environments and bentos.
+	default: {
+		///Block(defaultConfig)
+		configmap+: {
+			data_+:: {
+			},
+		},
+		///EndBlock(defaultConfig)
+	},
+};
+
+// configMixins contains a list of files to include as mixins into
+// for the configuration. Should be at the path ./config/<name>.jsonnet
+local configMixins = [
+	///Block(configMixins)
+
+	///EndBlock(configMixins)
+];
+
+// config merges the mixins together, and then merges the configurationOverride ontop.
+// then env_config is merged ontop, with bento being merged last. The final result is then returned.
+local config = (std.foldl(function(x, y) (x + y), configMixins, {}) + configurationOverride);
+local env_config = if std.objectHas(config.environment, app.environment) then config.environment[app.environment] else {};
+local bento_config = if std.objectHas(config.bento, app.bento) then config.bento[app.bento] else {};
+
+(config.default + env_config + bento_config)
+)
