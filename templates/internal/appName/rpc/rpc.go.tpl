@@ -65,6 +65,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 		}
 		defer lis.Close()
 
+		var ops []grpcx.ServerOption
 		// Initialize your server instance here.
 		//
 		///Block(server)
@@ -73,13 +74,13 @@ func (s *GRPCService) Run(ctx context.Context) error {
 	{{- else }}
 		server, err := NewServer(ctx, s.cfg)
 		if err != nil {
-				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
+				log.Error(ctx, "failed to create new server", events.NewErrorInfo(err))
 				return err
 		}
 	{{- end }}
 		///EndBlock(server)
 
-		srv, err := StartServer(ctx, server)
+		srv, err := StartServer(ctx, server, ops...)
 		if err != nil {
 				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
 				return err
