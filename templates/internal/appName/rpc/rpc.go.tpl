@@ -65,7 +65,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 		}
 		defer lis.Close()
 
-		var ops []grpcx.ServerOption
+		var opts []grpcx.ServerOption
 		// Initialize your server instance here.
 		//
 		///Block(server)
