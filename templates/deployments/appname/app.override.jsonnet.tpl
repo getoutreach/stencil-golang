@@ -41,4 +41,4 @@ local overrideMixins = [
 ];
 
 local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {});
-mergedOverrideMixins + objects + (if (isDev || isLocalDev) then dev_objects else {})
+mergedOverrideMixins + objects + (if isDev then dev_objects else {})
