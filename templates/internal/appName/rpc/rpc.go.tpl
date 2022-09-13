@@ -71,7 +71,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 	{{- if file.Block "server" }}
 {{ file.Block "server" }}
 	{{- else }}
-		server, err := NewServer(ctx, cfg)
+		server, err := NewServer(ctx, s.cfg)
 		if err != nil {
 				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
 				return err
