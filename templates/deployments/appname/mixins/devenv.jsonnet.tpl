@@ -1,5 +1,6 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 {{- $_ := file.SetPath (printf "deployments/%s/mixins/%s" .Config.Name (base file.Path)) }}
+{{- $_ := stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "mixins" (list "devenv") }}
 local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
 

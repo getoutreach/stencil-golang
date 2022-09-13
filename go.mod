@@ -4,7 +4,7 @@ module github.com/getoutreach/stencil-golang
 
 go 1.17
 
-require github.com/getoutreach/stencil v1.26.0
+require github.com/getoutreach/stencil v1.27.0
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.5 // indirect
@@ -15,13 +15,12 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220407094043-a94812496cf5 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/alessio/shellescape v1.4.1 // indirect
-	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/bradleyjkemp/cupaloy v2.3.0+incompatible // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.12.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/getoutreach/gobox v1.51.0 // indirect
+	github.com/getoutreach/gobox v1.53.0 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.2-0.20210804024030-7ab80d7c013d // indirect
 	github.com/go-git/go-git/v5 v5.4.2 // indirect

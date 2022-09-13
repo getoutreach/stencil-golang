@@ -45,7 +45,11 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 Environment variables to write out to `private.env` for VSCode to use while running tests.
 
 ```yaml
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "MY_ENV_VAR" "my-value")) }}
+{
+  {
+    stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "MY_ENV_VAR" "my-value")),
+  },
+}
 ```
 
 ### `api.Service`

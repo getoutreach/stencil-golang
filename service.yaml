@@ -1,8 +1,11 @@
 name: stencil-golang
 modules:
   - name: github.com/getoutreach/stencil-template-base
+    channel: main
   - name: github.com/getoutreach/stencil-circleci
+    channel: main
   - name: github.com/getoutreach/stencil-base
+    channel: main
 arguments:
   reportingTeam: fnd-dt
   description: Stencil Module for Golang Applications

@@ -1,10 +1,11 @@
-{{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.SetPath (printf "deployments/%s/%s.override.jsonnet" .Config.Name .Config.Name) }}
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 // {{ stencil.ApplyTemplate "copyright" }}
 //
 // Description: This file is automatically merged into the '{{ .Config.Name }}.jsonnet' file.
 // Configuration should go into the '{{ .Config.Name }}.config.jsonnet' file, or in the relevant
 // file in the configs/ directory.
+//
 // Managed: true
 
 local ok = import 'kubernetes/outreach.libsonnet';
@@ -41,4 +42,4 @@ local overrideMixins = [
 ];
 
 local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {});
-mergedOverrideMixins + objects + (if (isDev || isLocalDev) then dev_objects else {})
+mergedOverrideMixins + objects + (if isDev then dev_objects else {})

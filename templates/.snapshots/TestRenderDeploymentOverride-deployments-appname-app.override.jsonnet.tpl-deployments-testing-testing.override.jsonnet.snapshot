@@ -3,6 +3,7 @@
 // Description: This file is automatically merged into the 'testing.jsonnet' file.
 // Configuration should go into the 'testing.config.jsonnet' file, or in the relevant
 // file in the configs/ directory.
+//
 // Managed: true
 
 local ok = import 'kubernetes/outreach.libsonnet';
@@ -39,5 +40,5 @@ local overrideMixins = [
 ];
 
 local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {});
-mergedOverrideMixins + objects + (if (isDev || isLocalDev) then dev_objects else {})
+mergedOverrideMixins + objects + (if isDev then dev_objects else {})
 )
