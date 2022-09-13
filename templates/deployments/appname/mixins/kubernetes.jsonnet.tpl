@@ -1,5 +1,7 @@
 {{- if empty (stencil.Arg "kubernetes.groups") }}
 {{- $_ := file.Skip "No Kubernetes groups" }}
+{{- else }}
+{{- $_ := stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "mixins" (list "kubernetes") }}
 {{- end }}
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 {{- $_ := file.SetPath (printf "deployments/%s/mixins/%s" .Config.Name (base file.Path)) }}
