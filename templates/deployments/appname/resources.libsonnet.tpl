@@ -2,6 +2,9 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 // {{ stencil.ApplyTemplate "copyright" }}
 //
+// Description: This file contains resource definitions for each instance (bento, environment, or cluster)
+// that your service runs in.
+//
 // Managed: true
 local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');

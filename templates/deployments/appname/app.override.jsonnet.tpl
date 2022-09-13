@@ -5,6 +5,7 @@
 // Description: This file is automatically merged into the '{{ .Config.Name }}.jsonnet' file.
 // Configuration should go into the '{{ .Config.Name }}.config.jsonnet' file, or in the relevant
 // file in the configs/ directory.
+//
 // Managed: true
 
 local ok = import 'kubernetes/outreach.libsonnet';
