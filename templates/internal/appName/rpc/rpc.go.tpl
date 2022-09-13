@@ -80,7 +80,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 	{{- end }}
 		///EndBlock(server)
 
-		srv, err := StartServer(ctx, server, ops...)
+		srv, err := StartServer(ctx, server, opts...)
 		if err != nil {
 				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
 				return err
