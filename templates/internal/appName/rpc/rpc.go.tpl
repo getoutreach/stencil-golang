@@ -120,7 +120,6 @@ func StartServer(ctx context.Context, service api.Service) (*grpc.Server, error)
 	{{- end }}
 
 	opts := []grpcx.ServerOption{
-		t.WithUnaryServerInterceptorx(),
 		{{- $grpcServerOptions := stencil.GetModuleHook "internal/rpc/grpcServerOptions" }}
 		{{- if $grpcServerOptions }}
 		// gRPC server options injected by modules
