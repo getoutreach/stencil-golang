@@ -63,6 +63,36 @@ locals {
     "{{ .Config.Name }}.go_sched_goroutines_goroutines": "gauge",
     "{{ .Config.Name }}.go_sched_latencies_seconds": "distribution",
     "{{ .Config.Name }}.go_threads": "gauge",
+
+    {{- if has "http" (stencil.Arg "serviceActivities") }}
+    ## HTTP metrics
+    "{{ .Config.Name }}.http_client_request_seconds": "distribution",
+    "{{ .Config.Name }}.http_client_response_bytes": "distribution",
+    "{{ .Config.Name }}.http_request_bytes": "distribution",
+    "{{ .Config.Name }}.http_request_seconds": "distribution",
+    "{{ .Config.Name }}.http_response_bytes": "distribution",
+    "{{ .Config.Name }}.svc_connection_duration": "distribution",
+    "{{ .Config.Name }}.svc_connection_state_transistion": "distribution",
+    "{{ .Config.Name }}.svc_net_connection_active": "gauge",
+    "{{ .Config.Name }}.svc_net_connection_hijacked": "gauge",
+    "{{ .Config.Name }}.svc_net_connection_idle": "gauge",
+    "{{ .Config.Name }}.svc_net_connection_new": "gauge",
+    "{{ .Config.Name }}.svc_net_connection_closed": "count",
+    "{{ .Config.Name }}.svc_request_seconds": "distribution",
+    {{- end }}
+
+    {{- if has "grpc" (stencil.Arg "serviceActivities") }}
+    "{{ .Config.Name }}.grpc_request_handled": "distribution",
+    {{- end }}
+
+    {{- range stencil.GetModuleHook "temporalMetrics" }}
+    "{{ .Config.Name }}.{{ .name }}": "{{ .type }}",
+    {{- end }}
+
+    # Add any additional metrics for your service
+    ///Block(tfAdditionalMetrics)
+{{ file.Block "tfAdditionalMetrics" }}
+    ///EndBlock(tfAdditionalMetrics)
   }
 
   # Defines the tags to be added to the metrics above -- anything not on this list is not included
@@ -74,6 +104,10 @@ locals {
     "reporting_team",
     "pod_name",
     "region",
+    # Add any additional required tags for your service
+    ///Block(tfAdditionalMetricTags)
+{{ file.Block "tfAdditionalMetricTags" }}
+    ///EndBlock(tfAdditionalMetricTags)
   ]
 }
 
@@ -83,4 +117,8 @@ resource "datadog_metric_tag_configuration" "this" {
   metric_name = each.key
   metric_type = each.value
   tags        = local.tags
+  # Optional block to allow configuring the schema with other parameters
+  ///Block(tfAdditionalMetricConfiguration)
+{{ file.Block "tfAdditionalMetricConfiguration" }}
+  ///EndBlock(tfAdditionalMetricConfiguration)
 }
