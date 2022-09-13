@@ -23,7 +23,7 @@
   version: 2.6.6
 # Used in CI
 - name: protoc
-  version: 3.19.1
+  version: 21.5
 {{- end }}
 
 # Registers our versions w/ stencil-base
