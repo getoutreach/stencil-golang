@@ -14,7 +14,7 @@ COPY . .
 ###EndBlock(beforeBuild)
 
 # Cache dependencies across builds
-RUN --mount=type=ssh --mount=type=cache,target=/go/pkg make dep
+RUN --mount=type=ssh --mount=type=cache,target=/go/pkg go mod download
 
 # Build our application, caching the go build cache, but also using
 # the dependency cache from earlier.

@@ -43,7 +43,7 @@ func TestRenderDeploymentDockerfile(t *testing.T) {
 			"alpine": "3.1",
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestRenderDependabot(t *testing.T) {
