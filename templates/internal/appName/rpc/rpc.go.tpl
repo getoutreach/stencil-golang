@@ -65,6 +65,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 		}
 		defer lis.Close()
 
+		var opts []grpcx.ServerOption
 		// Initialize your server instance here.
 		//
 		///Block(server)
@@ -73,13 +74,13 @@ func (s *GRPCService) Run(ctx context.Context) error {
 	{{- else }}
 		server, err := NewServer(ctx, s.cfg)
 		if err != nil {
-				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
+				log.Error(ctx, "failed to create new server", events.NewErrorInfo(err))
 				return err
 		}
 	{{- end }}
 		///EndBlock(server)
 
-		srv, err := StartServer(ctx, server)
+		srv, err := StartServer(ctx, server, opts...)
 		if err != nil {
 				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
 				return err
@@ -108,7 +109,7 @@ func (s *GRPCService) Close(ctx context.Context) error {
 }
 
 // StartServer starts a RPC server with the provided implementation.
-func StartServer(ctx context.Context, service api.Service) (*grpc.Server, error) {
+func StartServer(ctx context.Context, service api.Service, opts... grpcx.ServerOption) (*grpc.Server, error) {
 	{{- $grpcServerOptionInit := stencil.GetModuleHook "internal/rpc/grpcServerOptionInit" }}
 	{{- if $grpcServerOptionInit }}
 	// gRPC server option initialization injected by modules
@@ -119,7 +120,7 @@ func StartServer(ctx context.Context, service api.Service) (*grpc.Server, error)
 	// end gRPC server option initialization injected by modules
 	{{- end }}
 
-	opts := []grpcx.ServerOption{
+	opts = append([]grpcx.ServerOption{
 		{{- $grpcServerOptions := stencil.GetModuleHook "internal/rpc/grpcServerOptions" }}
 		{{- if $grpcServerOptions }}
 		// gRPC server options injected by modules
@@ -128,7 +129,7 @@ func StartServer(ctx context.Context, service api.Service) (*grpc.Server, error)
 			{{- end }}
 		// end gRPC server options injected by modules
 		{{- end }}
-	}
+	}, opts...)
 
 	///Block(grpcServerOptions)
 {{ file.Block "grpcServerOptions" }}
