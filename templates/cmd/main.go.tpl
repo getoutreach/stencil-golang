@@ -1,4 +1,5 @@
-{{ $_ := file.SetPath (printf "cmd/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := file.SetPath (printf "cmd/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" }}
 {{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
 // {{ stencil.ApplyTemplate "copyright" }}
 
