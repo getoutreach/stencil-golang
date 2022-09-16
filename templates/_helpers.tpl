@@ -20,7 +20,7 @@
   version: 0.13.5
 # Just in case bundler/etc needs to be used in the root.
 - name: ruby
-  version: 2.6.6
+  version: 2.7.5
 # Used in CI
 - name: protoc
   version: 21.5
