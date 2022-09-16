@@ -62,7 +62,7 @@ updates:
       - dependency-name: "typescript"
       - dependency-name: "wait-on"
 
-  ###Block(dependabotPackageManagers)
+  ## <<Stencil::Block(dependabotPackageManagers)>>
 
-  ###EndBlock(dependabotPackageManagers)
+  ## <</Stencil::Block>>
 )

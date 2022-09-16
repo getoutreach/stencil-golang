@@ -1,5 +1,5 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 {{ .Config.Name }}:
-###Block(customDockerImages)
+## <<Stencil::Block(customDockerImages)>>
 {{ file.Block "customDockerImages" }}
-###EndBlock(customDockerImages)
+## <</Stencil::Block>>

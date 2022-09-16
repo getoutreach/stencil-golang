@@ -36,9 +36,9 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	coordinationv1 "k8s.io/api/coordination/v1"
 
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // KubernetesService is the concrete implementation of the serviceActivity interface
@@ -76,20 +76,20 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 		MetricsBindAddress: ":2019",
 
 		LeaderElection: true,
-		///Block(leaderElectionID)
+		// <<Stencil::Block(leaderElectionID)>>
 		{{- if file.Block "leaderElectionID" }}
 {{ file.Block "leaderElectionID" }}
 		{{- else }}
 		LeaderElectionID:       "{{ randAlphaNum 10 | lower }}.outreach.io",
 		{{- end }}
-		///EndBlock(leaderElectionID)
+		// <</Stencil::Block>>
 		LeaderElectionNamespace: app.Info().Namespace,
 	}
 
 	// Set or override manager options here
-	///Block(setOptions)
+	// <<Stencil::Block(setOptions)>>
 {{ file.Block "setOptions" }}
-	///EndBlock(setOptions)
+	// <</Stencil::Block>>
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), options)
 	if err != nil {
@@ -117,9 +117,9 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 	{{- end }}
 
 	// If resources have additional fields, init them here.
-	///Block(initResources)
+	// <<Stencil::Block(initResources)>>
 {{ file.Block "initResources" }}
-	///EndBlock(initResources)
+	// <</Stencil::Block>>
 
 	for _, r := range s.resources {
 		if err := r.Setup(mgr); err != nil {
@@ -153,9 +153,9 @@ func (s *KubernetesService) registerSchemes() {
 	utilruntime.Must(api_{{ $g.package }}_{{ $g.version }}.AddToScheme(s.scheme))
 	{{- end }}
 
-	///Block(extraSchemes)
+	// <<Stencil::Block(extraSchemes)>>
 {{ file.Block "extraSchemes" }}
-	///EndBlock(extraSchemes)
+	// <</Stencil::Block>>
 }
 
 // Close cleans up webhooks and controllers managed by this instance.

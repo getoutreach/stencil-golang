@@ -20,9 +20,9 @@ import (
 
 
 	// Place any extra imports for your service code here
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // HTTPService handles internal http requests, suchs as metrics, health
@@ -41,9 +41,9 @@ func NewHTTPService(cfg *Config) *HTTPService {
 // Run is the entrypoint for the HTTPService serviceActivity.
 func (s *HTTPService) Run(ctx context.Context) error {
 	// create a http handler (handlers.Service does metrics, health etc)
-	///Block(privatehandler)
+	// <<Stencil::Block(privatehandler)>>
 {{ file.Block "privatehandler" | default "s.App = http.NotFoundHandler()" }}
-	///EndBlock(privatehandler)
+	// <</Stencil::Block>>
 	return s.Service.Run(ctx, fmt.Sprintf("%s:%d", s.cfg.ListenHost, s.cfg.HTTPPort))
 }
 
@@ -63,9 +63,9 @@ func NewPublicHTTPService(cfg *Config) *PublicHTTPService {
 // Run starts the HTTP service at the host/port specified in the config
 func (s *PublicHTTPService) Run(ctx context.Context) error {
 	// set your public handler here.
-	///Block(publichandler)
+	// <<Stencil::Block(publichandler)>>
 {{ file.Block "publichandler" | default "s.App = Handler()" }}
-	///EndBlock(publichandler)
+	// <</Stencil::Block>>
 	return s.PublicService.Run(ctx, fmt.Sprintf("%s:%d", s.cfg.ListenHost, s.cfg.PublicHTTPPort))
 }
 {{- end }}

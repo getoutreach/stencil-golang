@@ -12,6 +12,6 @@ api/clients/node/node_modules/
 .devspace/
 bin/
 
-###Block(extras)
+## <<Stencil::Block(extras)>>
 {{ file.Block "extras" }}
-###EndBlock(extras)
+## <</Stencil::Block>>

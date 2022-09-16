@@ -433,6 +433,6 @@ profiles:
       - vars:
           DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
 
-  ###Block(profiles)
+  ## <<Stencil::Block(profiles)>>
 {{ file.Block "profiles" }}
-  ###EndBlock(profiles)
+  ## <</Stencil::Block>>

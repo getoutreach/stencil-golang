@@ -1,5 +1,5 @@
 name: github.com/getoutreach/stencil-golang
-###Block(keys)
+## <<Stencil::Block(keys)>>
 modules:
   - name: github.com/getoutreach/stencil-discovery
 arguments:
@@ -193,4 +193,4 @@ arguments:
       type:
         - string
         - number
-###EndBlock(keys)
+## <</Stencil::Block>>

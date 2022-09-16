@@ -477,6 +477,6 @@ resource "datadog_monitor" "temporal_worker_available_pods_low" {
 }
 {{- end }}
 
-///Block(tfCustomDatadog)
+// <<Stencil::Block(tfCustomDatadog)>>
 {{ file.Block "tfCustomDatadog" }}
-///EndBlock(tfCustomDatadog)
+// <</Stencil::Block>>

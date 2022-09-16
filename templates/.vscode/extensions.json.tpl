@@ -17,8 +17,8 @@
 
     // Please consider contributing back all recommended
     // extensions to stencil!
-    ///Block(extensions)
+    // <<Stencil::Block(extensions)>>
 {{ file.Block "extensions" }}
-    ///EndBlock(extensions)
+    // <</Stencil::Block>>
   ]
 }

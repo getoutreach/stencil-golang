@@ -17,9 +17,9 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/services/pkg/find"
-	///Block(configImports)
+	// <<Stencil::Block(configImports)>>
 {{ file.Block "configImports" }}
-	///EndBlock(configImports)
+	// <</Stencil::Block>>
 )
 
 // Config tracks config needed for {{ .Config.Name }}
@@ -37,16 +37,16 @@ type Config struct {
 	KafkaConsumerGroupID string `yaml:"KafkaConsumerGroupID"`
 	KafkaConsumerTopic string `yaml:"KafkaConsumerTopic"`
 	{{- end }}
-	///Block(config)
+	// <<Stencil::Block(config)>>
 {{ file.Block "config"}}
-	///EndBlock(config)
+	// <</Stencil::Block>>
 }
 
 // MarshalLog can be used to write config to log
 func (c *Config) MarshalLog(addfield func(key string, value interface{})) {
-	///Block(marshalconfig)
+	// <<Stencil::Block(marshalconfig)>>
 {{ file.Block "marshalconfig" }}
-	///EndBlock(marshalconfig)
+	// <</Stencil::Block>>
 }
 
 // LoadConfig returns a new Config type that has been loaded in accordance to the environment
@@ -69,11 +69,11 @@ func LoadConfig(ctx context.Context) (*Config, error) {
 		/// !!! DEPRECATED: This block is deprecated and will be removed in an upcoming release.
 		/// All configuration should be defined in deployments/{{ .Config.Name }}/{{.Config.Name}}.config.jsonnet.
 		///
-		///Block(defconfig)
+		// <<Stencil::Block(defconfig)>>
 		{{- if file.Block "defconfig" }}
 {{ file.Block "defconfig" }}
 		{{- end }}
-		///EndBlock(defconfig)
+		// <</Stencil::Block>>
 	}
 
 	// Attempt to load a local config file on top of the defaults
@@ -93,9 +93,9 @@ func LoadConfig(ctx context.Context) (*Config, error) {
 	{{- end }}
 
 	// Do any necessary tweaks/augmentations to your configuration here
-	///Block(configtweak)
+	// <<Stencil::Block(configtweak)>>
 {{ file.Block "configtweak" }}
-	///EndBlock(configtweak)
+	// <</Stencil::Block>>
 
 	log.Info(ctx, "Configuration data of the application:\n", &c)
 

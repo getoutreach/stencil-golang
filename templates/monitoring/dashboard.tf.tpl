@@ -28,9 +28,9 @@ locals {
       prefix  = "env"
       default = "*"
     },
-    ///Block(customDashboardParams)
+    // <<Stencil::Block(customDashboardParams)>>
 {{ file.Block "customDashboardParams" }}
-    ///EndBlock(customDashboardParams)
+    // <</Stencil::Block>>
   ]
 }
 
@@ -47,9 +47,9 @@ locals {
     "[Concourse CI/CD](https://concourse.outreach.cloud/teams/devs/pipelines/{{ .Config.Name }})",
   ]
   custom_links = [
-///Block(customLinks)
+// <<Stencil::Block(customLinks)>>
 {{ file.Block "customLinks" }}
-///EndBlock(customLinks)
+// <</Stencil::Block>>
   ]
 
   formatted_links = join("\n", formatlist("- %s", concat(local.standard_links, local.custom_links)))
@@ -284,7 +284,7 @@ module "temporal_resources" {
 
 # You can define additional sections here if needed.
 
-///Block(sectionDefinitions)
+// <<Stencil::Block(sectionDefinitions)>>
 {{- if file.Block "sectionDefinitions" }}
 {{ file.Block "sectionDefinitions" }}
 {{- else }}
@@ -301,7 +301,7 @@ module "temporal_resources" {
 # Don't forget to instantiate the new section by referencing it in the
 # dashboard definition below.
 {{- end }}
-///EndBlock(sectionDefinitions)
+// <</Stencil::Block>>
 
 # Here we render the dashboard.
 
@@ -320,9 +320,9 @@ module "dashboard" {
     module.grpc_bento_activity.rendered,
 {{- end }}
     module.deployment.rendered,
-///Block(sectionReferences)
+// <<Stencil::Block(sectionReferences)>>
 {{ file.Block "sectionReferences" }}
-///EndBlock(sectionReferences)
+// <</Stencil::Block>>
   ]
 }
 {{- if eq "dual" (stencil.Arg "metrics") }}
@@ -341,9 +341,9 @@ module "dashboard_otel" {
     module.grpc_bento_activity_otel.rendered,
 {{- end }}
     module.deployment.rendered,
-///Block(sectionReferencesOtel)
+// <<Stencil::Block(sectionReferencesOtel)>>
 {{ file.Block "sectionReferencesOtel" }}
-///EndBlock(sectionReferencesOtel)
+// <</Stencil::Block>>
   ]
 }
 {{- end }}
@@ -361,9 +361,9 @@ module "temporaldashboard" {
     module.temporal_latency.rendered,
     module.temporal_workflow.rendered,
     module.temporal_resources.rendered,
-///Block(sectionTemporalReferences)
+// <<Stencil::Block(sectionTemporalReferences)>>
 {{ file.Block "sectionTemporalReferences" }}
-///EndBlock(sectionTemporalReferences)
+// <</Stencil::Block>>
   ]
 }
 {{- end }}
@@ -381,9 +381,9 @@ module "temporaldashboard_otel" {
     module.temporal_latency.rendered,
     module.temporal_workflow_otel.rendered,
     module.temporal_resources.rendered,
-///Block(sectionTemporalReferencesOtel)
+// <<Stencil::Block(sectionTemporalReferencesOtel)>>
 {{ file.Block "sectionTemporalReferencesOtel" }}
-///EndBlock(sectionTemporalReferencesOtel)
+// <</Stencil::Block>>
   ]
 }
 {{- end }}

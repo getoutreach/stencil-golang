@@ -25,9 +25,9 @@ import (
 
 	api{{ $g.version }} "github.com/getoutreach/{{ .Config.Name }}/api/k8s/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // {{ $ctrlStruct }} is a controller for {{ $r.kind }} resources.
@@ -35,9 +35,9 @@ type {{ $ctrlStruct }} struct {
 	*controllers.Reconciler
 
 	// Place extra fields here.
-	///Block(controllerFields)
+	// <<Stencil::Block(controllerFields)>>
 {{ file.Block "controllerFields" }}
-	///EndBlock(controllerFields)
+	// <</Stencil::Block>>
 }
 
 // New{{ $ctrlStruct }} creates a new instance of {{ $ctrlStruct }}
@@ -68,9 +68,9 @@ func (r *{{ $ctrlStruct }}) CreateResource() resources.Resource {
 //nolint:unparam // Why: args ok to ignore
 func (r *{{ $ctrlStruct }}) EndReconcile(
 	ctx context.Context, req *logging.ReconcileRequest, rr controllers.ReconcileResult) {
-	///Block(endReconcile)
+	// <<Stencil::Block(endReconcile)>>
 {{ file.Block "endReconcile" }}
-	///EndBlock(endReconcile)
+	// <</Stencil::Block>>
 }
 
 // Reconcile is invoked when controller receives {{ $r.kind }} resource CR that hasn't been applied yet.
@@ -83,7 +83,7 @@ func (r *{{ $ctrlStruct }}) Reconcile(
 
 	logger := log.With(req, &rr)
 
-	///Block(controllerImpl)
+	// <<Stencil::Block(controllerImpl)>>
 	{{- if file.Block "controllerImpl" }}
 {{ file.Block "controllerImpl" }}
 	{{- else }}
@@ -92,7 +92,7 @@ func (r *{{ $ctrlStruct }}) Reconcile(
 	_ = in
 
 	{{- end }}
-	///EndBlock(controllerImpl)
+	// <</Stencil::Block>>
 
 	logger.Info(ctx, "Reconcile completed.")
 	return rr
@@ -107,7 +107,7 @@ func (r *{{ $ctrlStruct }}) NotFound(
 
 	logger := log.With(req, &rr)
 
-	///Block(notFoundImpl)
+	// <<Stencil::Block(notFoundImpl)>>
 	{{- if file.Block "notFoundImpl" }}
 {{ file.Block "notFoundImpl" }}
 	{{- else }}
@@ -116,7 +116,7 @@ func (r *{{ $ctrlStruct }}) NotFound(
 	// It this operator deals with business data, is OK to leave this code empty and perform the cleanup manually.
 
 	{{- end }}
-	///EndBlock(notFoundImpl)
+	// <</Stencil::Block>>
 
 	logger.Info(ctx, "NotFound completed.")
 	return rr
@@ -124,16 +124,16 @@ func (r *{{ $ctrlStruct }}) NotFound(
 
 // Close cleans up the controller upon exit
 func (r *{{ $ctrlStruct }}) Close(ctx context.Context) error {
-	///Block(controllerClose)
+	// <<Stencil::Block(controllerClose)>>
 {{ file.Block "controllerClose" }}
-	///EndBlock(controllerClose)
+	// <</Stencil::Block>>
 
 	return nil
 }
 
-///Block(controllerAddons)
+// <<Stencil::Block(controllerAddons)>>
 {{ file.Block "controllerAddons" }}
-///EndBlock(controllerAddons)
+// <</Stencil::Block>>
 {{- end -}}
 
 {{- $root := . }}

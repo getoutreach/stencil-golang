@@ -23,7 +23,7 @@ local resourcesOverride = {
 		// If there is no match for the deployment it will default to
 		// the resources defined here.
 		default: {
-			///Block(defaultResources)
+			// <<Stencil::Block(defaultResources)>>
 			{{- if file.Block "defaultResources" }}
 {{ file.Block "defaultResources" }}
 			{{- else }}
@@ -33,31 +33,31 @@ local resourcesOverride = {
 			},
 			limits: self.requests
 			{{- end }}
-			///EndBlock(defaultResources)
+			// <</Stencil::Block>>
 		},
 
 		// Environment-level resource overrides go here with the 1st-level keys
 		// of the object being environment names.
 		environment: {
-			///Block(environmentResources)
+			// <<Stencil::Block(environmentResources)>>
 {{ file.Block "environmentResources" }}
-			///EndBlock(environmentResources)
+			// <</Stencil::Block>>
 		},
 
 		// Cluster-level resource overrides go here with the 1st-level keys of
 		// the object being bento names.
 		cluster: {
-			///Block(clusterResources)
+			// <<Stencil::Block(clusterResources)>>
 {{ file.Block "clusterResources" }}
-			///EndBlock(clusterResources)
+			// <</Stencil::Block>>
 		},
 
 		// Bento-level resource overrides go here with the 1st-level keys of the
 		// object being bento names.
 		bento: {
-			///Block(bentoResources)
+			// <<Stencil::Block(bentoResources)>>
 {{ file.Block "bentoResources" }}
-			///EndBlock(bentoResources)
+			// <</Stencil::Block>>
 		}
 };
 
