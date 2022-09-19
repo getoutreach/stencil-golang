@@ -14,7 +14,6 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 import (
 	"context"
 
-	"github.com/getoutreach/mint/pkg/authn"
 	"github.com/getoutreach/services/pkg/grpcx"
 	"github.com/getoutreach/{{ .Config.Name }}/api"
 
@@ -56,7 +55,7 @@ func New(ctx context.Context) (api.Service, error) {
 		{{- end }}
 	}
 
-	conn, err := grpcx.NewClientConn(ctx, "{{ .Config.Name }}", useAuthn, useDiscovery)
+	conn, err := grpcx.NewClientConn(ctx, "{{ .Config.Name }}", clientOpts...)
 	if err != nil {
 		return nil, err
 	}
