@@ -85,7 +85,7 @@ vars:
     command: make version
   - name: BOX_REPOSITORY_URL
     source: command
-    command: yq -r '.storageURL' "$HOME/.outreach/.config/box/config.yml"
+    command: yq -r '.storageURL' "$HOME/.outreach/.config/box/box.yaml"
 
   - name: DLV_PORT
     value: 42097
