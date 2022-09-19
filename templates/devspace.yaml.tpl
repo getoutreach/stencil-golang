@@ -226,7 +226,7 @@ dev:
           value:
             name: DEV_CONTAINER_EXECUTABLE
             value: ${DEV_CONTAINER_EXECUTABLE}
-        - op:
+        - op: add
           path: spec.containers[0].env
           value:
             name: BOX_REPOSITORY_URL
