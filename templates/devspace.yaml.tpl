@@ -151,7 +151,6 @@ dev:
       containerPath: ${DEV_CONTAINER_WORKDIR}
       waitInitialSync: true
       excludePaths:
-        - .git
         - bin
         - ./vendor
         - node_modules
