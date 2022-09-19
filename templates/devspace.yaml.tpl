@@ -82,7 +82,10 @@ vars:
     command: grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g'
   - name: APP_VERSION
     source: command
-    command: git describe --match 'v[0-9]*' --tags --always HEAD
+    command: make version
+  - name: BOX_REPOSITORY_URL
+    source: command
+    command: yq -r '.storageURL' "$HOME/.outreach/.config/box/config.yml"
 
   - name: DLV_PORT
     value: 42097
@@ -223,6 +226,11 @@ dev:
           value:
             name: DEV_CONTAINER_EXECUTABLE
             value: ${DEV_CONTAINER_EXECUTABLE}
+        - op:
+          path: spec.containers[0].env
+          value:
+            name: BOX_REPOSITORY_URL
+            value: ${BOX_REPOSITORY_URL}
 
         # Package caching
         - op: add
