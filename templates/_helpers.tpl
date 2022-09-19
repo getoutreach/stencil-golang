@@ -125,7 +125,7 @@ go:
 - name: google.golang.org/grpc
   version: v1.37.0
 - name: github.com/getoutreach/orgservice
-  version: v1.39.0
+  version: v1.63.0
 {{- end }}
 
 {{- if stencil.Arg "commands" }}
