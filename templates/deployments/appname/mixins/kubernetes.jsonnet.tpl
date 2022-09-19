@@ -62,9 +62,9 @@ local common_status_properties = {
 
 // Please provide custom resource specs here. We could theoretically generate its code and spec from yaml ... but too much work for now.
 // Make will complain about missing specs when new controllers are added.
-///Block(customResources)
+// <<Stencil::Block(customResources)>>
 {{ file.Block "customResources" }}
-///EndBlock(customResources)
+// <</Stencil::Block>>
 
 local webhooks = {
   {{- if $createMutatingWebhook }}

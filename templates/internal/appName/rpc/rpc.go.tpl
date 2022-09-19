@@ -35,9 +35,9 @@ import (
 	// end imports added by modules
 	{{- end }}
 
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // GRPCService is the concrete implementation of the serviceActivity interface
@@ -68,7 +68,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 		var opts []grpcx.ServerOption
 		// Initialize your server instance here.
 		//
-		///Block(server)
+		// <<Stencil::Block(server)>>
 	{{- if file.Block "server" }}
 {{ file.Block "server" }}
 	{{- else }}
@@ -78,7 +78,7 @@ func (s *GRPCService) Run(ctx context.Context) error {
 				return err
 		}
 	{{- end }}
-		///EndBlock(server)
+		// <</Stencil::Block>>
 
 		srv, err := StartServer(ctx, server, opts...)
 		if err != nil {
@@ -131,9 +131,9 @@ func StartServer(ctx context.Context, service api.Service, opts... grpcx.ServerO
 		{{- end }}
 	}, opts...)
 
-	///Block(grpcServerOptions)
+	// <<Stencil::Block(grpcServerOptions)>>
 {{ file.Block "grpcServerOptions" }}
-	///EndBlock(grpcServerOptions)
+	// <</Stencil::Block>>
 
 	s, err := grpcx.NewServer(ctx, opts...)
 	if err != nil {
@@ -166,7 +166,7 @@ type rpcserver struct {
 
 // Place any GRPC handler functions for your service here
 //
-///Block(handlers)
+// <<Stencil::Block(handlers)>>
 {{- if file.Block "handlers" }}
 {{ file.Block "handlers" }}
 {{- else }}
@@ -195,4 +195,4 @@ func (s rpcserver) Pong(ctx context.Context, req *api.PongRequest) (*api.PongRes
 
 {{- end }}
 {{- end }}
-///EndBlock(handlers)
+// <</Stencil::Block>>

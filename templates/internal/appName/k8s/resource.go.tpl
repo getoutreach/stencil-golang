@@ -15,9 +15,9 @@ import (
 
 	"github.com/getoutreach/gobox/pkg/log"
 
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // Resource provides methods common to all webhooks and controllers.
@@ -38,7 +38,7 @@ type Resource interface {
 	Close(ctx context.Context) error
 
 	// Extra shared methods here.
-	///Block(resourceMethods)
+	// <<Stencil::Block(resourceMethods)>>
 {{ file.Block "resourceMethods" }}
-	///EndBlock(resourceMethods)
+	// <</Stencil::Block>>
 }

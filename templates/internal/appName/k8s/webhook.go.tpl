@@ -20,9 +20,9 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	api{{ $g.version }} "github.com/getoutreach/{{ .Config.Name }}/api/k8s/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // {{ $webhookStruct }} registers the webhook for {{ $r.kind }}.
@@ -30,9 +30,9 @@ import (
 // {{ $r.kind }} type itself.
 type {{ $webhookStruct }} struct {
 	// Place extra fields here.
-	///Block(webhookFields)
+	// <<Stencil::Block(webhookFields)>>
 {{ file.Block "webhookFields" }}
-	///EndBlock(webhookFields)
+	// <</Stencil::Block>>
 }
 
 // MarshalLog implements log.Marshaler for use in logging/tracing/metrics
@@ -67,16 +67,16 @@ func (r *{{ $webhookStruct }}) Setup(mgr ctrl.Manager) error {
 
 // Close cleans up the resource upon exit.
 func (r *{{ $webhookStruct }}) Close(ctx context.Context) error {
-	///Block(webhookClose)
+	// <<Stencil::Block(webhookClose)>>
 {{ file.Block "webhookClose" }}
-	///EndBlock(webhookClose)
+	// <</Stencil::Block>>
 
 	return nil
 }
 
-///Block(webhookAddons)
+// <<Stencil::Block(webhookAddons)>>
 {{ file.Block "webhookAddons"}}
-///EndBlock(webhookAddons)
+// <</Stencil::Block>>
 {{- end -}}
 
 {{- $root := . }}

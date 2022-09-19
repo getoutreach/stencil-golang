@@ -12,9 +12,9 @@ WORKDIR /src
 # Copy our source code into the container for building
 COPY . .
 
-###Block(beforeBuild)
+## <<Stencil::Block(beforeBuild)>>
 {{ file.Block "beforeBuild" }}
-###EndBlock(beforeBuild)
+## <</Stencil::Block>>
 
 # Cache dependencies across builds
 RUN --mount=type=ssh --mount=type=cache,target=/go/pkg go mod download
@@ -41,9 +41,9 @@ RUN apk add --no-cache curl \
     &&  update-ca-certificates \
     &&  apk del --no-cache curl
 
-###Block(afterBuild)
+## <<Stencil::Block(afterBuild)>>
 {{ file.Block "afterBuild" }}
-###EndBlock(afterBuild)
+## <</Stencil::Block>>
 
 COPY --from=builder /src/bin/{{ .Config.Name }} /usr/local/bin/{{ .Config.Name }}
 {{- $afterBuildHook := stencil.GetModuleHook "Dockerfile.afterBuild" }}

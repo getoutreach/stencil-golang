@@ -4,6 +4,6 @@ MY_NAMESPACE="{{ .Config.Name }}--bento1a"
 {{ $k }}={{ $v | quote }}
 {{- end }}
 {{- end }}
-///Block(vscodeEnvVars)
+// <<Stencil::Block(vscodeEnvVars)>>
 {{ file.Block "vscodeEnvVars" }}
-///EndBlock(vscodeEnvVars)
+// <</Stencil::Block>>

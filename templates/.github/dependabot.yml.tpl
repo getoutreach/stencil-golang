@@ -33,6 +33,6 @@ updates:
 {{- end }}
 {{- end }}
 
-  ###Block(dependabotPackageManagers)
+  ## <<Stencil::Block(dependabotPackageManagers)>>
 {{ file.Block "dependabotPackageManagers" }}
-  ###EndBlock(dependabotPackageManagers)
+  ## <</Stencil::Block>>

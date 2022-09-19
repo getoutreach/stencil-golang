@@ -8,9 +8,9 @@ local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
 
 // Put custom global variables here
-///Block(globalVars)
+// <<Stencil::Block(globalVars)>>
 {{ file.Block "globalVars" }}
-///EndBlock(globalVars)
+// <</Stencil::Block>>
 
 // Configuration override for various environments go here.
 local configurationOverride = {
@@ -24,36 +24,36 @@ local configurationOverride = {
 			configmap+: {
 				data_+:: {
 					ListenHost: '127.0.0.1',
-					///Block(localDevelopmentConfig)
+					// <<Stencil::Block(localDevelopmentConfig)>>
 {{ file.Block "localDevelopmentConfig" }}
-					///EndBlock(localDevelopmentConfig)
+					// <</Stencil::Block>>
 				},
 			},
 		},
 		development: {
 			configmap+: {
 				data_+:: {
-					///Block(developmentConfig)
+					// <<Stencil::Block(developmentConfig)>>
 {{ file.Block "developmentConfig" }}
-					///EndBlock(developmentConfig)
+					// <</Stencil::Block>>
 				},
 			},
 		},
-		///Block(environmentConfig)
+		// <<Stencil::Block(environmentConfig)>>
 {{ file.Block "environmentConfig" }}
-		///EndBlock(environmentConfig)
+		// <</Stencil::Block>>
 	},
 
 	// Bento level configuration override goes here.
 	bento: {
-		///Block(bentoConfig)
+		// <<Stencil::Block(bentoConfig)>>
 {{ file.Block "bentoConfig" }}
-		///EndBlock(bentoConfig)
+		// <</Stencil::Block>>
 	},
 
 	// Default configuration for all environments and bentos.
 	default: {
-		///Block(defaultConfig)
+		// <<Stencil::Block(defaultConfig)>>
 		{{- if file.Block "defaultConfig" }}
 {{ file.Block "defaultConfig" }}
 		{{- else }}
@@ -67,16 +67,16 @@ local configurationOverride = {
 			},
 		},
 		{{- end }}
-		///EndBlock(defaultConfig)
+		// <</Stencil::Block>>
 	},
 };
 
 // configMixins contains a list of files to include as mixins into
 // for the configuration. Should be at the path ./config/<name>.jsonnet
 local configMixins = [
-	///Block(configMixins)
+	// <<Stencil::Block(configMixins)>>
 {{ file.Block "configMixins" }}
-	///EndBlock(configMixins)
+	// <</Stencil::Block>>
 	{{- $moduleConfigMixins := stencil.GetModuleHook "app.config.jsonnet/config" }}
 	{{- if $moduleConfigMixins }}
 

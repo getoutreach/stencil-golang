@@ -6,9 +6,9 @@ local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('testing');
 
 // Put custom global variables here
-///Block(globalVars)
+// <<Stencil::Block(globalVars)>>
 
-///EndBlock(globalVars)
+// <</Stencil::Block>>
 
 // Configuration override for various environments go here.
 local configurationOverride = {
@@ -22,50 +22,50 @@ local configurationOverride = {
 			configmap+: {
 				data_+:: {
 					ListenHost: '127.0.0.1',
-					///Block(localDevelopmentConfig)
+					// <<Stencil::Block(localDevelopmentConfig)>>
 
-					///EndBlock(localDevelopmentConfig)
+					// <</Stencil::Block>>
 				},
 			},
 		},
 		development: {
 			configmap+: {
 				data_+:: {
-					///Block(developmentConfig)
+					// <<Stencil::Block(developmentConfig)>>
 
-					///EndBlock(developmentConfig)
+					// <</Stencil::Block>>
 				},
 			},
 		},
-		///Block(environmentConfig)
+		// <<Stencil::Block(environmentConfig)>>
 
-		///EndBlock(environmentConfig)
+		// <</Stencil::Block>>
 	},
 
 	// Bento level configuration override goes here.
 	bento: {
-		///Block(bentoConfig)
+		// <<Stencil::Block(bentoConfig)>>
 
-		///EndBlock(bentoConfig)
+		// <</Stencil::Block>>
 	},
 
 	// Default configuration for all environments and bentos.
 	default: {
-		///Block(defaultConfig)
+		// <<Stencil::Block(defaultConfig)>>
 		configmap+: {
 			data_+:: {
 			},
 		},
-		///EndBlock(defaultConfig)
+		// <</Stencil::Block>>
 	},
 };
 
 // configMixins contains a list of files to include as mixins into
 // for the configuration. Should be at the path ./config/<name>.jsonnet
 local configMixins = [
-	///Block(configMixins)
+	// <<Stencil::Block(configMixins)>>
 
-	///EndBlock(configMixins)
+	// <</Stencil::Block>>
 ];
 
 // config merges the mixins together, and then merges the configurationOverride ontop.

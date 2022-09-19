@@ -10,32 +10,32 @@
   "main": "dist/index.js",
   "repository": "https://github.com/getoutreach/{{ .Config.Name }}",
   "files": [
-    ///Block(nodeDistFiles)
+    // <<Stencil::Block(nodeDistFiles)>>
 {{ file.Block "nodeDistFiles" }}
-    ///EndBlock(nodeDistFiles)
+    // <</Stencil::Block>>
     "dist"
   ],
   "license": "UNLICENSED",
   "dependencies": {
-    ///Block(nodeDependencies)
+    // <<Stencil::Block(nodeDependencies)>>
 {{ file.Block "nodeDependencies" }}
-    ///EndBlock(nodeDependencies)
+    // <</Stencil::Block>>
 	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.dependencies }}
 	  "{{ $d.name }}": "{{ $d.version }}",
 	{{- end }}
   },
   "devDependencies": {
-    ///Block(nodeDevDependencies)
+    // <<Stencil::Block(nodeDevDependencies)>>
 {{ file.Block "nodeDevDependencies" }}
-    ///EndBlock(nodeDevDependencies)
+    // <</Stencil::Block>>
 	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.devDependencies }}
 	  "{{ $d.name }}": "{{ $d.version }}",
 	{{- end }}
   },
   "scripts": {
-    ///Block(nodeScripts)
+    // <<Stencil::Block(nodeScripts)>>
 {{ file.Block "nodeScripts" }}
-    ///EndBlock(nodeScripts)
+    // <</Stencil::Block>>
     "build": "npm-run-all clean pretty lint tsc",
     "ci": "npm-run-all pretty lint test-ci",
     "clean": "rimraf dist",

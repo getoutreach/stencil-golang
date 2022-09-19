@@ -29,16 +29,16 @@ import (
 	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 
 	// Place any extra imports for your startup code here
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 // Place any customized code for your service in this block
 //
-///Block(customized)
+// <<Stencil::Block(customized)>>
 {{ file.Block "customized" }}
-///EndBlock(customized)
+// <</Stencil::Block>>
 
 // main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
@@ -72,9 +72,9 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	{{- end }}
 
 	// Place any code for your service to run before registering service activities in this block
-	///Block(initialization)
+	// <<Stencil::Block(initialization)>>
 {{ file.Block "initialization" }}
-	///EndBlock(initialization)
+	// <</Stencil::Block>>
 	{{- $postInitializationBlock := stencil.GetModuleHook "postInitializationBlock" }}
 	{{- if $postInitializationBlock }}
 
@@ -113,16 +113,16 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 		// Place any additional ServiceActivities that your service has built here to have them handled automatically
 		//
-		///Block(services)
+		// <<Stencil::Block(services)>>
 {{ file.Block "services" }}
-		///EndBlock(services)
+		// <</Stencil::Block>>
 	}
 
 	// Place any code for your service to run during startup in this block
 	//
-	///Block(startup)
+	// <<Stencil::Block(startup)>>
 {{ file.Block "startup" }}
-	///EndBlock(startup)
+	// <</Stencil::Block>>
 
 	if err := async.RunGroup(acts).Run(ctx); err != nil {
 		log.Warn(ctx, "shutting down service", events.NewErrorInfo(err))

@@ -56,9 +56,9 @@ type KafkaConsumerService struct {
 	hosts []string
 
 	// place any additional properties here
-	///Block(consumerproperties)
+	// <<Stencil::Block(consumerproperties)>>
 {{ file.Block "consumerproperties" }}
-	///EndBlock(consumerproperties)
+	// <</Stencil::Block>>
 }
 
 // NewKafkaConsumerService initializes and returns a KafkaConsumerService instance
@@ -66,9 +66,9 @@ func NewKafkaConsumerService(cfg *Config) *KafkaConsumerService {
 	svc := KafkaConsumerService{cfg: cfg}
 
 	// initialize your consumer here
-	///Block(initialization)
+	// <<Stencil::Block(initialization)>>
 {{ file.Block "initialization" }}
-	///EndBlock(initialization)
+	// <</Stencil::Block>>
 
 	return &svc
 }
@@ -123,9 +123,9 @@ func (s *KafkaConsumerService) pollMessages(ctx context.Context) {
 		}
 
 		// handle the kafka message here
-		///Block(handlemessage)
+		// <<Stencil::Block(handlemessage)>>
 {{ file.Block "handlemessage" }}
-		///EndBlock(handlemessage)
+		// <</Stencil::Block>>
 
 		// DEPRECATED.  Use the 'handlemessage' block instead
 		if s.handler != nil {

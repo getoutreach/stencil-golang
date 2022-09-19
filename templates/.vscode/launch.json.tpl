@@ -20,14 +20,14 @@
       "debugAdapter": "dlv-dap",
       "request": "attach",
       "mode": "remote",
-      ///Block(vscodeRemoteDebug)
+      // <<Stencil::Block(vscodeRemoteDebug)>>
 {{- if file.Block "vscodeRemoteDebug" }}
 {{ file.Block "vscodeRemoteDebug" }}
 {{- else }}
       "host": "127.0.0.1",
       "port": 42097,
 {{- end }}
-    ///EndBlock(vscodeRemoteDebug)
+    // <</Stencil::Block>>
       "substitutePath": [
         {
           "from": "${workspaceRoot}",
@@ -43,8 +43,8 @@
         }
       ],
     },
-    ///Block(vscodeLaunchConfigs)
+    // <<Stencil::Block(vscodeLaunchConfigs)>>
 {{ file.Block "vscodeLaunchConfigs" }}
-    ///EndBlock(vscodeLaunchConfigs)
+    // <</Stencil::Block>>
   ]
 }
