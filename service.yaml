@@ -9,7 +9,8 @@ modules:
 arguments:
   reportingTeam: fnd-dt
   description: Stencil Module for Golang Applications
+  plugin: true
   releaseOptions:
+    force: true
     enablePrereleases: true
-    allowMajorVersions: true
     prereleasesBranch: rc

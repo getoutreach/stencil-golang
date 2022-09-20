@@ -14,5 +14,6 @@ indent_size  = 2
 
 ## <<Stencil::Block(editorconfig)>>
 [*.tpl]
-indent_style = tab
+indent_style = space
+indent_size =  2
 ## <</Stencil::Block>>

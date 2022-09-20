@@ -7,14 +7,15 @@ orbs:
 # Extra contexts to expose to all jobs below
 contexts: &contexts
   - aws-credentials
+  - ghaccesstoken
+  - docker-registry
   - npm-credentials
   - prismacloud-credentials
   - opslevel-credentials
   - vault-dev
   - confluence
   ## <<Stencil::Block(extraContexts)>>
-  - docker-registry
-  - ghaccesstoken
+
   ## <</Stencil::Block>>
 
 # Branches used for releasing code, pre-release or not

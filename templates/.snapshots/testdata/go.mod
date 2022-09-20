@@ -8,7 +8,6 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.53.0
 	github.com/getoutreach/stencil v1.28.0-rc.2
-	github.com/magefile/mage v1.14.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.0
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3
@@ -81,3 +80,5 @@ require (
 	gotest.tools/v3 v3.3.0 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace github.com/getoutreach/stencil => ../stencil
