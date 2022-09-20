@@ -44,7 +44,6 @@ func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen
 
 	originalModHM := make(map[string]semver.Version)
 	for _, mod := range origMod.Require {
-		//nolint:govet // Why: We're OK shadowing err
 		v, err := semver.ParseTolerant(mod.Mod.Version)
 		if err != nil {
 			continue
@@ -61,7 +60,6 @@ func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen
 	// Change the left hand module versions if the right hand versions
 	// are greater than the left hand ones.
 	for _, req := range templateMod.Require {
-		//nolint:govet /// Why: We're OK shadowing err
 		v, err := semver.ParseTolerant(req.Mod.Version)
 		if err != nil {
 			continue
