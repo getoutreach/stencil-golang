@@ -89,17 +89,6 @@ local all = {
 	trace_configmap: ok.ConfigMap('config-trace', app.namespace) {
 		local this = self,
 		data_:: {
-			{{- if eq "honeycomb" (stencil.Arg "tracing") }}
-			Honeycomb: {
-				Enabled: true,
-				APIHost: 'https://api.honeycomb.io',
-				APIKey: {
-					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
-				},
-				Dataset: if isDev then 'dev' else 'outreach',
-				SamplePercent: if isDev then 100 else 1,
-			},
-			{{- else }}
 			OpenTelemetry: {
 				Enabled: true,
 				{{- if eq "lightstep" (stencil.Arg "tracing") }}
@@ -117,7 +106,6 @@ local all = {
 				Dataset: if isDev then 'dev' else 'outreach',
 				SamplePercent: if isDev then 100 else 1,
 			},
-			{{- end }}
 		} + if isDev then {
 			GlobalTags+: {
 				DevEmail: devEmail,

@@ -72,7 +72,6 @@ arguments:
     schema:
       type: string
       enum:
-        - honeycomb
         - opentelemetry
         - lightstep
     descriptions: Tracing backend to send traces to
