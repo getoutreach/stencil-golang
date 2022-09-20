@@ -9,7 +9,7 @@ go 1.17
 
 require (
 	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).go }}
-	{{ $d.name }} {{ $d.version }}
+	{{ $d.name }} {{ hasPrefix "v" $d.version | ternary "" "v" }}{{ $d.version }}
 	{{- end }}
 )
 
