@@ -9,11 +9,6 @@ updates:
     # stencil-golang managed dependencies
     ignore:
       - dependency-name: github.com/getoutreach/gobox
-      - dependency-name: github.com/getoutreach/mint
-      - dependency-name: github.com/getoutreach/httpx
-      - dependency-name: github.com/getoutreach/services
-      - dependency-name: github.com/getoutreach/datastores/v2
-      - dependency-name: github.com/getoutreach/tollmon
       - dependency-name: google.golang.org/grpc
       - dependency-name: github.com/getoutreach/orgservice
 

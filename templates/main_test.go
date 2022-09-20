@@ -2,9 +2,13 @@
 package main_test
 
 import (
+	"context"
+	"os"
 	"testing"
 
+	"github.com/getoutreach/stencil-golang/internal/plugin"
 	"github.com/getoutreach/stencil/pkg/stenciltest"
+	"github.com/magefile/mage/sh"
 )
 
 var libaryTmpls = []string{
@@ -53,5 +57,36 @@ func TestRenderDependabot(t *testing.T) {
 		"serviceActivities": []interface{}{"grpc"},
 		"grpcClients":       []interface{}{"node"},
 	})
+	st.Run(false)
+}
+
+func TestBasicGoMod(t *testing.T) {
+	st := stenciltest.New(t, "go.mod.tpl", libaryTmpls...)
+
+	p, err := plugin.NewStencilGolangPlugin(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	st.Ext("github.com/getoutreach/stencil-golang", p)
+	st.Run(false)
+}
+
+func TestMergeGoMod(t *testing.T) {
+	st := stenciltest.New(t, "go.mod.tpl", libaryTmpls...)
+
+	p, err := plugin.NewStencilGolangPlugin(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	st.Ext("github.com/getoutreach/stencil-golang", p)
+
+	// HACK: We need to support copying arbitrary files in stenciltest so we
+	// don't have to pollute the current working directory with a go.mod file.
+	if err := sh.Copy("go.mod", ".snapshots/testdata/go.mod"); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove("go.mod")
+
 	st.Run(false)
 }
