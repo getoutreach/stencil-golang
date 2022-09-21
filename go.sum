@@ -164,8 +164,8 @@ github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568/go.mod h1:xEzjJPgXI
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/getoutreach/gobox v1.53.0 h1:X8Jwxzhyk81X4vTj3pnEEqXIYymvVulz115cqL7XhtQ=
 github.com/getoutreach/gobox v1.53.0/go.mod h1:/yxedTR3b6TIcxc/QZ58q8C5Lhmp4nu0zZL4TVzykuw=
-github.com/getoutreach/stencil v1.28.0-rc.2 h1:zALhcs5/3z2noPJ5Lll6BYV9g5pvYttcTZUVrMNXYE4=
-github.com/getoutreach/stencil v1.28.0-rc.2/go.mod h1:HWT52m7XEK587xSUVp4j/Ki2Gc+fKKRdIsOwrM/KsAk=
+github.com/getoutreach/stencil v1.28.0-rc.4 h1:sEomXwKJ2EIvWSa3uDSA3aaMT0T/SOkc/XFvHKnrp7A=
+github.com/getoutreach/stencil v1.28.0-rc.4/go.mod h1:VgF7xOMju8fADA1sZVJtGfWTJ08I5izWQ+yuisFfCUs=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
 github.com/gin-gonic/gin v1.7.7/go.mod h1:axIBovoeJpVj8S3BwE0uPMTeReE4+AfFtqpqaZ1qq1U=
@@ -600,7 +600,7 @@ github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLY
 github.com/ulikunitz/xz v0.5.10 h1:t92gobL9l3HE202wg3rlk19F6X+JOxl9BBrCCMYEYd8=
 github.com/ulikunitz/xz v0.5.10/go.mod h1:nbz6k7qbPmH4IRqmfOplQw/tblSgqTqBwxkY0oWt/14=
 github.com/urfave/cli/v2 v2.6.0/go.mod h1:oDzoM7pVwz6wHn5ogWgFUU1s4VJayeQS+aEZDqXIEJs=
-github.com/urfave/cli/v2 v2.14.0/go.mod h1:1CNUng3PtjQMtRzJO4FMXBQvkGtuYRxxiR9xMa7jMwI=
+github.com/urfave/cli/v2 v2.16.3/go.mod h1:1CNUng3PtjQMtRzJO4FMXBQvkGtuYRxxiR9xMa7jMwI=
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPUpymEIMZ47gx8=
 github.com/valyala/fasttemplate v1.2.1/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
