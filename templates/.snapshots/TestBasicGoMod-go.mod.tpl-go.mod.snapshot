@@ -6,5 +6,5 @@
 go 1.17
 
 require (
-	github.com/getoutreach/gobox v1.53.2
+	github.com/getoutreach/gobox v1.54.0
 ))
