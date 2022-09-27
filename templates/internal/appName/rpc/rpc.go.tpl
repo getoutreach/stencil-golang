@@ -119,7 +119,8 @@ func (s *GRPCService) Close(ctx context.Context) error {
 	return nil
 }
 
-// StartServer is deprecated. Call StartServers instead.
+// StartServer is a wrapper for StartServers for compatibility reasons
+// Deprecated: Call StartServers instead.
 func StartServer(ctx context.Context, service api.Service, opts ...grpcx.ServerOption) (*grpc.Server, error) {
 	return StartServers(ctx, &Servers{DefaultServer: service}, opts...)
 }
