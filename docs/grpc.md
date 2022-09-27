@@ -14,7 +14,7 @@ When a gRPC service is created a few additional files will be created, the most 
 - `api/<name>.proto` - contains the protobuf definition for the service
 - `internal/<name>/server.go` - contains the rpc implementation
 
-gRPC, by default, exposes prometheus metrics and traces with the [grpcx](https://github.com/getoutreach/grpcx) package. Through this package we also enable reflection by default.
+gRPC, by default, exposes prometheus metrics and traces with the [grpcx](https://github.com/getoutreach/services/tree/main/pkg/grpcx) package. Through this package we also enable reflection by default.
 
 ## Adding a New Method
 
