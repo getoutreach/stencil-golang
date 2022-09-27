@@ -118,7 +118,12 @@ func (s *GRPCService) Close(ctx context.Context) error {
 	return nil
 }
 
-// StartServer starts a RPC server with the provided implementation.
+// StartServer is deprecated. Call StartServers instead.
+func StartServer(ctx context.Context, service api.Service, opts ...grpcx.ServerOption) (*grpc.Server, error) {
+	return StartServers(ctx, &Servers{DefaultServer: service}, opts...)
+}
+
+// StartServers starts a RPC server with the provided implementation.
 func StartServers(ctx context.Context, servers *Servers, opts... grpcx.ServerOption) (*grpc.Server, error) {
 	{{- $grpcServerOptionInit := stencil.GetModuleHook "internal/rpc/grpcServerOptionInit" }}
 	{{- if $grpcServerOptionInit }}
