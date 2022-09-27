@@ -52,6 +52,7 @@ func NewGRPCService(cfg *Config) *GRPCService {
 	return &GRPCService{cfg}
 }
 
+// Servers holds all the server implementation instances.
 type Servers {
   DefaultServer api.Service
   // Add your additional RPC servers here
