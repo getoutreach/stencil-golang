@@ -1,6 +1,6 @@
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 import * as grpc from '@grpc/grpc-js';
-import { {{ title .Config.Name }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
+import { {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
 import { createAuthenticationInterceptor, createErrorLoggerInterceptor } from '@outreach/grpc-client';
 import winston from 'winston';
 import * as find from '@outreach/find';
@@ -13,7 +13,7 @@ const ConsoleTransport = () => {
 };
 
 /**
- * The ClientOptions interface defines the gRPC service endpoint the {{ title .Config.Name }}Client connects to as well
+ * The ClientOptions interface defines the gRPC service endpoint the {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client connects to as well
  * as any gRPC options that should be used by the client.
  */
 export interface ClientOptions {
@@ -27,9 +27,9 @@ export interface ClientOptions {
 /**
  * @param accessToken The token to use to authenticate all requests the client submits
  * @param options The client options that affect its behavior
- * @returns The newly created {{ title .Config.Name }}Client instance
+ * @returns The newly created {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client instance
  */
-export function create{{ title .Config.Name }}Client(accessToken: string, options?: ClientOptions): {{ title .Config.Name }}Client {
+export function create{{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client(accessToken: string, options?: ClientOptions): {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client {
   const logger = winston.createLogger({ transports: [ConsoleTransport()] });
   const endpoint = options?.endpoint || find.service('{{ .Config.Name }}').dnsName + ':5000';
   const clientName = '{{ .Config.Name }}' + ':gRPCClient';
@@ -39,5 +39,5 @@ export function create{{ title .Config.Name }}Client(accessToken: string, option
     interceptors.push(...options.interceptors);
   }
 
-  return new {{ title .Config.Name }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
+  return new {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
 }
