@@ -1,5 +1,7 @@
 {{- if empty (stencil.Arg "kubernetes.groups") }}
 {{- $_ := file.Skip "No Kubernetes groups" }}
+{{- else }}
+{{- $_ := stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "mixins" (list "kubernetes") }}
 {{- end }}
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 {{- $_ := file.SetPath (printf "deployments/%s/mixins/%s" .Config.Name (base file.Path)) }}
@@ -60,9 +62,9 @@ local common_status_properties = {
 
 // Please provide custom resource specs here. We could theoretically generate its code and spec from yaml ... but too much work for now.
 // Make will complain about missing specs when new controllers are added.
-///Block(customResources)
+// <<Stencil::Block(customResources)>>
 {{ file.Block "customResources" }}
-///EndBlock(customResources)
+// <</Stencil::Block>>
 
 local webhooks = {
   {{- if $createMutatingWebhook }}

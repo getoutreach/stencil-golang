@@ -1,9 +1,9 @@
 {
   // Please consider contributing back all added
-  // settings to bootstrap!
-  ///Block(settings)
+  // settings to stencil!
+  // <<Stencil::Block(settings)>>
 {{ file.Block "settings" }}
-  ///EndBlock(settings)
+  // <</Stencil::Block>>
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
   "go.formatTool": "goimports",

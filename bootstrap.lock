@@ -1,4 +1,4 @@
 versions:
   # HACK(jaredallard): Remove when stencil-base is cleaned up and bootstrap
   # is dead.
-  devbase: v2.3.0-rc.14
+  devbase: v2.4.0-rc.5

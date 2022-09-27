@@ -1,16 +1,13 @@
 {{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
-// Code managed by Bootstrap - modify only in the blocks
+// {{ stencil.ApplyTemplate "copyright" }}
+//
+// Description: This file contains resource definitions for each instance (bento, environment, or cluster)
+// that your service runs in.
+//
+// Managed: true
 local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
-
-// THESE VALUES ARE DEPRECATED: Use app.<value> instead.
-local name = '{{ .Config.Name }}';
-local environment = std.extVar('environment');
-local bento = std.extVar('bento');
-local cluster = std.extVar('cluster');
-local namespace = std.extVar('namespace');
-// END DEPRECATION
 
 local accounts = import './mixins/accounts.env.jsonnet';
 
@@ -21,47 +18,47 @@ local accounts = import './mixins/accounts.env.jsonnet';
 //
 // bento > cluster > environment
 local resourcesOverride = {
-    local this = self,
+		local this = self,
 
-    // If there is no match for the deployment it will default to
-    // the resources defined here.
-    default: {
-      ///Block(defaultResources)
-      {{- if file.Block "defaultResources" }}
+		// If there is no match for the deployment it will default to
+		// the resources defined here.
+		default: {
+			// <<Stencil::Block(defaultResources)>>
+			{{- if file.Block "defaultResources" }}
 {{ file.Block "defaultResources" }}
-      {{- else }}
-      requests: {
-        cpu: '100m',
-        memory: '100Mi'
-      },
-      limits: self.requests
-      {{- end }}
-      ///EndBlock(defaultResources)
-    },
+			{{- else }}
+			requests: {
+				cpu: '100m',
+				memory: '100Mi'
+			},
+			limits: self.requests
+			{{- end }}
+			// <</Stencil::Block>>
+		},
 
-    // Environment-level resource overrides go here with the 1st-level keys
-    // of the object being environment names.
-    environment: {
-      ///Block(environmentResources)
+		// Environment-level resource overrides go here with the 1st-level keys
+		// of the object being environment names.
+		environment: {
+			// <<Stencil::Block(environmentResources)>>
 {{ file.Block "environmentResources" }}
-      ///EndBlock(environmentResources)
-    },
+			// <</Stencil::Block>>
+		},
 
-    // Cluster-level resource overrides go here with the 1st-level keys of
-    // the object being bento names.
-    cluster: {
-    	///Block(clusterResources)
+		// Cluster-level resource overrides go here with the 1st-level keys of
+		// the object being bento names.
+		cluster: {
+			// <<Stencil::Block(clusterResources)>>
 {{ file.Block "clusterResources" }}
-    	///EndBlock(clusterResources)
-    },
+			// <</Stencil::Block>>
+		},
 
-    // Bento-level resource overrides go here with the 1st-level keys of the
-    // object being bento names.
-    bento: {
-      ///Block(bentoResources)
+		// Bento-level resource overrides go here with the 1st-level keys of the
+		// object being bento names.
+		bento: {
+			// <<Stencil::Block(bentoResources)>>
 {{ file.Block "bentoResources" }}
-      ///EndBlock(bentoResources)
-    }
+			// <</Stencil::Block>>
+		}
 };
 
 // Resource override merging logic.

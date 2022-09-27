@@ -82,7 +82,10 @@ vars:
     command: grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g'
   - name: APP_VERSION
     source: command
-    command: git describe --match 'v[0-9]*' --tags --always HEAD
+    command: make version
+  - name: BOX_REPOSITORY_URL
+    source: command
+    command: yq -r '.storageURL' "$HOME/.outreach/.config/box/box.yaml"
 
   - name: DLV_PORT
     value: 42097
@@ -148,7 +151,6 @@ dev:
       containerPath: ${DEV_CONTAINER_WORKDIR}
       waitInitialSync: true
       excludePaths:
-        - .git
         - bin
         - ./vendor
         - node_modules
@@ -223,6 +225,11 @@ dev:
           value:
             name: DEV_CONTAINER_EXECUTABLE
             value: ${DEV_CONTAINER_EXECUTABLE}
+        - op: add
+          path: spec.containers[0].env
+          value:
+            name: BOX_REPOSITORY_URL
+            value: ${BOX_REPOSITORY_URL}
 
         # Package caching
         - op: add
@@ -433,6 +440,6 @@ profiles:
       - vars:
           DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
 
-  ###Block(profiles)
+  ## <<Stencil::Block(profiles)>>
 {{ file.Block "profiles" }}
-  ###EndBlock(profiles)
+  ## <</Stencil::Block>>

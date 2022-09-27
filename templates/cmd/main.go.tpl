@@ -1,5 +1,6 @@
-{{- file.Skip "Using bootstrap main.go for now" }}
-{{- /* Breaking changes are required for clerk, temporal, and tollmon integration currently */}}
+{{- $_ := file.SetPath (printf "cmd/%s/%s" .Config.Name (base file.Path)) }}
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" }}
+{{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
 // {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file is the entrypoint for {{ .Config.Name }}.
@@ -22,42 +23,30 @@ import (
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/trace"
 	"github.com/getoutreach/tollmon/pkg/tollgate"
+	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/shutdown"
+	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/gomaxprocs"
 
 	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 
 	// Place any extra imports for your startup code here
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
-// setMaxProcs ensures that container CPU quotas are adhered to if any exist.
-func setMaxProcs(ctx context.Context) func() {
-	// Set GOMAXPROCS to match the Linux container CPU quota (if any)
-	undo, err := maxprocs.Set(maxprocs.Logger(func(m string, args ...interface{}) {
-		message := fmt.Sprintf(m, args...)
-		log.Info(ctx, "maxprocs.Set", log.F{"message": message})
-	}))
-	if err != nil {
-		log.Error(ctx, "maxprocs.Set", events.NewErrorInfo(err))
-		return func(){}
-	}
-	return undo
-}
-
 // Place any customized code for your service in this block
-///Block(customized)
+//
+// <<Stencil::Block(customized)>>
 {{ file.Block "customized" }}
-///EndBlock(customized)
+// <</Stencil::Block>>
 
-{{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
+// main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	env.ApplyOverrides()
 	app.SetName("{{ .Config.Name }}")
-	defer setMaxProcs(ctx)()
 
 	cfg, err := {{ $pkgName }}.LoadConfig(ctx)
 	if err != nil {
@@ -72,37 +61,68 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	defer trace.CloseTracer(ctx)
 
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
+	{{- $preInitializationBlock := stencil.GetModuleHook "preInitializationBlock" }}
+	{{- if $preInitializationBlock }}
+
+	// Code inserted by modules
+		{{- range $preInitializationBlock  }}
+	{{ . }}
+		{{- end }}
+	// End code inserted by modules
+	{{- end }}
 
 	// Place any code for your service to run before registering service activities in this block
-	///Block(initialization)
+	// <<Stencil::Block(initialization)>>
 {{ file.Block "initialization" }}
-	///EndBlock(initialization)
+	// <</Stencil::Block>>
+	{{- $postInitializationBlock := stencil.GetModuleHook "postInitializationBlock" }}
+	{{- if $postInitializationBlock }}
+
+	// Code inserted by modules
+		{{- range $postInitializationBlock  }}
+	{{ . }}
+		{{- end }}
+	// End code inserted by modules
+	{{- end }}
 
 	acts := []async.Runner{
-		{{ $pkgName }}.NewShutdownService(),
-		&{{ $pkgName }}.NewHTTPService(),
+		shutdown.New(),
+		gomaxprocs.New(),
+		{{ $pkgName }}.NewHTTPService(cfg),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
-		&{{ $pkgName }}.NewPublicHTTPService(),
+		{{ $pkgName }}.NewPublicHTTPService(cfg),
 		{{- end }}
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
-		&{{ $pkgName }}.NewGRPCService(),
+		{{ $pkgName }}.NewGRPCService(cfg),
 		{{- end }}
 		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewKafkaConsumerService(),
+		{{ $pkgName }}.NewKafkaConsumerService(cfg),
 		{{- end }}
-		{{- if not (stencil.Arg "kubernetes.groups") }}
-		{{ $pkgName }}.NewKubernetesService(),
+		{{- if stencil.Arg "kubernetes.groups" }}
+		{{ $pkgName }}.NewKubernetesService(cfg),
 		{{- end }}
+		{{- $svcActs := stencil.GetModuleHook "serviceActivities" }}
+		{{- if $svcActs }}
+
+		// Service activities inserted by modules here
+			{{- range $svcActs  }}
+			{{ . }},
+			{{- end }}
+		// End service activities inserted by modules
+		{{- end }}
+
 		// Place any additional ServiceActivities that your service has built here to have them handled automatically
-		///Block(services)
+		//
+		// <<Stencil::Block(services)>>
 {{ file.Block "services" }}
-		///EndBlock(services)
+		// <</Stencil::Block>>
 	}
 
 	// Place any code for your service to run during startup in this block
-	///Block(startup)
+	//
+	// <<Stencil::Block(startup)>>
 {{ file.Block "startup" }}
-	///EndBlock(startup)
+	// <</Stencil::Block>>
 
 	if err := async.RunGroup(acts).Run(ctx); err != nil {
 		log.Warn(ctx, "shutting down service", events.NewErrorInfo(err))

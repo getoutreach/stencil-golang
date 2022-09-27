@@ -1,5 +1,6 @@
 name: github.com/getoutreach/stencil-golang
 ###Block(keys)
+type: templates,extension
 modules:
   - name: github.com/getoutreach/stencil-discovery
 arguments:
@@ -71,7 +72,6 @@ arguments:
     schema:
       type: string
       enum:
-        - honeycomb
         - opentelemetry
         - lightstep
     descriptions: Tracing backend to send traces to
@@ -92,16 +92,6 @@ arguments:
       items:
         type: string
     description: "List of mixins to also import. Set in override.jsonnet instead"
-    deprecated: true
-  skipResourcesCheck:
-    schema:
-      type: boolean
-    description: Whether or not to check for resources related to `serviceActivities`.
-    deprecated: true
-  resources.kafka:
-    schema:
-      type: string
-    description: Kafka version to use in github.com/getoutreach/stencil-circleci (used to check resources related to `serviceActivities`).
     deprecated: true
   dependencies.optional:
     schema:
@@ -181,17 +171,24 @@ arguments:
     schema:
       type: number
     description: Overrides the min available replica count in the "available_pods_low" alert in terraform module in monitoring/datadog.tf.
-  deployment.serviceDomain:
-    description: The service domain that the service is needs deployed to.
+  deployment.serviceDomains:
+    description: The service domains that the service is deployed to.
     schema:
-      type: string
+      type: array
   deployment.environments:
     description: A list of environments that the service is deployed to.
     schema:
       type: array
   versions.go:
     description: Go version to use
-    default: 1.19
+    default: "1.19"
+    schema:
+      type:
+        - string
+        - number
+  versions.alpine:
+    description: Alpine version to use
+    default: "3.16"
     schema:
       type:
         - string

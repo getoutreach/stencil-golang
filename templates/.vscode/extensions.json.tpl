@@ -16,9 +16,9 @@
     {{- end }}
 
     // Please consider contributing back all recommended
-    // extensions to bootstrap!
-    ///Block(extensions)
+    // extensions to stencil!
+    // <<Stencil::Block(extensions)>>
 {{ file.Block "extensions" }}
-    ///EndBlock(extensions)
+    // <</Stencil::Block>>
   ]
 }

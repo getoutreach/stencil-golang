@@ -42,6 +42,6 @@ typings/
 
 .DS_Store
 
-###Block(nodeGitIgnore)
+## <<Stencil::Block(nodeGitIgnore)>>
 {{ file.Block "nodeGitIgnore" }}
-###EndBlock(nodeGitIgnore)
+## <</Stencil::Block>>

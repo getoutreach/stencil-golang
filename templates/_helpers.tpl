@@ -4,13 +4,6 @@
 {{ fail "service has to be set to \"true\" in order to supply \"serviceActivities\"" }}
 {{- end }}
 
-# Checks that kafka has an accompanying resource defined
-{{- if and (has "kafka" (stencil.Arg "serviceActivities")) (not (stencil.Arg "skipResourcesCheck")) }}
-  {{- if not (stencil.Arg "resources.kafka") }}
-    {{ fail "Kafka used without automatic resource provisioning with resources.kafka. See https://github.com/getoutreach/stencil-circleci for full setup details. If you are provisioning Kafka manually or using a module that does not follow the resources convention, disable this check by setting skipResourcesCheck." }}
-  {{- end }}
-{{- end }}
-
 # This will be better when we rollout the versions functionality
 # in stencil later.
 {{- define "goVersion" }}
@@ -27,10 +20,10 @@
   version: 0.13.5
 # Just in case bundler/etc needs to be used in the root.
 - name: ruby
-  version: 2.6.6
+  version: 2.7.5
 # Used in CI
 - name: protoc
-  version: 3.19.1
+  version: 21.5
 {{- end }}
 
 # Registers our versions w/ stencil-base
@@ -107,37 +100,27 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.49.1
-{{- if not (stencil.Arg "oss") }}
-- name: github.com/getoutreach/mint
-  version: v1.51.0
-{{- if eq "honeycomb" (stencil.Arg "tracing") }}
-- name: github.com/getoutreach/httpx
-  version: v1.13.1
-- name: github.com/getoutreach/services
-  version: v1.95.2
-{{- else }}
-- name: github.com/getoutreach/httpx
-  version: v1.16.0
-- name: github.com/getoutreach/services
-  version: v1.101.0
-{{- end }}
-- name: github.com/getoutreach/datastores/v2
-  version: v2.17.0
-{{- end }}
+  version: v1.54.0
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
-- name: github.com/getoutreach/tollmon
-  version: v1.26.0
 - name: google.golang.org/grpc
   version: v1.37.0
 - name: github.com/getoutreach/orgservice
-  version: v1.39.0
+  version: v1.63.0
 {{- end }}
 
 {{- if stencil.Arg "commands" }}
 - name: github.com/urfave/cli/v2
-  version: v2.3.0
+  version: v2.16.3
+{{- end }}
+
+{{- if stencil.Arg "kubernetes.groups" }}
+- name: k8s.io/apimachinery
+  version: v0.23.0
+- name: k8s.io/client-go
+  version: v0.23.0
+- name: sigs.k8s.io/controller-runtime
+  version: v0.9.6
 {{- end }}
 
 {{- range stencil.GetModuleHook "go_modules" }}
@@ -177,7 +160,7 @@ nodejs:
   - name: "@typescript-eslint/eslint-plugin"
     version: ^2.33.0
   - name: "@typescript-eslint/parser"
-    version: ^4.1.1
+    version: ^2.33.0
   - name: eslint
     version: ^7.13.0
   - name: eslint-config-prettier

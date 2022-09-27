@@ -20,8 +20,6 @@ Add a dependency to this service. This dependency will be ignored by dependency 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "go_modules" (stencil.ApplyTemplate "deps" | fromYaml) }}
 ```
 
-````
-
 ### `js_modules`
 
 **Type**: `{ name string, version string }`
@@ -47,8 +45,12 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 Environment variables to write out to `private.env` for VSCode to use while running tests.
 
 ```yaml
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "MY_ENV_VAR" "my-value")) }}
-````
+{
+  {
+    stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" (list (dict "MY_ENV_VAR" "my-value")),
+  },
+}
+```
 
 ### `api.Service`
 
@@ -103,4 +105,31 @@ Extra mixin files in `deployments/appname/mixins` to include in the jsonnet depl
 # deployments/appname/mixins/my-mixin.jsonnet
 {{ $myMixin := "my-mixin" }}
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "mixins" (list $myMixin) }}
+```
+
+### `Dockerfile.afterBuild`
+
+**Type**: `string`
+
+**File**: `deployments/appname/Dockerfile.tpl`
+
+Extra commands to run after the build stage in the Dockerfile.
+
+```tpl
+{{ $myCommand := "RUN echo 'hello world'" }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "Dockerfile.afterBuild" (list $myCommand) }}
+```
+
+### `app.config.jsonnet/config`
+
+**Type**: `string`
+
+**File**: `deployments/appname/app.config.jsonnet.tpl`
+
+Extra configuration jsonnet files to merge into the application config.
+
+```tpl
+# deployments/appname/configs/my-config.jsonnet
+{{ $myConfig := "my-config" }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "app.config.jsonnet/config" (list $myConfig) }}
 ```

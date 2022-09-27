@@ -1,0 +1,10 @@
+(*codegen.File)(module github.com/getoutreach/testing
+
+// This is locked to 1.17 to ensure that generics
+// are not in use. This will be removed in the near future.
+// - https://outreach-io.atlassian.net/wiki/spaces/DT/pages/2475294804
+go 1.17
+
+require (
+	github.com/getoutreach/gobox v1.54.0
+))

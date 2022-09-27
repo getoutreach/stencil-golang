@@ -20,18 +20,18 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	// Place imports here
-	///Block(imports)
+	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
-	///EndBlock(imports)
+	// <</Stencil::Block>>
 )
 
 {{- if $isCustomResource }}
 
 // {{ $r.kind }}Spec holds the spec metadata for {{ $r.kind }} resource.
 type {{ $r.kind }}Spec struct {
-	///Block(spec)
+	// <<Stencil::Block(spec)>>
 {{ file.Block "spec" }}
-	///EndBlock(spec)
+	// <</Stencil::Block>>
 }
 
 // Hash returns the hash of all the spec fields, it is used to detect changes in the spec.
@@ -45,9 +45,9 @@ func (s *{{ $r.kind }}Spec) Hash() (string, error) {
 type {{ $r.kind }}Status struct {
   resources.ResourceStatus
 
-	///Block(status)
+	// <<Stencil::Block(status)>>
 {{ file.Block "status" }}
-	///EndBlock(status)
+	// <</Stencil::Block>>
 }
 
 // {{ $r.kind }} is the schema for the {{ $r.kind }} resource.
@@ -63,9 +63,9 @@ type {{ $r.kind }} struct {
 	// Status holds CR's status fields.
 	Status {{ $r.kind }}Status   `json:"status"`
 
-	///Block(crFields)
+	// <<Stencil::Block(crFields)>>
 {{ file.Block "crFields" }}
-	///EndBlock(crFields)
+	// <</Stencil::Block>>
 }
 
 // GetSpec allows reconciler to perform generic operations on
@@ -103,16 +103,16 @@ func (r *{{ $r.kind }}) MarshalLog(addfield func(key string, value interface{}))
 }
 
 // Define additional types here.
-///Block(moreTypes)
+// <<Stencil::Block(moreTypes)>>
 {{ file.Block "moreTypes" }}
-///EndBlock(moreTypes)
+// <</Stencil::Block>>
 
 // init registers the custom types with the schema
 func init() { //nolint:gochecknoinits // Why: used for registering
 	// Register additional types here.
-	///Block(registerTypes)
+	// <<Stencil::Block(registerTypes)>>
 {{ file.Block "registerTypes" }}
-	///EndBlock(registerTypes)
+	// <</Stencil::Block>>
 
 	SchemeBuilder.Register(&{{ $r.kind }}{}, &{{ $r.kind }}List{})
 }
