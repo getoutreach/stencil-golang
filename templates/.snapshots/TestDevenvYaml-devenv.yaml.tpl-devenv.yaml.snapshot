@@ -1,8 +1,8 @@
 (*codegen.File)(service: false
 dependencies:
-  optional: 
+  optional:
     - ghi
-  required: 
+  required:
     - abc
     - def
 )
