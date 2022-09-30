@@ -106,3 +106,8 @@ func TestDevenvYaml(t *testing.T) {
 	})
 	st.Run(false)
 }
+
+func TestEmptyDevenvYaml(t *testing.T) {
+	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
+	st.Run(false)
+}
