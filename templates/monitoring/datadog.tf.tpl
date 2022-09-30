@@ -129,7 +129,7 @@ resource "datadog_monitor" "available_pods_low" {
 resource "datadog_monitor" "panics" {
   type    = "log alert"
   name    = "{{ .Config.Name | title }} Service panics"
-  query   = "logs(\"panic status:error service:{{ .Config.Name }} -env:development\").index(\"*\").rollup(\"count\").by(\"kube_namespace\").last(\"5m\") > 0"
+  query   = "logs(\"panic status:error service:{{ .Config.Name }} -env:development -@k8s_namespace:*devenv*\").index(\"*\").rollup(\"count\").by(\"kube_namespace\").last(\"5m\") > 0"
   tags    = local.ddTags
   message = <<EOF
   Log based monitor of runtime error panics.
