@@ -104,6 +104,7 @@ issues:
         - gosec
         - funlen
         - gochecknoglobals # Globals in test files are tolerated.
+        - goconst # Repeated consts in test files are tolerated.
     # This rule is buggy and breaks on our `///Block` lines.  Disable for now.
     - linters:
         - gocritic
