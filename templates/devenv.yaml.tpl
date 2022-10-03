@@ -1,18 +1,20 @@
 service: {{ stencil.Arg "service" }}
 dependencies:
-{{- if gt (len (stencil.GetModuleHook "devenv.dependencies.optional")) 0 }}
+{{- if stencil.GetModuleHook "devenv.dependencies.optional" }}
   optional:
-{{- range (stencil.GetModuleHook "devenv.dependencies.optional") }}
+  {{- range (stencil.GetModuleHook "devenv.dependencies.optional") }}
     - "{{ . }}"
-{{- end }}
+  {{- end }}
 {{- else }}
-  optional: []
+  optional:
+{{ toYaml (stencil.Arg "dependencies.optional") | indent 4 }}
 {{- end }}
-{{- if gt (len (stencil.GetModuleHook "devenv.dependencies.required")) 0 }}
+{{- if stencil.GetModuleHook "devenv.dependencies.required" }}
   required:
-{{- range (stencil.GetModuleHook "devenv.dependencies.required") }}
+  {{- range (stencil.GetModuleHook "devenv.dependencies.required") }}
     - "{{ . }}"
-{{- end }}
+  {{- end }}
 {{- else }}
-  required: []
+  required:
+{{ toYaml (stencil.Arg "dependencies.required") | indent 4 }}
 {{- end }}

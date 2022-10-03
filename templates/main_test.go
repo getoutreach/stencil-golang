@@ -90,3 +90,24 @@ func TestMergeGoMod(t *testing.T) {
 
 	st.Run(false)
 }
+
+func TestDevenvYaml(t *testing.T) {
+	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"dependencies": map[string]interface{}{
+			"required": []interface{}{
+				"abc",
+				"def",
+			},
+			"optional": []interface{}{
+				"ghi",
+			},
+		},
+	})
+	st.Run(false)
+}
+
+func TestEmptyDevenvYaml(t *testing.T) {
+	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
+	st.Run(false)
+}
