@@ -53,7 +53,7 @@ func NewGRPCService(cfg *Config) *GRPCService {
 }
 
 // Servers holds all the server implementation instances.
-type Servers {
+type Servers struct {
   DefaultServer api.Service
   // Add your additional RPC servers here
   // <<Stencil::Block(servers)>>
