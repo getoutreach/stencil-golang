@@ -5,7 +5,6 @@
     "hashicorp.terraform",
     "golang.go",
     "Grafana.vscode-jsonnet",
-    "xrc-inc.jsonnet-formatter",
     "timonwong.shellcheck",
     "zxh404.vscode-proto3",
     "redhat.vscode-yaml",
