@@ -4,7 +4,7 @@
     "esbenp.prettier-vscode",
     "hashicorp.terraform",
     "golang.go",
-    "heptio.jsonnet",
+    "Grafana.vscode-jsonnet",
     "xrc-inc.jsonnet-formatter",
     "timonwong.shellcheck",
     "zxh404.vscode-proto3",
