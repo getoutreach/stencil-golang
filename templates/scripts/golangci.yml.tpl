@@ -2,20 +2,6 @@
 lintroller:
   tier: "{{ stencil.Arg "lintroller" }}"
 
-severity:
-  default-severity: error
-  case-sensitive: false
-  rules:
-    - severity: warning
-      # New rule, add as warning for now
-      text: "^(redundantSprint|ioutilDeprecated|octalLiteral):"
-      linters:
-        - gocritic
-    - severity: warning
-      # New rule, add as warning for now
-      linters:
-        - errorlint
-
 # Linter settings
 linters-settings:
   errcheck:
