@@ -255,6 +255,13 @@ dev:
             name: GOMODCACHE
             value: ${DEV_CONTAINER_CACHE}/go/mod
 
+        # Lint caching
+        - op: add
+          path: spec.containers[0].env
+          value:
+            name: GOLANGCI_LINT_CACHE
+            value: ${DEV_CONTAINER_CACHE}/golangci-lint
+
         # Storage for sources - this way we don't have to sync everything every time, makes startup faster
         - op: add
           path: spec.volumes
