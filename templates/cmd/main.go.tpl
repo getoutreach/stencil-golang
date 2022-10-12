@@ -126,5 +126,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 	if err := async.RunGroup(acts).Run(ctx); err != nil {
 		log.Warn(ctx, "shutting down service", events.NewErrorInfo(err))
+    // If there is an error it should exit with a code to indicate it
+		defer os.Exit(1)
 	}
 }
