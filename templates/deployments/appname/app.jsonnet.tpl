@@ -230,6 +230,7 @@ local all = {
 								MY_DEPLOYMENT: app.name,
 								MY_ENVIRONMENT: app.environment,
 								MY_CLUSTER: app.cluster,
+								MY_REGION: app.region,
 							},
 							readinessProbe: {
 								httpGet: {
