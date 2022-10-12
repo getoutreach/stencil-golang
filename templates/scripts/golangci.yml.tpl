@@ -34,6 +34,7 @@ linters-settings:
       - style
     disabled-checks:
       - whyNoLint # Doesn't seem to work properly
+      - timeCmpSimplify # Suggests bad simplifications (After is not identical to !Before).
   funlen:
     lines: 500
     statements: 50
