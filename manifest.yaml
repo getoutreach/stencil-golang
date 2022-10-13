@@ -4,6 +4,37 @@ type: templates,extension
 modules:
   - name: github.com/getoutreach/stencil-discovery
 arguments:
+  githubActions:
+    description: List of github actions you want to create
+    required: false
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          name: 
+            type: string
+            pattern: "^[a-z0-9-_]*$"
+          dockerConfig:
+            require: true
+            type: object
+            properties:
+              buildContext:
+                require: true
+                type: string
+                default: "" 
+              pushTo:
+                require: false
+                type: "string"
+                default: ""
+              secrets:
+                require: false
+                type: "string"
+                default: ""
+              platforms:
+                require: false
+                type: "string"
+                default: ""
   service:
     schema:
       type: boolean
