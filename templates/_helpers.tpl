@@ -56,7 +56,6 @@
 {{- define "skipIfNotService" }}
 {{- if not (stencil.Arg "service") }}
   {{ file.Skip "Not a service" }}
-  {{ file.Delete }}
 {{- end }}
 {{- end }}
 
