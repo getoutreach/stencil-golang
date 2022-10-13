@@ -48,7 +48,6 @@
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
 {{- if not (and (has "grpc" $serviceActivities) (has $grpcClient $grpcClients)) }}
   {{ file.Skip (printf "Not a gRPC service, or %s client not specified in grpcClients" $grpcClient) }}
-  {{ file.Delete }}
 {{- end }}
 {{- end }}
 
