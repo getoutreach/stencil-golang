@@ -43,9 +43,7 @@ import (
 // main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
   exitCode := 1
-  defer func() {
-    os.Exit(exitCode)
-  }
+  defer os.Exit(exitCode)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
