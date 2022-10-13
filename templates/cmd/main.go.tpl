@@ -42,11 +42,12 @@ import (
 
 // main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
-	ctx, cancel := context.WithCancel(context.Background())
   exitCode := 1
   defer func() {
     os.Exit(exitCode)
   }
+
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	env.ApplyOverrides()
