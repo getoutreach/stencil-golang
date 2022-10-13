@@ -45,7 +45,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
   exitCode := 1
   defer os.Exit(exitCode)
 
-	ctx, cancel := context.WithCancel(context.Background())
+  ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	env.ApplyOverrides()
@@ -127,8 +127,11 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 {{ file.Block "startup" }}
 	// <</Stencil::Block>>
 
-	if err := async.RunGroup(acts).Run(ctx); err != nil {
-		log.Warn(ctx, "shutting down service", events.NewErrorInfo(err))
+	if err := async.RunGroup(acts).Run(ctx); err != nil && !errors.Is(err, context.Canceled) {
+		log.Error(ctx, "shutting down service", events.NewErrorInfo(err))
+		return
 	}
-  exitCode = 0
+
+	exitCode = 0
+	log.Info(ctx, "graceful shutdown process successful")
 }
