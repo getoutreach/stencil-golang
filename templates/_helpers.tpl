@@ -151,8 +151,6 @@ nodejs:
   devDependencies:
   - name: "@outreach/eslint-config"
     version: ^1.0.4
-  - name: "@outreach/prettier-config"
-    version: ^1.0.3
   - name: "@types/jest"
     version: ^26.0.15
   - name: "@typescript-eslint/eslint-plugin"
