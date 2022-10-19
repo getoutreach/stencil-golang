@@ -35,7 +35,6 @@ updates:
       - dependency-name: "ts-enum-util"
       - dependency-name: "winston"
       - dependency-name: "@outreach/eslint-config"
-      - dependency-name: "@outreach/prettier-config"
       - dependency-name: "@types/jest"
       - dependency-name: "@typescript-eslint/eslint-plugin"
       - dependency-name: "@typescript-eslint/parser"
