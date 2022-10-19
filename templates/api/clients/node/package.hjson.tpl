@@ -49,7 +49,6 @@
     "test-ci": "NODE_ENV=test jest \"./src/\"",
     "tsc": "node -r tsconfig-paths/register ./node_modules/.bin/tsc -p tsconfig.production.json && node ./scripts/copy-definitions.js"
   },
-  "prettier": "@outreach/prettier-config",
   "moduleDirectories": [
     "node_modules",
     "src"
