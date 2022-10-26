@@ -48,7 +48,6 @@
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
 {{- if not (and (has "grpc" $serviceActivities) (has $grpcClient $grpcClients)) }}
   {{ file.Skip (printf "Not a gRPC service, or %s client not specified in grpcClients" $grpcClient) }}
-  {{ file.Delete }}
 {{- end }}
 {{- end }}
 
@@ -56,7 +55,6 @@
 {{- define "skipIfNotService" }}
 {{- if not (stencil.Arg "service") }}
   {{ file.Skip "Not a service" }}
-  {{ file.Delete }}
 {{- end }}
 {{- end }}
 
@@ -153,8 +151,6 @@ nodejs:
   devDependencies:
   - name: "@outreach/eslint-config"
     version: ^1.0.4
-  - name: "@outreach/prettier-config"
-    version: ^1.0.3
   - name: "@types/jest"
     version: ^26.0.15
   - name: "@typescript-eslint/eslint-plugin"
