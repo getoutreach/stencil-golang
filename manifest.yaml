@@ -4,8 +4,6 @@ type: templates,extension
 modules:
   - name: github.com/getoutreach/stencil-discovery
 arguments:
-  githubActions:
-    from: github.com/getoutreach/stencil-actions
   service:
     schema:
       type: boolean
