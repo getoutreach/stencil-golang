@@ -3,10 +3,7 @@ name: github.com/getoutreach/stencil-golang
 type: templates,extension
 modules:
   - name: github.com/getoutreach/stencil-discovery
-  - name: github.com/getoutreach/stencil-actions
 arguments:
-  githubActions:
-    from: github.com/getoutreach/stencil-actions
   service:
     schema:
       type: boolean
