@@ -193,4 +193,9 @@ arguments:
       type:
         - string
         - number
+  versions.terraform:
+    schema:
+      type: string
+    default: "0.14.11"
+    description: The version of terraform that is used.
 ###EndBlock(keys)
