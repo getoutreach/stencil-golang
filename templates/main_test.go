@@ -114,3 +114,20 @@ func TestEmptyDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
 	st.Run(false)
 }
+
+func TestDatadogTf(t *testing.T) {
+	st := stenciltest.New(t, "monitoring/datadog.tf.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"reportingTeam": "test:team",
+		"deployment": map[string]interface{}{
+			"environments": []interface{}{
+				"staging",
+				"production",
+			},
+			"serviceDomains": []interface{}{
+				"bento",
+			},
+		},
+	})
+	st.Run(false)
+}
