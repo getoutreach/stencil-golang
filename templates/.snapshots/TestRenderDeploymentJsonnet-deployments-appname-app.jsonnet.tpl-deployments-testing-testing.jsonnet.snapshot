@@ -226,6 +226,9 @@ local override = import './testing.override.jsonnet';
 local configuration = import './testing.config.jsonnet';
 
 local mixins = [
+	import './mixins/a.jsonnet',
+	import './mixins/b.jsonnet',
+	import './mixins/c.jsonnet',
 ];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});
 
