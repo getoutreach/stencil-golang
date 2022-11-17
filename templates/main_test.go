@@ -30,6 +30,9 @@ func TestRenderDeploymentConfig(t *testing.T) {
 
 func TestRenderDeploymentJsonnet(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"mixins": []interface{}{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
+	})
 	st.Run(false)
 }
 

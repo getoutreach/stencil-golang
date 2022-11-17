@@ -319,7 +319,7 @@ local override = import './{{ $appName }}.override.jsonnet';
 local configuration = import './{{ $appName }}.config.jsonnet';
 
 local mixins = [
-	{{- range $mixin := concat (stencil.Arg "mixins") (stencil.GetModuleHook "mixins") }}
+	{{- range $mixin := sortAlpha (concat (stencil.Arg "mixins") (stencil.GetModuleHook "mixins")) }}
 	import './mixins/{{ $mixin }}.jsonnet',
 	{{- end }}
 ];
