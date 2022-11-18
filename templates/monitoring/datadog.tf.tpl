@@ -72,7 +72,7 @@ resource "datadog_monitor" "pod_restarts_high" {
 resource "datadog_monitor" "pod_cpu_high" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Pod CPU > ${var.cpu_high_threshold}% of limit last ${var.cpu_high_window}m"
-  query = "avg(last_${var.cpu_high_window}m):100 * (default_zero(avg:kubernetes.cpu.usage.total{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}) / 1000000000) / avg:kubernetes.cpu.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace} >= ${var.cpu_high_threshold}"
+  query = "avg(last_${var.cpu_high_window}m):100 * (default_zero(avg:kubernetes.cpu.usage.total{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}) / 1000000000) / avg:kubernetes.cpu.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} >= ${var.cpu_high_threshold}"
   tags = local.ddTags
   message = <<EOF
   One of the service's pods has been using over ${var.cpu_high_threshold}% of its limit CPU on average for the last ${var.cpu_high_window} minutes.  This almost certainly means that the service needs more CPU to function properly and is being throttled in its current form.
@@ -85,7 +85,7 @@ resource "datadog_monitor" "pod_cpu_high" {
 resource "datadog_monitor" "pod_memory_rss_high" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Pod Memory.rss > 80% of limit last 30m"
-  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.rss{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace}), 60, 'max') >= 80"
+  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.rss{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}), 60, 'max') >= 80"
   tags = local.ddTags
   message = <<EOF
   One of the service's pods has been using over 80% of its limit memory on average for the last 30 minutes.  This almost certainly means that the service needs more memory to function properly and is being throttled in its current form due to GC patterns and/or will be OOMKilled if consumption increases.
@@ -98,7 +98,7 @@ resource "datadog_monitor" "pod_memory_rss_high" {
 resource "datadog_monitor" "pod_memory_working_set_high" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Pod Memory.working_set > 80% of limit last 30m"
-  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.working_set{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace}), 60, 'max') >= 80"
+  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.working_set{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}), 60, 'max') >= 80"
   tags = local.ddTags
   message = <<EOF
   One of the service's pods has been using over 80% of its limit memory on average for the last 30 minutes.  This almost certainly means that the service needs more memory to function properly and is being throttled in its current form due to GC patterns and/or will be OOMKilled if consumption increases.
