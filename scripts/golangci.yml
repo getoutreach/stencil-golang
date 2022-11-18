@@ -1,5 +1,6 @@
-# HACK(jaredallard): Remove when stencil-base is cleaned up.
 # yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
+lintroller:
+  tier: "platinum"
 
 # Linter settings
 linters-settings:
@@ -42,7 +43,6 @@ linters:
   disable-all: true
   enable:
     - bodyclose
-    - deadcode
     - depguard
     - dogsled
     - errcheck
@@ -65,12 +65,10 @@ linters:
     # - misspell        # The reason we're disabling this right now is because it uses 1/2 of the memory of the run.
     - nakedret
     - staticcheck
-    - structcheck
     - typecheck
     - unconvert
     - unparam
     - unused
-    - varcheck
     - whitespace
 
 issues:
@@ -89,6 +87,7 @@ issues:
         - gosec
         - funlen
         - gochecknoglobals # Globals in test files are tolerated.
+        - goconst # Repeated consts in test files are tolerated.
     # This rule is buggy and breaks on our `///Block` lines.  Disable for now.
     - linters:
         - gocritic
