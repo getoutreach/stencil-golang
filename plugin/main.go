@@ -1,3 +1,5 @@
+// Copyright 2022 Outreach Corporation. All Rights Reserved.
+
 package main
 
 import (
