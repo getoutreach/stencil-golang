@@ -94,6 +94,11 @@ func (s *KafkaConsumerService) Run(ctx context.Context) error {
 		MaxBytes: 10e6, // 10MB
 	})
 
+	// add custom setup before running the service 
+	// <<Stencil::Block(run)>>
+{{ file.Block "run" }}
+	// <</Stencil::Block>>
+
 	s.pollMessages(ctx)
 
 	return ctx.Err()
