@@ -447,6 +447,21 @@ profiles:
       - vars:
           DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
 
+{{- range (stencil.GetModuleHook "devspace.profiles") }}
+  - name: {{ .name }}
+    {{- if .description }}
+    description: {{ .description }}
+    {{- end }}
+    activation:
+      {{- if .activation }}
+{{ toYaml .activation | indent 6 }}
+      {{- end }}
+    {{- if .patches }}
+    patches:
+{{ toYaml .patches | indent 6 }}
+    {{- end }}
+{{- end }}
+
   ## <<Stencil::Block(profiles)>>
 {{ file.Block "profiles" }}
   ## <</Stencil::Block>>
