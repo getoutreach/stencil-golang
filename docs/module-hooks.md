@@ -133,3 +133,45 @@ Extra configuration jsonnet files to merge into the application config.
 {{ $myConfig := "my-config" }}
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "app.config.jsonnet/config" (list $myConfig) }}
 ```
+
+### `devspace.profiles`
+
+**Type**: 
+```
+{ 
+   name: string, 
+   description: string, 
+   activation: 
+      env: [ key: value ]
+      vars: [ key: value ]
+   patches:
+      [
+        {
+          op: string
+          path: string
+          value: [ key: value ]
+        }
+      ]
+```
+
+**File**: `devspace.yaml.tpl`
+
+Extra [devspace profiles](https://www.devspace.sh/docs/5.x/configuration/profiles/basics) to merge into the devspace.yaml config. 
+
+```tpl
+{{- define "ingestTerminalDevspaceProfile" }}
+- name: {{ .Config.Name }}-ingest-terminal
+  description: Allows for running ingest in --with-terminal mode
+  activation:
+    - env:
+        DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}-ingest
+        DEVENV_DEV_TERMINAL: "true"
+  patches:
+    - op: replace
+      path: dev.terminal.labelSelector
+      value:
+        app: {{ .Config.Name }}-ingest
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.profiles" (stencil.ApplyTemplate "ingestDevspaceProfile" | fromYaml) }}
+```
