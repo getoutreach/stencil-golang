@@ -168,17 +168,17 @@ variable http_success_rate_evaluation_window {
 
 variable http_latency_high_count_threshold {
   type = number
-  default {{ stencil.Arg "terraform.datadog.http.latency.count.highCount" | default 1000 }}
+  default = {{ stencil.Arg "terraform.datadog.http.latency.count.highCount" | default 1000 }}
 }
 
 variable http_latency_high_low_traffic_threshold {
   type = number
-  default {{ stencil.Arg "terraform.datadog.http.latency.thresholds.lowTraffic" | default 2 }}
+  default = {{ stencil.Arg "terraform.datadog.http.latency.thresholds.lowTraffic" | default 2 }}
 }
 
 variable http_latency_high_high_traffic_threshold {
   type = number
-  default {{ stencil.Arg "terraform.datadog.http.latency.thresholds.highTraffic" | default 2 }}
+  default = {{ stencil.Arg "terraform.datadog.http.latency.thresholds.highTraffic" | default 2 }}
 }
 
 locals {
