@@ -102,3 +102,24 @@ The level of rules to apply for the [lintroller](https://github.com/getoutreach/
 **Default**: `[]`
 
 A list of Vault key paths to use for this service. These secrets will be pulled on deployment time and stored in a Kubernetes secret with the `basename` of the path.
+
+## `terraform.datadog.http.latency.count.highCount`
+
+**Type**: `number`
+**Default**: `1000`
+
+Overrides the high count threshold in the `http_latency_high` terraform module in `monitoring/datadog.tf`.
+
+## `terraform.datadog.http.latency.thresholds.lowTraffic`
+
+**Type**: `number`
+**Default**: `2`
+
+Overrides the low traffic threshold in the `http_latency_high` terraform module in `monitoring/datadog.tf`.
+
+## `terraform.datadog.http.latency.thresholds.highTraffic`
+
+**Type**: `number`
+**Default**: `2`
+
+Overrides the high traffic threshold in the `http_latency_high` terraform module in `monitoring/datadog.tf`.
