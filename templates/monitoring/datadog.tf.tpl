@@ -166,6 +166,21 @@ variable http_success_rate_evaluation_window {
   default = {{ stencil.Arg "terraform.datadog.http.evaluationWindow" | default "last_15m" | quote }}
 }
 
+variable http_latency_high_count_threshold {
+  type = number
+  default = {{ stencil.Arg "terraform.datadog.http.latency.count.highCount" | default 1000 }}
+}
+
+variable http_latency_high_low_traffic_threshold {
+  type = number
+  default = {{ stencil.Arg "terraform.datadog.http.latency.thresholds.lowTraffic" | default 2 }}
+}
+
+variable http_latency_high_high_traffic_threshold {
+  type = number
+  default = {{ stencil.Arg "terraform.datadog.http.latency.thresholds.highTraffic" | default 2 }}
+}
+
 locals {
 	http_request_seconds = local.prefix ? "{{ stencil.ApplyTemplate "goPackageSafeName" }}.http_request_seconds" : "http_request_seconds" 
 }
@@ -200,9 +215,9 @@ module "http_latency_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(last_15m):count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < 1000"
-  low_traffic_query = "avg(last_15m):p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > 2"
-  high_traffic_query = "avg(last_15m):p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > 2"
+  low_count_query = "sum(last_15m):count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_latency_high_count_threshold}"
+  low_traffic_query = "avg(last_15m):p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_low_traffic_threshold}"
+  high_traffic_query = "avg(last_15m):p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_high_traffic_threshold}"
 }
 
 resource "datadog_service_level_objective" "http_p99_latency" {
