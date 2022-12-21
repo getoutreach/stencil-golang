@@ -159,14 +159,6 @@ arguments:
     schema:
       type: number
     description: Overrides the low count threshold in the "http_success_rate_low" & "http_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.qos.thresholds.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.qos.thresholds.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
   terraform.datadog.http.latency.thresholds.lowTraffic:
     schema:
       type: number
