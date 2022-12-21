@@ -39,6 +39,38 @@ locals {
   ddTags = concat(["{{ .Config.Name }}", "team:{{  stencil.Arg "reportingTeam" }}"], var.additional_dd_tags)
 }
 
+resource "datadog_monitor" "argocd_application_health_status" {
+  type = "query alert"
+  name = "{{ .Config.Name | title }} argocd application health status"
+  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}):clamp_max(sum:argocd_application_controller.argocd_app_info{name:{{ .Config.Name }},health_status:healthy} by {cluster_name}, 1) < 1"
+  tags = local.ddTags
+  message = <<EOF
+  If ArgoCD Health status is not healthy for a certain amount of time we want to know as it might indicated deployment issues.
+  Note: This monitor will auto-resolve after 15 minutes of no restarts.
+  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-restarts.md"
+  {{- if (stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.notify") }}
+  Notify: ${join(" ", var.P2_notify)}
+  {{- end }}
+  EOF
+  require_full_window = false
+}
+
+resource "datadog_monitor" "argocd_application_sync_status" {
+  type = "query alert"
+  name = "{{ .Config.Name | title }} argocd application sync status"
+  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow" | default "last_15m"}}):clamp_max(sum:argocd_application_controller.argocd_app_info{name:{{ .Config.Name }},sync_status:synced} by {cluster_name}, 1) < 1"
+  tags = local.ddTags
+  message = <<EOF
+  If we ever have a pod restart, we want to know.
+  Note: This monitor will auto-resolve after 15 minutes of no restarts.
+  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-restarts.md"
+  {{- if (stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.notify") }}
+  Notify: ${join(" ", var.P2_notify)}
+  {{- end }}
+  EOF
+  require_full_window = false
+}
+
 # splitting the interval 15 mins to 3 windows (moving rollup by 5mins) and if each of them contains restart -> alert
 resource "datadog_monitor" "pod_restarts" {
   type = "query alert"
