@@ -148,27 +148,22 @@ resource "datadog_downtime" "panics_silence" {
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 variable http_success_rate_low_traffic_percentile {
   type    = number
-  default = {{ stencil.Arg "terraform.datadog.http.percentiles.lowTraffic" | default 90 }}
+  default = {{ stencil.Arg "terraform.datadog.http.qos.percentiles.lowTraffic" | default 90 }}
 }
 
 variable http_success_rate_high_traffic_percentile {
   type    = number
-  default = {{ stencil.Arg "terraform.datadog.http.percentiles.highTraffic" | default 99 }}
+  default = {{ stencil.Arg "terraform.datadog.http.qos.percentiles.highTraffic" | default 99 }}
 }
 
-variable http_success_rate_low_count_threshold {
+variable http_low_count_threshold {
   type    = number
-  default = {{ stencil.Arg "terraform.datadog.http.thresholds.lowCount" | default 1000 }}
+  default = {{ stencil.Arg "terraform.datadog.http.lowTrafficCountThreshold" | default 1000 }}
 }
 
-variable http_success_rate_evaluation_window {
+variable http_evaluation_window {
   type    = string
   default = {{ stencil.Arg "terraform.datadog.http.evaluationWindow" | default "last_15m" | quote }}
-}
-
-variable http_latency_high_count_threshold {
-  type = number
-  default = {{ stencil.Arg "terraform.datadog.http.latency.count.highCount" | default 1000 }}
 }
 
 variable http_latency_high_low_traffic_threshold {
@@ -193,14 +188,14 @@ module "http_success_rate_low" {
   Composite monitor calculating the success rate of non-5xx requests as a 0-100% monitor.
   High traffic -> P${var.http_success_rate_high_traffic_percentile}
   Low traffic -> P${var.http_success_rate_low_traffic_percentile}
-  Low traffic count < ${var.http_success_rate_low_count_threshold}
+  Low traffic count < ${var.http_low_count_threshold}
   Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/http-success-rate-low.md"
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(${var.http_success_rate_evaluation_window}):count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_success_rate_low_count_threshold}"
-  low_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_low_traffic_percentile}"
-  high_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.http_success_rate_high_traffic_percentile}"
+  low_count_query = "sum(${var.http_evaluation_window}):count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_low_count_threshold}"
+  low_traffic_query = "sum(${var.http_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_low_traffic_percentile}"
+  high_traffic_query = "sum(${var.http_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.http_success_rate_high_traffic_percentile}"
 }
 
 module "http_latency_high" {
@@ -215,9 +210,9 @@ module "http_latency_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "sum(last_15m):count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_latency_high_count_threshold}"
-  low_traffic_query = "avg(last_15m):p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_low_traffic_threshold}"
-  high_traffic_query = "avg(last_15m):p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_high_traffic_threshold}"
+  low_count_query = "sum(${var.http_evaluation_window}):count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_low_count_threshold}"
+  low_traffic_query = "avg(${var.http_evaluation_window}):p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_low_traffic_threshold}"
+  high_traffic_query = "avg(${var.http_evaluation_window}):p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_high_traffic_threshold}"
 }
 
 resource "datadog_service_level_objective" "http_p99_latency" {
