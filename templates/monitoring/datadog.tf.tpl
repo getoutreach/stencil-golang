@@ -46,8 +46,8 @@ resource "datadog_monitor" "argocd_application_health_status" {
   tags = local.ddTags
   message = <<EOF
   If ArgoCD Health status is not healthy for a certain amount of time we want to know as it might indicated deployment issues.
-  Note: This monitor will auto-resolve after 15 minutes of no restarts.
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-restarts.md"
+  Note: This monitor will auto-resolve after a Healthy status is reported within the specified evaluation timeframe
+  Runbook: "https://outreach-io.atlassian.net/wiki/spaces/DT/pages/2390589626/ArgoCD+Runbooks"
   {{- if (stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.notify") }}
   Notify: ${join(" ", var.P2_notify)}
   {{- end }}
@@ -62,8 +62,8 @@ resource "datadog_monitor" "argocd_application_sync_status" {
   tags = local.ddTags
   message = <<EOF
   If we ever have a pod restart, we want to know.
-  Note: This monitor will auto-resolve after 15 minutes of no restarts.
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-restarts.md"
+  Note: This monitor will auto-resolve after a Synced status is reported within the specified evaluation timeframe
+  Runbook: "https://outreach-io.atlassian.net/wiki/spaces/DT/pages/2390589626/ArgoCD+Runbooks"
   {{- if (stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.notify") }}
   Notify: ${join(" ", var.P2_notify)}
   {{- end }}
