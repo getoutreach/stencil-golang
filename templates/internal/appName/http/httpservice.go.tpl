@@ -48,16 +48,37 @@ func (s *HTTPService) Run(ctx context.Context) error {
 }
 
 {{- if has "http" (stencil.Arg "serviceActivities") }}
+// PublicHTTPDependencies is used to inject dependencies into the PublicHTTPService
+// service activity.
+type PublicHTTPDependencies struct{
+    // <<Stencil::Block(publicHTTPDependencies)>>
+{{ file.Block "publicHTTPDependencies" }}
+	  // <</Stencil::Block>>
+
+    {{- $publicHTTPDependencyInjection := stencil.GetModuleHook "internal/http/publicHTTPDependencyInjection" }}
+    {{- if $publicHTTPDependencyInjection }}
+    // dependencies injected by modules
+    {{- range $publicHTTPDependencyInjection }}
+    {{ . }}
+    {{- end }}
+    // end dependencies injected by modules
+    {{- end }}
+}
+
 // PublicHTTPService handles public http service calls
 type PublicHTTPService struct {
-	handlers.PublicService
+	  handlers.PublicService
 
-	cfg *Config
+	  cfg *Config
+    deps *PublicHTTPDependencies
 }
 
 // NewPublicHTTPService creates a new PublicHTTPService service activity.
-func NewPublicHTTPService(cfg *Config) *PublicHTTPService {
-	return &PublicHTTPService{cfg: cfg}
+func NewPublicHTTPService(cfg *Config, deps *PublicHTTPDependencies) *PublicHTTPService {
+	  return &PublicHTTPService{
+        cfg: cfg,
+        deps: deps,
+    }
 }
 
 // Run starts the HTTP service at the host/port specified in the config
@@ -66,6 +87,16 @@ func (s *PublicHTTPService) Run(ctx context.Context) error {
 	// <<Stencil::Block(publichandler)>>
 {{ file.Block "publichandler" | default "s.App = Handler()" }}
 	// <</Stencil::Block>>
+
+    {{- $publicHTTPPreServerRun := stencil.GetModuleHook "internal/http/publicHTTPPreServerRun" }}
+    {{- if $publicHTTPPreServerRun }}
+    // code inserted by modules
+    {{- range $publicHTTPPreServerRun }}
+    {{ . }}
+    {{- end }}
+    // end code inserted by modules
+    {{- end }}
+
 	return s.PublicService.Run(ctx, fmt.Sprintf("%s:%d", s.cfg.ListenHost, s.cfg.PublicHTTPPort))
 }
 {{- end }}

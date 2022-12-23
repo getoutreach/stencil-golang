@@ -65,6 +65,14 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	}
 	defer trace.CloseTracer(ctx)
 
+    // Initialize variables for service activity dependency injection.
+    {{- if has "http" (stencil.Arg "serviceActivities") }}
+    var publicHTTPDeps {{ $pkgName }}.PublicHTTPDependencies
+    {{- end }}
+    {{- if has "grpc" (stencil.Arg "serviceActivities") }}
+    var gRPCDeps {{ $pkgName }}.GRPCDependencies
+    {{- end }}
+
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
 	{{- $preInitializationBlock := stencil.GetModuleHook "preInitializationBlock" }}
 	{{- if $preInitializationBlock }}
@@ -95,10 +103,10 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		gomaxprocs.New(),
 		{{ $pkgName }}.NewHTTPService(cfg),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewPublicHTTPService(cfg),
+		{{ $pkgName }}.NewPublicHTTPService(cfg, &publicHTTPDeps),
 		{{- end }}
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewGRPCService(cfg),
+		{{ $pkgName }}.NewGRPCService(cfg, &gRPCDeps),
 		{{- end }}
 		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewKafkaConsumerService(cfg),

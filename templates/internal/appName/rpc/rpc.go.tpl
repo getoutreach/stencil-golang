@@ -40,16 +40,37 @@ import (
 	// <</Stencil::Block>>
 )
 
+// GRPCDependencies is used to inject dependencies into the GRPCService service
+// activity.
+type GRPCDependencies struct{
+    // <<Stencil::Block(GRPCDependencies)>>
+{{ file.Block "GRPCDependencies" }}
+	  // <</Stencil::Block>>
+
+    {{- $gRPCDependencyInjection := stencil.GetModuleHook "internal/rpc/gRPCDependencyInjection" }}
+    {{- if $gRPCDependencyInjection }}
+    // dependencies injected by modules
+    {{- range $gRPCDependencyInjection }}
+    {{ . }}
+    {{- end }}
+    // end dependencies injected by modules
+    {{- end }}
+}
+
 // GRPCService is the concrete implementation of the serviceActivity interface
 // which defines methods to start and stop a service. In this case the service
 // being implemented is a gRPC server.
 type GRPCService struct {
 	cfg *Config
+	deps *GRPCDependencies
 }
 
 // NewGRPCService creates a new GRPCService instance.
-func NewGRPCService(cfg *Config) *GRPCService {
-	return &GRPCService{cfg}
+func NewGRPCService(cfg *Config, deps *GRPCDependencies) *GRPCService {
+	return &GRPCService{
+        cfg: cfg,
+        deps: deps,
+    }
 }
 
 // Servers holds all the server implementation instances.
@@ -119,14 +140,8 @@ func (s *GRPCService) Close(ctx context.Context) error {
 	return nil
 }
 
-// StartServer is a wrapper for StartServers for compatibility reasons
-// Deprecated: Call StartServers instead.
-func StartServer(ctx context.Context, service api.Service, opts ...grpcx.ServerOption) (*grpc.Server, error) {
-	return StartServers(ctx, &Servers{DefaultServer: service}, opts...)
-}
-
-// StartServers starts a RPC server with the provided implementation.
-func StartServers(ctx context.Context, servers *Servers, opts... grpcx.ServerOption) (*grpc.Server, error) {
+// startServers starts a RPC server with the provided implementation.
+func (s *GRPCService) startServers(ctx context.Context, servers *Servers, opts... grpcx.ServerOption) (*grpc.Server, error) {
 	{{- $grpcServerOptionInit := stencil.GetModuleHook "internal/rpc/grpcServerOptionInit" }}
 	{{- if $grpcServerOptionInit }}
 	// gRPC server option initialization injected by modules
