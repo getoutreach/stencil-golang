@@ -18,6 +18,14 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/httpx/pkg/handlers"
 
+  {{- $additionalImports := stencil.GetModuleHook "internal/http/additionalImports" }}
+	{{- if $additionalImports }}
+	// imports added by modules
+		{{- range $additionalImports }}
+	{{ . | quote }}
+		{{- end }}
+	// end imports added by modules
+	{{- end }}
 
 	// Place any extra imports for your service code here
 	// <<Stencil::Block(imports)>>
