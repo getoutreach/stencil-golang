@@ -33,17 +33,38 @@ import (
 	// <</Stencil::Block>>
 )
 
+// PrivateHTTPDependencies is used to inject dependencies into the HTTPService service
+// activity.
+type PrivateHTTPDependencies struct{
+    // <<Stencil::Block(privateHTTPDependencies)>>
+{{ file.Block "privateHTTPDependencies" }}
+	  // <</Stencil::Block>>
+
+    {{- $privateHTTPDependencyInjection := stencil.GetModuleHook "internal/http/privateHTTPDependencyInjection" }}
+    {{- if $privateHTTPDependencyInjection }}
+    // dependencies injected by modules
+    {{- range $privateHTTPDependencyInjection }}
+    {{ . }}
+    {{- end }}
+    // end dependencies injected by modules
+    {{- end }}
+}
+
 // HTTPService handles internal http requests, suchs as metrics, health
 // and readiness checks. This is required for ALL services to have.
 type HTTPService struct {
 	handlers.Service
 
 	cfg *Config
+  deps *PublicHTTPDependencies
 }
 
 // NewHTTPService creates a new HTTPService service activity.
-func NewHTTPService(cfg *Config) *HTTPService {
-	return &HTTPService{cfg: cfg}
+func NewHTTPService(cfg *Config, deps *PrivateHTTPDependencies) *HTTPService {
+	  return &HTTPService{
+        cfg: cfg,
+        deps: deps,
+    }
 }
 
 // Run is the entrypoint for the HTTPService serviceActivity.

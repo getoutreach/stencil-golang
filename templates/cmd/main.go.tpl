@@ -40,6 +40,22 @@ import (
 {{ file.Block "customized" }}
 // <</Stencil::Block>>
 
+// depedencies is a conglomerate struct used for injecting dependencies into service
+// activities.
+type dependencies struct{
+  privateHTTP {{ $pkgName }}.PrivateHTTPDependencies
+  {{- if has "http" (stencil.Arg "serviceActivities") }}
+  publicHTTP {{ $pkgName }}.PublicHTTPDependencies
+  {{- end }}
+  {{- if has "grpc" (stencil.Arg "serviceActivities") }}
+  gRPC {{ $pkgName }}.GRPCDependencies
+  {{- end }}
+
+  // <<Stencil::Block(customServiceActivityDependencyInjection)>>
+{{ file.Block "customServiceActivityDependencyInjection" }}
+	// <</Stencil::Block>>
+}
+
 // main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
   exitCode := 1
@@ -65,13 +81,8 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	}
 	defer trace.CloseTracer(ctx)
 
-    // Initialize variables for service activity dependency injection.
-    {{- if has "http" (stencil.Arg "serviceActivities") }}
-    var publicHTTPDeps {{ $pkgName }}.PublicHTTPDependencies
-    {{- end }}
-    {{- if has "grpc" (stencil.Arg "serviceActivities") }}
-    var gRPCDeps {{ $pkgName }}.GRPCDependencies
-    {{- end }}
+  // Initialize variable for service activity dependency injection.
+  var deps dependencies
 
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
 	{{- $preInitializationBlock := stencil.GetModuleHook "preInitializationBlock" }}
@@ -101,12 +112,12 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	acts := []async.Runner{
 		shutdown.New(),
 		gomaxprocs.New(),
-		{{ $pkgName }}.NewHTTPService(cfg),
+		{{ $pkgName }}.NewHTTPService(cfg, &deps.privateHTTP),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewPublicHTTPService(cfg, &publicHTTPDeps),
+		{{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP),
 		{{- end }}
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewGRPCService(cfg, &gRPCDeps),
+		{{ $pkgName }}.NewGRPCService(cfg, &deps.gRPC),
 		{{- end }}
 		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewKafkaConsumerService(cfg),
