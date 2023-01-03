@@ -41,7 +41,8 @@ import (
 )
 
 // GRPCDependencies is used to inject dependencies into the GRPCService service
-// activity.
+// activity. Great examples of integrations to be placed into here would be a database
+// connection or perhaps a redis client that the service activity needs to use.
 type GRPCDependencies struct{
     // <<Stencil::Block(GRPCDependencies)>>
 {{ file.Block "GRPCDependencies" }}
@@ -67,10 +68,10 @@ type GRPCService struct {
 
 // NewGRPCService creates a new GRPCService instance.
 func NewGRPCService(cfg *Config, deps *GRPCDependencies) *GRPCService {
-	return &GRPCService{
-        cfg: cfg,
-        deps: deps,
-    }
+  return &GRPCService{
+    cfg: cfg,
+    deps: deps,
+  }
 }
 
 // Servers holds all the server implementation instances.

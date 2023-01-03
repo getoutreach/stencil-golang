@@ -34,7 +34,8 @@ import (
 )
 
 // PrivateHTTPDependencies is used to inject dependencies into the HTTPService service
-// activity.
+// activity. Great examples of integrations to be placed into here would be a database
+// connection or perhaps a redis client that the service activity needs to use.
 type PrivateHTTPDependencies struct{
     // <<Stencil::Block(privateHTTPDependencies)>>
 {{ file.Block "privateHTTPDependencies" }}
@@ -78,7 +79,9 @@ func (s *HTTPService) Run(ctx context.Context) error {
 
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 // PublicHTTPDependencies is used to inject dependencies into the PublicHTTPService
-// service activity.
+// service activity. Great examples of integrations to be placed into here would be
+// a database connection or perhaps a redis client that the service activity needs to
+// use.
 type PublicHTTPDependencies struct{
     // <<Stencil::Block(publicHTTPDependencies)>>
 {{ file.Block "publicHTTPDependencies" }}
@@ -94,7 +97,7 @@ type PublicHTTPDependencies struct{
     {{- end }}
 }
 
-// PublicHTTPService handles public http service calls
+// PublicHTTPService handles public http service calls.
 type PublicHTTPService struct {
 	  handlers.PublicService
 
@@ -110,7 +113,7 @@ func NewPublicHTTPService(cfg *Config, deps *PublicHTTPDependencies) *PublicHTTP
     }
 }
 
-// Run starts the HTTP service at the host/port specified in the config
+// Run starts the HTTP service at the host/port specified in the config.
 func (s *PublicHTTPService) Run(ctx context.Context) error {
 	// set your public handler here.
 	// <<Stencil::Block(publichandler)>>
