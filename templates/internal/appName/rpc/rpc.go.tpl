@@ -68,7 +68,7 @@ type GRPCService struct {
 
 // NewGRPCService creates a new GRPCService instance.
 func NewGRPCService(cfg *Config, deps *GRPCDependencies) *GRPCService {
-  return &GRPCService{
+	return &GRPCService{
     cfg: cfg,
     deps: deps,
   }
@@ -113,7 +113,7 @@ func (gs *GRPCService) Run(ctx context.Context) error {
 		// <</Stencil::Block>>
     servers.DefaultServer = server
 
-		srv, err := gs.startServers(ctx, servers, opts...)
+		srv, err := gs.StartServers(ctx, servers, opts...)
 		if err != nil {
 				log.Error(ctx, "failed to start server", events.NewErrorInfo(err))
 				return err
@@ -141,8 +141,8 @@ func (gs *GRPCService) Close(ctx context.Context) error {
 	return nil
 }
 
-// startServers starts a RPC server with the provided implementation.
-func (gs *GRPCService) startServers(ctx context.Context, servers *Servers, opts... grpcx.ServerOption) (*grpc.Server, error) {
+// StartServers starts a RPC server with the provided implementation.
+func (gs *GRPCService) StartServers(ctx context.Context, servers *Servers, opts... grpcx.ServerOption) (*grpc.Server, error) {
 	{{- $grpcServerOptionInit := stencil.GetModuleHook "internal/rpc/grpcServerOptionInit" }}
 	{{- if $grpcServerOptionInit }}
 	// gRPC server option initialization injected by modules
