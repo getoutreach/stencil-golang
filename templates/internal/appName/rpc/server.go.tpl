@@ -13,6 +13,12 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
+  {{- $additionalImports := stencil.GetModuleHook "internal/rpc/server.additionalImports" }}
+  {{- if $additionalImports }}
+      {{- range $additionalImports -}}
+  {{ . | indent 2 }}
+      {{- end }}
+  {{- end }}
 )
 
 // Server is the actual server implementation of the API.
@@ -20,12 +26,32 @@ import (
 // Note that tracing, logging and metrics are already handled for these
 // methods.
 type Server struct{
+  {{- $additionalHandlerState := stencil.GetModuleHook "internal/rpc/server.additionalHandlerState" }}
+  {{- if $additionalHandlerState }}
+  // handler state added my modules
+    {{- range $additionalHandlerState -}}
+  {{ . | indent 2 }}
+    {{- end -}}
+  // end handler state added by modules
+  {{- end }}
+
 	// Place any handler state for your service here.
 }
 
 // NewServer creates a new server instance.
 func NewServer(ctx context.Context, cfg *Config) (*Server, error) {
+  {{- $additionalProperties := stencil.GetModuleHook "internal/rpc/server.additionalProperties" }}
+  {{- if $additionalProperties }}
+    return &Server{
+      // properties added by modules
+    {{- range $additionalProperties -}}
+      {{ . | indent 6 }}
+    {{- end -}}
+      // end properties added by modules
+    }, nil
+  {{- else }}
 	return &Server{}, nil
+  {{- end }}
 }
 
 // Ping is a simple ping endpoint that returns "pong" + message when called

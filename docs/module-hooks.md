@@ -175,3 +175,49 @@ Extra [devspace profiles](https://www.devspace.sh/docs/5.x/configuration/profile
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.profiles" (stencil.ApplyTemplate "ingestDevspaceProfile" | fromYaml) }}
 ```
+
+### `internal/rpc/server.additionalImports`
+
+**Type**: `string`
+
+**File**: `internal/appName/rpc/server.go.tpl`
+
+```tpl
+{{ define "imports" }}
+"sync"
+
+"github.com/getoutreach/outreachtest/pkg/logrecorder"
+"{{ stencil.ApplyTemplate "appImportPath" }}/api"
+{{ end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "internal/rpc/server.additionalImports" (list (stencil.ApplyTemplate "imports")) }}
+```
+
+### `internal/rpc/server.additionalHanderState`
+
+**Type**: `string`
+
+**File**: `internal/appName/rpc/server.go.tpl`
+
+```tpl
+{{ define "handlerState" }}
+config *Config
+result *api.TestRunResponse
+{{ end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "internal/rpc/server.additionalHandlerState" (list (stencil.ApplyTemplate "handlerState")) }}
+```
+
+### `internal/rpc/server.additionalProperties`
+
+**Type**: `string`
+
+**File**: `internal/appName/rpc/server.go.tpl`
+
+```tpl
+{{ define "properties" }}
+config: cfg,
+{{ end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "internal/rpc/server.additionalProperties" (list (stencil.ApplyTemplate "properties")) }}
+```
