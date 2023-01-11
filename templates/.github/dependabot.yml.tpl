@@ -8,8 +8,12 @@ updates:
       interval: "daily"
     # stencil-golang managed dependencies
     ignore:
+{{- $goDeps := list -}}
 {{- range $d := $deps.go }}
+{{- if not (has $d.name $goDeps) }}
+{{- $goDeps = append $goDeps $d.name }}
       - dependency-name: {{ $d.name }}
+{{- end }}
 {{- end }}
 
   # Ignore semantic-release, this code is only executed in CI.
