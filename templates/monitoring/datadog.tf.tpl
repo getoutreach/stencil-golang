@@ -1,4 +1,5 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
+{{- $_ := file.Static }}
 variable P1_notify {
   type = list(string)
   default = []
