@@ -1,5 +1,5 @@
 {{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
-{{- $_ := file.Static }}
+{{- $_ := file.Static }} 
 variable P1_notify {
   type = list(string)
   default = []
@@ -12,7 +12,6 @@ variable additional_dd_tags {
   type = list(string)
   default = []
 }
-
 variable cpu_high_threshold {
   type = number
   default = 80
