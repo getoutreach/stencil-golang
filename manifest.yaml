@@ -222,4 +222,8 @@ arguments:
       type: string
     default: "0.14.11"
     description: The version of terraform that is used.
+  disableGrpcGeneration:
+    description: Disable gRPC generation if you are using protoAPI generation
+    schema:
+      type: boolean
 ## <</Stencil::Block>>
