@@ -20,6 +20,9 @@ import (
 	"github.com/getoutreach/gobox/pkg/orerr"
 	"github.com/getoutreach/gobox/pkg/trace"
 	"github.com/segmentio/kafka-go"
+  // <<Stencil::Block(imports)>>
+{{ file.Block "imports" }}
+	// <</Stencil::Block>>
 )
 // loggableMessage is an adapter which allows kafka.Message to be used
 // as a log.Marshaler.

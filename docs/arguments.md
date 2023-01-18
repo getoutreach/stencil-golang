@@ -123,3 +123,27 @@ Overrides the low traffic threshold in the `http_latency_high` terraform module 
 **Default**: `2`
 
 Overrides the high traffic threshold in the `http_latency_high` terraform module in `monitoring/datadog.tf`.
+
+## `terraform.datadog.monitoring.argocd.appHealth.notify`
+**Type**: `bool`
+**Default**: `false`
+
+Enable/Disable Datadog P2 notification for ArgoCD Application Health
+
+## `terraform.datadog.monitoring.argocd.syncStatus.notify`
+**Type**: `bool`
+**Default**: `false`
+
+Enable/Disable Datadog P2 notification for ArgoCD Sync Status
+
+## `terraform.datadog.monitoring.argocd.appHealth.evaluationWindow`
+**Type**: `string`
+**Default**: `last_15m`
+
+Evaluation time frame for Datadog to evaluate the ArgoCD Application Health monitor. 
+
+## `terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow`
+**Type**: `string`
+**Default**: `last_15m`
+
+Evaluation time frame for Datadog to evaluate the ArgoCD Sync Status monitor. 
