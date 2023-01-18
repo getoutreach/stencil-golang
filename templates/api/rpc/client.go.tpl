@@ -13,6 +13,7 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
+  "fmt"
 
 	"github.com/getoutreach/services/pkg/grpcx"
 	"github.com/getoutreach/{{ .Config.Name }}/api"
