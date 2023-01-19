@@ -57,7 +57,7 @@ type HTTPService struct {
 	handlers.Service
 
 	cfg *Config
-  deps *PublicHTTPDependencies
+  deps *PrivateHTTPDependencies
 }
 
 // NewHTTPService creates a new HTTPService service activity.
