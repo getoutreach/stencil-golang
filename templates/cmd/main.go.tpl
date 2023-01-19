@@ -40,7 +40,7 @@ import (
 {{ file.Block "customized" }}
 // <</Stencil::Block>>
 
-// depedencies is a conglomerate struct used for injecting dependencies into service
+// dependencies is a conglomerate struct used for injecting dependencies into service
 // activities.
 type dependencies struct{
   privateHTTP {{ $pkgName }}.PrivateHTTPDependencies
