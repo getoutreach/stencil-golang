@@ -230,9 +230,9 @@ module "http_success_rate_low" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "default_zero(sum(${var.http_success_rate_evaluation_window}):count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_success_rate_low_count_threshold})"
-  low_traffic_query = "default_zero(sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_low_traffic_percentile})"
-  high_traffic_query = "default_zero(sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.http_success_rate_high_traffic_percentile})"
+  low_count_query = "sum(${var.http_success_rate_evaluation_window}):default_zero(count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()) < ${var.http_success_rate_low_count_threshold}"
+  low_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * clamp_min(default_zero(count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1) / clamp_min(default_zero(count:${local.http_request_seconds}{*, !env:development} by {kube_namespace}.as_count()), 1) < ${var.http_success_rate_low_traffic_percentile}"
+  high_traffic_query = "sum(${var.http_success_rate_evaluation_window}):100 * clamp_min(default_zero(count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1) / clamp_min(default_zero(count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1) < ${var.http_success_rate_high_traffic_percentile}"
 }
 
 module "http_latency_high" {
@@ -247,9 +247,9 @@ module "http_latency_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "default_zero(sum(last_15m):count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_latency_high_count_threshold})"
-  low_traffic_query = "default_zero(avg(last_15m):p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_low_traffic_threshold})"
-  high_traffic_query = "default_zero(avg(last_15m):p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.http_latency_high_high_traffic_threshold})""
+  low_count_query = "sum(last_15m):default_zero(count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()) < ${var.http_latency_high_count_threshold}"
+  low_traffic_query = "avg(last_15m):default_zero(p90:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}) > ${var.http_latency_high_low_traffic_threshold}"
+  high_traffic_query = "avg(last_15m):default_zero(p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}) > ${var.http_latency_high_high_traffic_threshold}"
 }
 
 resource "datadog_service_level_objective" "http_p99_latency" {
@@ -277,8 +277,8 @@ resource "datadog_service_level_objective" "http_success" {
   description = "Comparing 5xx responses to all requests as a ratio, broken out by bento."
   tags = local.ddTags
   query {
-    numerator   = "count:${local.http_request_seconds}{!status:5xx, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count().fill(zero)"
-    denominator = "count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count().fill(zero)"
+    numerator   = "claimp_min(default_zero(count:${local.http_request_seconds}{!status:5xx, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
+    denominator = "claimp_min(default_zero(count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
   }
   thresholds {
     timeframe = "7d"
