@@ -403,8 +403,8 @@ resource "datadog_service_level_objective" "grpc_success" {
   description = "Comparing (status:ok) responses to all requests as a ratio, broken out by bento."
   tags = local.ddTags
   query {
-    numerator   = "count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count().fill(zero)"
-    denominator = "count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count().fill(zero)"
+    numerator   = "claimp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count()), 1)"
+    denominator = "claimp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
   }
   thresholds {
     timeframe = "7d"
