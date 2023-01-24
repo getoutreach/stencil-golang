@@ -277,8 +277,8 @@ resource "datadog_service_level_objective" "http_success" {
   description = "Comparing 5xx responses to all requests as a ratio, broken out by bento."
   tags = local.ddTags
   query {
-    numerator   = "claimp_min(default_zero(count:${local.http_request_seconds}{!status:5xx, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
-    denominator = "claimp_min(default_zero(count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
+    numerator   = "clamp_min(default_zero(count:${local.http_request_seconds}{!status:5xx, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
+    denominator = "clamp_min(default_zero(count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
   }
   thresholds {
     timeframe = "7d"
@@ -336,9 +336,9 @@ module "grpc_success_rate_low" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "default_zero(sum(${var.grpc_evaluation_window}):count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold})"
-  low_traffic_query = "default_zero(sum(${var.grpc_evaluation_window}):default_zero(100 * (count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }},statuscategory:categoryservererror} by {kube_namespace}.as_count() / count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count())) >= ${var.grpc_qos_low_traffic_threshold})"
-  high_traffic_query = "default_zero(sum(${var.grpc_evaluation_window}):100 * ( count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count() / count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.grpc_qos_high_traffic_threshold})"
+  low_count_query = "sum(${var.grpc_evaluation_window}):default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()) < ${var.grpc_low_count_threshold})"
+  low_traffic_query = "sum(${var.grpc_evaluation_window}):100 * clamp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }},statuscategory:categoryservererror} by {kube_namespace}.as_count()), 1) / clamp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1) >= ${var.grpc_qos_low_traffic_threshold})"
+  high_traffic_query = "sum(${var.grpc_evaluation_window}):100 * clamp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count()), 1) / clamp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1) < ${var.grpc_qos_high_traffic_threshold})"
 }
 
 variable grpc_latency_low_traffic_percentile {
@@ -373,9 +373,9 @@ module "grpc_latency_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-  low_count_query = "default_zero(sum(${var.grpc_evaluation_window}):count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold})"
-  low_traffic_query = "default_zero(avg(${var.grpc_evaluation_window}):p${var.grpc_latency_low_traffic_percentile}:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.grpc_latency_low_traffic_threshold})"
-  high_traffic_query = "default_zero(avg(${var.grpc_evaluation_window}):p${var.grpc_latency_high_traffic_percentile}:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.grpc_latency_high_traffic_threshold})"
+  low_count_query = "sum(${var.grpc_evaluation_window}):count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.grpc_low_count_threshold})"
+  low_traffic_query = "avg(${var.grpc_evaluation_window}):p${var.grpc_latency_low_traffic_percentile}:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.grpc_latency_low_traffic_threshold})"
+  high_traffic_query = "avg(${var.grpc_evaluation_window}):p${var.grpc_latency_high_traffic_percentile}:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace} > ${var.grpc_latency_high_traffic_threshold})"
 }
 
 resource "datadog_service_level_objective" "grpc_p99_latency" {
@@ -403,8 +403,8 @@ resource "datadog_service_level_objective" "grpc_success" {
   description = "Comparing (status:ok) responses to all requests as a ratio, broken out by bento."
   tags = local.ddTags
   query {
-    numerator   = "claimp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count()), 1)"
-    denominator = "claimp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
+    numerator   = "clamp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}, !statuscategory:categoryservererror} by {kube_namespace}.as_count()), 1)"
+    denominator = "clamp_min(default_zero(count:${local.grpc_request_source}{${join(", ", var.grpc_tags)},app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
   }
   thresholds {
     timeframe = "7d"
