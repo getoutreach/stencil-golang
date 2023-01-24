@@ -232,6 +232,7 @@ module "http_success_rate_low" {
   require_full_window = false
   low_count_query = "default_zero(sum(${var.http_success_rate_evaluation_window}):count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() < ${var.http_success_rate_low_count_threshold})"
   low_traffic_query = "default_zero(sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development} by {kube_namespace}.as_count() ) < ${var.http_success_rate_low_traffic_percentile})"
+  high_traffic_query = "default_zero(sum(${var.http_success_rate_evaluation_window}):100 * ( count:${local.http_request_seconds}{!status:5xx,!env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() / count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count() ) < ${var.http_success_rate_high_traffic_percentile})"
 }
 
 module "http_latency_high" {
