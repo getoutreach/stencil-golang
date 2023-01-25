@@ -148,7 +148,7 @@ variable available_pods_low_count {
 resource "datadog_monitor" "available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:{{ .Config.Name }},env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:{{ .Config.Name }},env:production} by {kube_namespace} < ${var.available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
   The {{ .Config.Name | title }} replica count should be at least ${var.available_pods_low_count}, which is also the PDB.  If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
@@ -474,7 +474,7 @@ resource "datadog_monitor" "temporal_history_pod_restarts" {
 resource "datadog_monitor" "temporal_frontend_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal frontend Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-frontend,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:temporal-frontend,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
   The {{ .Config.Name | title }} temporal frontend replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
@@ -487,7 +487,7 @@ resource "datadog_monitor" "temporal_frontend_available_pods_low" {
 resource "datadog_monitor" "temporal_history_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal history Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-history,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:temporal-history,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
   The {{ .Config.Name | title }} temporal history replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
@@ -500,7 +500,7 @@ resource "datadog_monitor" "temporal_history_available_pods_low" {
 resource "datadog_monitor" "temporal_matching_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal matching Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-matching,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:temporal-matching,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
   The {{ .Config.Name | title }} temporal matching replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
@@ -513,7 +513,7 @@ resource "datadog_monitor" "temporal_matching_available_pods_low" {
 resource "datadog_monitor" "temporal_worker_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal worker Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-worker,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:temporal-worker,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
   The {{ .Config.Name | title }} temporal worker replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
