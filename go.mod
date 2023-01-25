@@ -60,11 +60,13 @@ require (
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/pjbgf/sha1cd v0.2.3 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/santhosh-tekuri/jsonschema/v5 v5.1.1 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/skeema/knownhosts v1.1.0 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	github.com/whilp/git-urls v1.0.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
