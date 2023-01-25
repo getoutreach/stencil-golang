@@ -1,5 +1,5 @@
 {{- if not (and (stencil.Arg "service") (has "http" (stencil.Arg "serviceActivities"))) -}}
-  {{- file.Skip "Not a service" -}}
+  {{- file.Skip "Not a service or does not have http in the serviceActivities" -}}
 {{- end -}}
 variable http_success_rate_low_traffic_percentile {
   type    = number
