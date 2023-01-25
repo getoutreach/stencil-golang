@@ -16,6 +16,9 @@ arguments:
   terraform.datadog.monitoring.argocd.appHealth.evaluationWindow:
     type: string
     description: The amount of time to query the ArgoCD App Health alert over (i.e. last_15m)
+  terraform.datadog.monitoring.generateSLOs:
+    type: boolean
+    description: Have stencil generate Datadog service level objectives based
   service:
     schema:
       type: boolean
