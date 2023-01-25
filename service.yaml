@@ -1,5 +1,8 @@
 name: stencil-golang
 arguments:
+  ciOptions:
+    skipDocker: true
+    skipE2e: true
   reportingTeam: fnd-dt
   description: Stencil Module for Golang Applications
   plugin: true

@@ -38,6 +38,32 @@ locals {
   ddTags = concat(["testing", "team:test:team"], var.additional_dd_tags)
 }
 
+resource "datadog_monitor" "argocd_application_health_status" {
+  type = "query alert"
+  name = "Testing argocd application health status"
+  query = "max(last_15m):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:testing,health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  tags = local.ddTags
+  message = <<EOF
+  ArgoCD Health status has been unhealthy over the window last_15m.
+  Note: This monitor will auto-resolve after a Healthy status is reported within the specified evaluation timeframe
+  Runbook: "https://outreach-io.atlassian.net/wiki/spaces/DT/pages/2390589626/ArgoCD+Runbooks"
+  EOF
+  require_full_window = false
+}
+
+resource "datadog_monitor" "argocd_application_sync_status" {
+  type = "query alert"
+  name = "Testing argocd application sync status"
+  query = "max(last_15m):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:testing,sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  tags = local.ddTags
+  message = <<EOF
+  ArgoCD Sync status has not been synced over the window last_15m.
+  Note: This monitor will auto-resolve after a Synced status is reported within the specified evaluation timeframe
+  Runbook: "https://outreach-io.atlassian.net/wiki/spaces/DT/pages/2390589626/ArgoCD+Runbooks"
+  EOF
+  require_full_window = false
+}
+
 # splitting the interval 15 mins to 3 windows (moving rollup by 5mins) and if each of them contains restart -> alert
 resource "datadog_monitor" "pod_restarts" {
   type = "query alert"

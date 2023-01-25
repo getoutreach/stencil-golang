@@ -1,4 +1,4 @@
-// Copyright 2022 Outreach Corporation. All Rights Reserved.
+// Copyright 2023 Outreach Corporation. All Rights Reserved.
 
 // Description: provides tools for merging plugins.
 package plugin

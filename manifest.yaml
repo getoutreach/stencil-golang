@@ -4,6 +4,18 @@ type: templates,extension
 modules:
   - name: github.com/getoutreach/stencil-discovery
 arguments:
+  terraform.datadog.monitoring.argocd.appHealth.notify:
+    type: boolean
+    description: Alert when ArgoCD health is not healthy
+  terraform.datadog.monitoring.argocd.syncStatus.notify:
+    type: boolean
+    description: Alert when ArgoCD syncStatus is not synced
+  terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow:
+    type: string
+    description: The amount of time to query the ArgoCD Sync Status alert over (i.e. last_15m)
+  terraform.datadog.monitoring.argocd.appHealth.evaluationWindow:
+    type: string
+    description: The amount of time to query the ArgoCD App Health alert over (i.e. last_15m)
   service:
     schema:
       type: boolean
@@ -210,4 +222,8 @@ arguments:
       type: string
     default: "0.14.11"
     description: The version of terraform that is used.
+  disableGrpcGeneration:
+    description: Disable gRPC generation if you are using protoAPI generation
+    schema:
+      type: boolean
 ## <</Stencil::Block>>

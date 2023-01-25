@@ -13,6 +13,8 @@
 // which implements a cleaner interface.
 package api
 
+{{- if not (stencil.Arg "disableGrpcGeneration") }}
 // The following line(s) generate code using protobuf (e.g. {{ .Config.Name }}.pb.go)
 //
 //go:generate ../scripts/shell-wrapper.sh protoc.sh
+{{- end }}
