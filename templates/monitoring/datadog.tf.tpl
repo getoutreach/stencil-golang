@@ -148,7 +148,7 @@ resource "datadog_monitor" "pod_memory_working_set_high" {
 resource "datadog_monitor" "available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:{{ .Config.Name }},env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:{{ .Config.Name }},env:production} by {kube_namespace} < ${var.available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
   The {{ .Config.Name | title }} replica count should be at least ${var.available_pods_low_count}, which is also the PDB.  If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
