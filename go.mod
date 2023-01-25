@@ -8,6 +8,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.57.4
 	github.com/getoutreach/stencil v1.29.0
+	github.com/getoutreach/stencil-discovery v1.3.3
 	github.com/magefile/mage v1.14.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.0
@@ -30,7 +31,6 @@ require (
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/getoutreach/services v1.125.0 // indirect
-	github.com/getoutreach/stencil-discovery v1.3.3 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.4.0 // indirect
 	github.com/go-git/go-git/v5 v5.5.2 // indirect
@@ -76,7 +76,6 @@ require (
 	golang.org/x/term v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	golang.org/x/tools v0.5.0 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230125152338-dcaf20b6aeaa // indirect
 	google.golang.org/grpc v1.52.1 // indirect
