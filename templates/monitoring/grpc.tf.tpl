@@ -1,5 +1,5 @@
 {{- if not (and (stencil.Arg "service") (has "grpc" (stencil.Arg "serviceActivities"))) -}}
-  {{- file.Skip "Not a service" -}}
+  {{- file.Skip "Not a service or does not have grpc in the serviceActivities" -}}
 {{- end -}}
 variable grpc_request_source {
   type    = string

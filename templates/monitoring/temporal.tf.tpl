@@ -1,5 +1,5 @@
 {{- if not (and (stencil.Arg "service") (has "temporal" (stencil.Arg "serviceActivities"))) -}}
-  {{- file.Skip "Not a service" -}}
+  {{- file.Skip "Not a service or does not have temporal in the serviceActivities" -}}
 {{- end -}}
 resource "datadog_monitor" "temporal_frontend_pod_restarts" {
   type = "query alert"

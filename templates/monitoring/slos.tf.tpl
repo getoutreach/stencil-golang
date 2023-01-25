@@ -1,6 +1,4 @@
 {{- if not (stencil.Arg "terraform.datadog.monitoring.generateSLOs") -}}
-  {{- file.Skip "Generate SLOs is false" -}}
-{{- end -}}
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 resource "datadog_service_level_objective" "http_p99_latency" {
   name        = "{{ .Config.Name | title }} HTTP P99 Latency"
@@ -73,6 +71,7 @@ resource "datadog_service_level_objective" "grpc_success" {
     warning = 99.95
   }
 }
+{{- end }}
 {{- end }}
 
 // <<Stencil::Block(tfCustomSLODatadog)>>
