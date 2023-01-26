@@ -1,4 +1,4 @@
-{{- if not (stencil.Arg "terraform.datadog.monitoring.generateSLOs") -}}
+{{- if (stencil.Arg "terraform.datadog.monitoring.generateSLOs") -}}
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 resource "datadog_service_level_objective" "http_p99_latency" {
   name        = "{{ .Config.Name | title }} HTTP P99 Latency"
