@@ -72,40 +72,6 @@ module "http_latency_high" {
   high_traffic_query = "avg(last_15m):default_zero(p99:${local.http_request_seconds}{*, !env:development,app:testing} by {kube_namespace}) > ${var.http_latency_high_high_traffic_threshold}"
 }
 
-resource "datadog_service_level_objective" "http_p99_latency" {
-  name        = "Testing HTTP P99 Latency"
-  type        = "monitor"
-  description = "Keeping track of P99 latency commitments for all Testing requests in aggregate, for production bentos only."
-  tags = local.ddTags
-  monitor_ids = [module.http_latency_high.high_traffic_id]
-  groups = [
-    "kube_namespace:testing--test-bento",
-    "kube_namespace:testing--test-bento-1",
-    "kube_namespace:testing--test-bento-2",
-  ]
-  thresholds {
-    timeframe = "7d"
-    target = 99.9
-    warning = 99.95
-  }
-}
-
-resource "datadog_service_level_objective" "http_success" {
-  name        = "Testing HTTP Success Response"
-  type        = "metric"
-  description = "Comparing 5xx responses to all requests as a ratio, broken out by bento."
-  tags = local.ddTags
-  query {
-    numerator   = "clamp_min(default_zero(count:${local.http_request_seconds}{!status:5xx, !env:development,app:testing} by {kube_namespace}.as_count()), 1)"
-    denominator = "clamp_min(default_zero(count:${local.http_request_seconds}{*, !env:development,app:testing} by {kube_namespace}.as_count()), 1)"
-  }
-  thresholds {
-    timeframe = "7d"
-    target = 99.9
-    warning = 99.95
-  }
-}
-
 // <<Stencil::Block(tfCustomHTTPDatadog)>>
 
 // <</Stencil::Block>>

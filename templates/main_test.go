@@ -157,7 +157,6 @@ func TestGRPCTf(t *testing.T) {
 
 func TestHTTPTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/http.tf.tpl", libaryTmpls...)
-	st.Ext("github.com/getoutreach/stencil-discovery", &discoverytest.MockPlugin{})
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
