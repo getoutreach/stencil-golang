@@ -18,6 +18,7 @@ arguments:
     description: The amount of time to query the ArgoCD App Health alert over (i.e. last_15m)
   terraform.datadog.monitoring.generateSLOs:
     type: boolean
+    default: true
     description: Have stencil generate Datadog service level objectives based on HTTP/GRPC queries/monitors.
   service:
     schema:
