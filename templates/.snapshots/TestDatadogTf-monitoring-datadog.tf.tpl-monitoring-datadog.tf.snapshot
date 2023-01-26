@@ -34,6 +34,11 @@ variable "alert_on_panics" {
   description = "Enables/Disables the panics monitor defined based on the logs"
 }
 
+variable available_pods_low_count {
+  type    = number
+  default = 2
+}
+
 locals {
   ddTags = concat(["testing", "team:test:team"], var.additional_dd_tags)
 }
@@ -131,11 +136,6 @@ resource "datadog_monitor" "pod_memory_working_set_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-}
-
-variable available_pods_low_count {
-  type    = number
-  default = 2
 }
 
 resource "datadog_monitor" "available_pods_low" {
