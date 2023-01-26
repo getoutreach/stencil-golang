@@ -75,41 +75,6 @@ module "http_latency_high" {
   high_traffic_query = "avg(last_15m):default_zero(p99:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}) > ${var.http_latency_high_high_traffic_threshold}"
 }
 
-resource "datadog_service_level_objective" "http_p99_latency" {
-  name        = "{{ .Config.Name | title }} HTTP P99 Latency"
-  type        = "monitor"
-  description = "Keeping track of P99 latency commitments for all {{ .Config.Name | title }} requests in aggregate, for production bentos only."
-  tags = local.ddTags
-  monitor_ids = [module.http_latency_high.high_traffic_id]
-  groups = [
-    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomains")}}
-    {{- range $b := $bentos }}
-    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
-    {{- end }}
-  ]
-  thresholds {
-    timeframe = "7d"
-    target = 99.9
-    warning = 99.95
-  }
-}
-
-resource "datadog_service_level_objective" "http_success" {
-  name        = "{{ .Config.Name | title }} HTTP Success Response"
-  type        = "metric"
-  description = "Comparing 5xx responses to all requests as a ratio, broken out by bento."
-  tags = local.ddTags
-  query {
-    numerator   = "clamp_min(default_zero(count:${local.http_request_seconds}{!status:5xx, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
-    denominator = "clamp_min(default_zero(count:${local.http_request_seconds}{*, !env:development,app:{{ stencil.ApplyTemplate "goPackageSafeName" }}} by {kube_namespace}.as_count()), 1)"
-  }
-  thresholds {
-    timeframe = "7d"
-    target = 99.9
-    warning = 99.95
-  }
-}
-
 // <<Stencil::Block(tfCustomHTTPDatadog)>>
 {{ file.Block "tfCustomHTTPDatadog" }}
 // <</Stencil::Block>>
