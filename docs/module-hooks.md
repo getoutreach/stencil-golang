@@ -175,3 +175,16 @@ Extra [devspace profiles](https://www.devspace.sh/docs/5.x/configuration/profile
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.profiles" (stencil.ApplyTemplate "ingestDevspaceProfile" | fromYaml) }}
 ```
+
+### `devspace.ports`
+
+**Type**: `string`
+
+**File**: `devspace.yaml.tpl`
+
+Extra ports that should be forwarded while `devspace dev` is running
+
+```tpl
+# devspace.ports
+{{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.ports" (list "4000") }}
+```
