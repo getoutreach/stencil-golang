@@ -188,3 +188,20 @@ Extra ports that should be forwarded while `devspace dev` is running
 # devspace.ports
 {{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.ports" (list "4000") }}
 ```
+
+### `Makefile.commands`
+
+**Type**: `string`
+
+**File**: `Makefile`
+
+Extra commands to add to the root Makefile
+
+```tpl
+## run-rover:           merges shared and specific schemas and runs rover-cli 
+.PHONY: run-rover
+run-rover:
+    cat internal/graphql/schema/shared.graphql > internal/graphql/generated/schema.graphql
+    cat internal/graphql/schema/schema.graphql >> internal/graphql/generated/schema.graphql
+    rover dev --router-config config/apollo.yaml --name rogue --url http://localhost:4000/graphql --schema internal/graphql/generated/schema.graphql
+```
