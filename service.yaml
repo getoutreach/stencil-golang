@@ -12,7 +12,12 @@ arguments:
     prereleasesBranch: rc
 modules:
   - name: github.com/getoutreach/stencil-template-base
+    channel: rc
   - name: github.com/getoutreach/stencil-circleci
+    channel: rc
   - name: github.com/getoutreach/stencil-base
+    channel: rc
   - name: github.com/getoutreach/devbase
+    channel: rc
+  - name: github.com/getoutreach/stencil-golang
     channel: rc
