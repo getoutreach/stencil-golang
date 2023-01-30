@@ -157,6 +157,18 @@ dev:
         {{- if (has "node" (stencil.Arg "grpcClients")) }}
         - api/clients/node/node_modules/
         {{- end }}
+    {{- range (stencil.GetModuleHook "devspace.sync") }}
+    - name: {{ .name }}
+      labelSelector: {{ .labelSelector }}
+      namespace: {{ .namespace }}
+      localSubPath: {{ .localSubPath }}
+      containerPath: {{ .containerPath }}
+      waitInitialSync: true
+      {{- if .excludePaths }}
+      excludePaths:
+{{ toYaml .excludePaths | indent 8 }}
+      {{- end }}
+    {{- end }}
 
   # Since our Helm charts and manifests deployments are often optimized for production,
   # DevSpace let's you swap out Pods dynamically to get a better dev environment
