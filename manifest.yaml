@@ -1,8 +1,6 @@
 name: github.com/getoutreach/stencil-golang
 ## <<Stencil::Block(keys)>>
 type: templates,extension
-modules:
-  - name: github.com/getoutreach/stencil-discovery
 arguments:
   terraform.datadog.monitoring.argocd.appHealth.notify:
     type: boolean

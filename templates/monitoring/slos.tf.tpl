@@ -1,24 +1,5 @@
 {{- if (stencil.Arg "terraform.datadog.monitoring.generateSLOs") -}}
 {{- if has "http" (stencil.Arg "serviceActivities") }}
-resource "datadog_service_level_objective" "http_p99_latency" {
-  name        = "{{ .Config.Name | title }} HTTP P99 Latency"
-  type        = "monitor"
-  description = "Keeping track of P99 latency commitments for all {{ .Config.Name | title }} requests in aggregate, for production bentos only."
-  tags = local.ddTags
-  monitor_ids = [module.http_latency_high.high_traffic_id]
-  groups = [
-    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomains")}}
-    {{- range $b := $bentos }}
-    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
-    {{- end }}
-  ]
-  thresholds {
-    timeframe = "7d"
-    target = 99.9
-    warning = 99.95
-  }
-}
-
 resource "datadog_service_level_objective" "http_success" {
   name        = "{{ .Config.Name | title }} HTTP Success Response"
   type        = "metric"
@@ -37,25 +18,6 @@ resource "datadog_service_level_objective" "http_success" {
 {{- end }}
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
-resource "datadog_service_level_objective" "grpc_p99_latency" {
-  name        = "{{ .Config.Name | title }} GRPC P99 Latency"
-  type        = "monitor"
-  description = "Keeping track of P99 latency commitments for all {{ .Config.Name | title }} GRPC requests in aggregate, for production bentos only."
-  tags = local.ddTags
-  monitor_ids = [module.grpc_latency_high.high_traffic_id]
-  groups = [
-    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomains") }}
-    {{- range $b := $bentos }}
-    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
-    {{- end }}
-  ]
-  thresholds {
-    timeframe = "7d"
-    target = 99.9
-    warning = 99.95
-  }
-}
-
 resource "datadog_service_level_objective" "grpc_success" {
   name        = "{{ .Config.Name | title }} GRPC Success Response"
   type        = "metric"
@@ -72,6 +34,10 @@ resource "datadog_service_level_objective" "grpc_success" {
   }
 }
 {{- end }}
+{{- end }}
+
+{{- range (stencil.GetModuleHook "monitoring.slos") }}
+{{ . }}
 {{- end }}
 
 // <<Stencil::Block(tfCustomSLODatadog)>>

@@ -209,3 +209,39 @@ run-rover:
 
 {{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "Makefile.commands" (list (stencil.ApplyTemplate "run.rover")) }}
 ```
+
+### `monitoring.slos`
+
+**Type**: `string`
+
+**File**: `monitoring/slos.tf`
+
+Extra SLO teraform definitions.
+
+```
+{{- define "grpc-slo"}}
+resource "datadog_service_level_objective" "grpc_p99_latency" {
+  name        = "{{ .Config.Name | title }} GRPC P99 Latency"
+  type        = "monitor"
+  description = "Keeping track of P99 latency commitments for all {{ .Config.Name | title }} GRPC requests in aggregate, for production bentos only."
+  tags = local.ddTags
+  monitor_ids = [module.grpc_latency_high.high_traffic_id]
+  groups = [
+    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomains") }}
+    {{- range $b := $bentos }}
+    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
+    {{- end }}
+  ]
+  thresholds {
+    timeframe = "7d"
+    target = 99.9
+    warning = 99.95
+  }
+}
+{{- end }}
+
+
+{{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "monitoring.slos"
+  (list (stencil.ApplyTemplate "grpc-slo"))
+}}
+```

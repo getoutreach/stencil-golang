@@ -6,7 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/getoutreach/stencil-discovery/pkg/discoverytest"
 	"github.com/getoutreach/stencil-golang/internal/plugin"
 	"github.com/getoutreach/stencil/pkg/stenciltest"
 	"github.com/magefile/mage/sh"
@@ -21,12 +20,12 @@ func TestRenderAPIGoSuccess(t *testing.T) {
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
 	// why this test does not verify correct handling of odd service names.
 	st := stenciltest.New(t, "api/api.go.tpl", libaryTmpls...)
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestRenderDeploymentConfig(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.config.jsonnet.tpl", libaryTmpls...)
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestRenderDeploymentJsonnet(t *testing.T) {
@@ -34,12 +33,12 @@ func TestRenderDeploymentJsonnet(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"mixins": []interface{}{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libaryTmpls...)
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestRenderDeploymentDockerfile(t *testing.T) {
@@ -51,7 +50,7 @@ func TestRenderDeploymentDockerfile(t *testing.T) {
 			"alpine": "3.1",
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestRenderDependabot(t *testing.T) {
@@ -61,7 +60,7 @@ func TestRenderDependabot(t *testing.T) {
 		"serviceActivities": []interface{}{"grpc"},
 		"grpcClients":       []interface{}{"node"},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestBasicGoMod(t *testing.T) {
@@ -73,7 +72,7 @@ func TestBasicGoMod(t *testing.T) {
 	}
 
 	st.Ext("github.com/getoutreach/stencil-golang", p)
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestMergeGoMod(t *testing.T) {
@@ -92,7 +91,7 @@ func TestMergeGoMod(t *testing.T) {
 	}
 	defer os.Remove("go.mod")
 
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestDevenvYaml(t *testing.T) {
@@ -108,12 +107,12 @@ func TestDevenvYaml(t *testing.T) {
 			},
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestEmptyDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestDatadogTf(t *testing.T) {
@@ -130,12 +129,11 @@ func TestDatadogTf(t *testing.T) {
 			},
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestGRPCTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/grpc.tf.tpl", libaryTmpls...)
-	st.Ext("github.com/getoutreach/stencil-discovery", &discoverytest.MockPlugin{})
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
@@ -152,7 +150,7 @@ func TestGRPCTf(t *testing.T) {
 			"grpc",
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestHTTPTf(t *testing.T) {
@@ -173,12 +171,11 @@ func TestHTTPTf(t *testing.T) {
 			"http",
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestTemporalTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/temporal.tf.tpl", libaryTmpls...)
-	st.Ext("github.com/getoutreach/stencil-discovery", &discoverytest.MockPlugin{})
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
@@ -195,12 +192,11 @@ func TestTemporalTf(t *testing.T) {
 			"temporal",
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }
 
 func TestSLOsTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/slos.tf.tpl", libaryTmpls...)
-	st.Ext("github.com/getoutreach/stencil-discovery", &discoverytest.MockPlugin{})
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
 		"terraform.datadog.monitoring.generateSLOs": true,
@@ -219,5 +215,5 @@ func TestSLOsTf(t *testing.T) {
 			"grpc",
 		},
 	})
-	st.Run(false)
+	st.Run(true)
 }

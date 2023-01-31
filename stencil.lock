@@ -2,10 +2,10 @@ version: v1.29.0
 modules:
     - name: github.com/getoutreach/devbase
       url: https://github.com/getoutreach/devbase
-      version: v2.9.0-rc.3
+      version: v2.9.0-rc.4
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
-      version: v0.8.0-rc.1
+      version: v0.8.0-rc.2
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
       version: v1.7.0-rc.1
@@ -14,7 +14,7 @@ modules:
       version: v1.7.0-rc.1
     - name: github.com/getoutreach/stencil-template-base
       url: https://github.com/getoutreach/stencil-template-base
-      version: v0.5.0-rc.2
+      version: v0.5.0-rc.3
 files:
     - name: .circleci/config.yml
       template: .circleci/config.yml.tpl
