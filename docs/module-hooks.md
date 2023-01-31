@@ -136,12 +136,13 @@ Extra configuration jsonnet files to merge into the application config.
 
 ### `devspace.profiles`
 
-**Type**: 
+**Type**:
+
 ```
-{ 
-   name: string, 
-   description: string, 
-   activation: 
+{
+   name: string,
+   description: string,
+   activation:
       env: [ key: value ]
       vars: [ key: value ]
    patches:
@@ -156,7 +157,7 @@ Extra configuration jsonnet files to merge into the application config.
 
 **File**: `devspace.yaml.tpl`
 
-Extra [devspace profiles](https://www.devspace.sh/docs/5.x/configuration/profiles/basics) to merge into the devspace.yaml config. 
+Extra [devspace profiles](https://www.devspace.sh/docs/5.x/configuration/profiles/basics) to merge into the devspace.yaml config.
 
 ```tpl
 {{- define "ingestTerminalDevspaceProfile" }}
@@ -174,6 +175,40 @@ Extra [devspace profiles](https://www.devspace.sh/docs/5.x/configuration/profile
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.profiles" (stencil.ApplyTemplate "ingestDevspaceProfile" | fromYaml) }}
+```
+
+### `devspace.sync`
+
+**Type**:
+
+```
+{
+  name: string,
+  labelSelector: string,
+  namespace: string,
+  localSubPath: string,
+  containerPath: string,
+  excludePaths: [ string ]
+}
+```
+
+**File**: `devspace.yaml.tpl`
+
+Extra devspace sync to merge into a devspace.yaml config.
+
+```
+{{- define "testSync"}}
+    - name: test
+      labelSelector: ${DEVENV_DEPLOY_LABELS}
+      namespace: ${DEVENV_DEPLOY_NAMESPACE}
+      localSubPath: ./
+      containerPath: ${DEV_CONTAINER_WORKDIR}
+      excludePaths:
+        - bin
+        - ./vendor
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.profiles" (stencil.ApplyTemplate "testSync" | fromYaml) }}
 ```
 
 ### `devspace.ports`
