@@ -139,6 +139,9 @@ dev:
 {{- if (has "http" (stencil.Arg "serviceActivities")) }}
         - port: 8080
 {{- end }}
+{{- range (stencil.GetModuleHook "devspace.ports") }}
+        - port: {{ . }}
+{{- end }}
         # Remote debugging port
         - port: ${DLV_PORT}
 

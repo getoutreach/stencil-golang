@@ -210,3 +210,73 @@ Extra devspace sync to merge into a devspace.yaml config.
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.profiles" (stencil.ApplyTemplate "testSync" | fromYaml) }}
 ```
+
+### `devspace.ports`
+
+**Type**: `string`
+
+**File**: `devspace.yaml.tpl`
+
+Extra ports that should be forwarded while `devspace dev` is running
+
+```tpl
+# devspace.ports
+{{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.ports" (list "4000") }}
+```
+
+### `Makefile.commands`
+
+**Type**: `string`
+
+**File**: `Makefile`
+
+Extra commands to add to the root Makefile
+
+```tpl
+{{- define "run.rover" }}
+## run-rover:           merges shared and specific schemas and runs rover-cli 
+.PHONY: run-rover
+run-rover:
+	cat internal/graphql/schema/shared.graphql > internal/graphql/generated/schema.graphql
+	cat internal/graphql/schema/schema.graphql >> internal/graphql/generated/schema.graphql
+	rover dev --router-config config/apollo.yaml --name $appName --url http://localhost:4000/graphql --schema internal/graphql/generated/schema.graphql
+{{- end }}
+
+{{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "Makefile.commands" (list (stencil.ApplyTemplate "run.rover")) }}
+```
+
+### `monitoring.slos`
+
+**Type**: `string`
+
+**File**: `monitoring/slos.tf`
+
+Extra SLO teraform definitions.
+
+```
+{{- define "grpc-slo"}}
+resource "datadog_service_level_objective" "grpc_p99_latency" {
+  name        = "{{ .Config.Name | title }} GRPC P99 Latency"
+  type        = "monitor"
+  description = "Keeping track of P99 latency commitments for all {{ .Config.Name | title }} GRPC requests in aggregate, for production bentos only."
+  tags = local.ddTags
+  monitor_ids = [module.grpc_latency_high.high_traffic_id]
+  groups = [
+    {{- $bentos := extensions.Call "github.com/getoutreach/stencil-discovery.Bentos" (stencil.Arg "deployment.environments") (stencil.Arg "deployment.serviceDomains") }}
+    {{- range $b := $bentos }}
+    "kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}--{{ $b.name }}",
+    {{- end }}
+  ]
+  thresholds {
+    timeframe = "7d"
+    target = 99.9
+    warning = 99.95
+  }
+}
+{{- end }}
+
+
+{{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "monitoring.slos"
+  (list (stencil.ApplyTemplate "grpc-slo"))
+}}
+```
