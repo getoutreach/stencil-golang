@@ -137,9 +137,9 @@ nodejs:
   - name: "@outreach/find"
     version: ^1.0.1
   - name: "@types/google-protobuf"
-    version: ^3.7.4
+    version: ^3.15.0
   - name: google-protobuf
-    version: ^3.13.0
+    version: ^3.15.0
   - name: ts-enum-util
     version: ^4.0.2
   - name: winston
