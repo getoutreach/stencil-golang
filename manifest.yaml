@@ -228,4 +228,11 @@ arguments:
     description: Disable gRPC generation if you are using protoAPI generation
     schema:
       type: boolean
+  go.stanza:
+    description: Go stanza version
+    default: "1.17"
+    schema:
+      type:
+        - string
+        - number
 ## <</Stencil::Block>>
