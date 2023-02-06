@@ -1,0 +1,7 @@
+(*codegen.File)(module github.com/getoutreach/testing
+
+go 1.19
+
+require (
+	github.com/getoutreach/gobox v1.54.0
+))
