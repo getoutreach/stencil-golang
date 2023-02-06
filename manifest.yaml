@@ -207,7 +207,7 @@ arguments:
       type: array
   versions.go:
     description: Go version to use
-    default: "1.19.2"
+    default: "1.19.5"
     schema:
       type:
         - string
