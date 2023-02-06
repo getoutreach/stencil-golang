@@ -94,6 +94,23 @@ func TestMergeGoMod(t *testing.T) {
 	st.Run(true)
 }
 
+func TestGoModStanzaVersion(t *testing.T) {
+	st := stenciltest.New(t, "go.mod.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"go": map[string]interface{}{
+			"stanza": "1.19",
+		},
+	})
+
+	p, err := plugin.NewStencilGolangPlugin(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	st.Ext("github.com/getoutreach/stencil-golang", p)
+	st.Run(true)
+}
+
 func TestDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
 	st.Args(map[string]interface{}{

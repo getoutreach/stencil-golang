@@ -2,10 +2,14 @@
 {{- define "go.mod" -}}
 module github.com/{{ .Runtime.Box.Org }}/{{ .Config.Name }}
 
+{{ if eq "1.17" (stencil.Arg "go.stanza") -}}
 // This is locked to 1.17 to ensure that generics
 // are not in use. This will be removed in the near future.
 // - https://outreach-io.atlassian.net/wiki/spaces/DT/pages/2475294804
 go 1.17
+{{- else -}}
+go {{ stencil.Arg "go.stanza" }}
+{{- end }}
 
 require (
 	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).go }}
