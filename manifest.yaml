@@ -230,9 +230,8 @@ arguments:
       type: boolean
   go.stanza:
     description: Go stanza version
-    default: "1.17"
+    default: "1.19"
     schema:
       type:
         - string
-        - number
 ## <</Stencil::Block>>
