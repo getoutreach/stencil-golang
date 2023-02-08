@@ -148,6 +148,7 @@ dev:
   # `dev.sync` configures a file sync between our Pods in k8s and your local project files
   sync:
     - name: app
+      containerName: ${DEVENV_DEPLOY_APPNAME}
       labelSelector: ${DEVENV_DEPLOY_LABELS}
       namespace: ${DEVENV_DEPLOY_NAMESPACE}
       localSubPath: ./
@@ -359,6 +360,7 @@ profiles:
             cd "${DEV_CONTAINER_WORKDIR}"
             "${DEV_CONTAINER_WORKDIR}/scripts/shell-wrapper.sh" devspace_start.sh
           container:
+            imageSelector: ${DEV_CONTAINER_IMAGE}
             labelSelector: ${DEVENV_DEPLOY_LABELS}
 
   - name: remoteAppImages
