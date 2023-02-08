@@ -22,6 +22,10 @@ export interface ClientOptions {
 
   /** This is the gRPC interceptors that should be run on messages passed through the client. */
   interceptors?: grpc.Interceptor[];
+
+  /** This is the ChannelOptions map for overriding default grpc-js ChannelOptions values. */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  channelOptions?: Map<string, any> | null;
 }
 
 /**
@@ -38,6 +42,6 @@ export function create{{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Clien
   if (options?.interceptors) {
     interceptors.push(...options.interceptors);
   }
-
-  return new {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors });
+  const channelOptions = options?.channelOptions;
+  return new {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client(endpoint, grpc.credentials.createInsecure(), { interceptors, channelOptions });
 }
