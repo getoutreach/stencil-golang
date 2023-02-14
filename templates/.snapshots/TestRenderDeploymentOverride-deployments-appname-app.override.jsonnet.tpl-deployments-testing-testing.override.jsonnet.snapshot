@@ -17,6 +17,8 @@ local isDev = (app.environment == 'development' || app.environment == 'local_dev
 
 // Objects contains kubernetes objects (or resources) that should be created in
 // all environments.
+// Note: If creating an HPA, you will need to remove the deployment.replica so it does not conflict.
+// Ex: deployment+: {spec+: { replicas: null, }, },
 local objects = {
 	// <<Stencil::Block(override)>>
 
