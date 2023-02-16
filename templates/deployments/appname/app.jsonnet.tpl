@@ -91,18 +91,13 @@ local all = {
 		data_:: {
 			OpenTelemetry: {
 				Enabled: true,
-				{{- if eq "lightstep" (stencil.Arg "tracing") }}
-				AdditionalEndpoint:  'ingest.lightstep.com:443',
+				{{- if eq "opentelemetry" (stencil.Arg "tracing") }}
+				AdditionalEndpoint:  'otel-collector-tracing.monitoring.svc.cluster.local:4317',
 				{{- end }}
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
 					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
 				},
-				{{- if eq "lightstep" (stencil.Arg "tracing") }}
-				AdditionalAPIKey: {
-					Path: '/run/secrets/outreach.io/lightstep/apiKey',
-				},
-				{{- end }}
 				Dataset: if isDev then 'dev' else 'outreach',
 				SamplePercent: if isDev then 100 else 1,
 			},

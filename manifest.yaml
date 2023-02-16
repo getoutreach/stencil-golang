@@ -87,7 +87,6 @@ arguments:
       type: string
       enum:
         - opentelemetry
-        - lightstep
     descriptions: Tracing backend to send traces to
     default: opentelemetry
   slack:
