@@ -15,12 +15,9 @@
   version: {{ stencil.ApplyTemplate "goVersion" | trim | squote }}
 # Not used for gRPC clients
 - name: nodejs
-  version: 16.13.0
+  version: {{ stencil.Arg "versions.nodejs" }}
 - name: terraform
   version: {{ stencil.Arg "versions.terraform" }}
-# Just in case bundler/etc needs to be used in the root.
-- name: ruby
-  version: 2.7.5
 # Used in CI
 - name: protoc
   version: 21.5
