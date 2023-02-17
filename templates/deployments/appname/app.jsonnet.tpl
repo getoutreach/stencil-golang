@@ -92,7 +92,7 @@ local all = {
 			OpenTelemetry: {
 				Enabled: true,
 				{{- if eq "opentelemetry" (stencil.Arg "tracing") }}
-				AdditionalEndpoint:  'otel-collector-tracing.monitoring.svc.cluster.local:4317',
+				CollectorEndpoint:  'otel-collector-tracing.monitoring.svc.cluster.local:4317',
 				{{- end }}
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
