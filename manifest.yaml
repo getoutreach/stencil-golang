@@ -246,7 +246,7 @@ arguments:
     default: "0.15.5"
     description: The version of terraform that is used.
   disableGrpcGeneration:
-    description: Disable gRPC generation if you are using protoAPI generation
+    description: Disable gRPC generation
     schema:
       type: boolean
   go.stanza:
