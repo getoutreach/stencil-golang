@@ -87,8 +87,9 @@ arguments:
       type: string
       enum:
         - opentelemetry
+        - honeycomb
     descriptions: Tracing backend to send traces to
-    default: opentelemetry
+    default: honeycomb
   slack:
     schema:
       type: string

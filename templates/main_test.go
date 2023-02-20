@@ -36,6 +36,14 @@ func TestRenderDeploymentJsonnet(t *testing.T) {
 	st.Run(true)
 }
 
+func TestRenderDeploymentOpenTelemetryTracing(t *testing.T) {
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"tracing": "opentelemetry",
+	})
+	st.Run(true)
+}
+
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libaryTmpls...)
 	st.Run(true)
