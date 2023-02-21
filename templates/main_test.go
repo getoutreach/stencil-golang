@@ -36,6 +36,22 @@ func TestRenderDeploymentJsonnet(t *testing.T) {
 	st.Run(true)
 }
 
+func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"reportingTeam": "test:team",
+		"deployment": map[string]interface{}{
+			"strategy": "canary",
+		},
+		"service": true,
+		"serviceActivities": []interface{}{
+			"http",
+		},
+		"slack": "hello",
+	})
+	st.Run(true)
+}
+
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libaryTmpls...)
 	st.Run(true)

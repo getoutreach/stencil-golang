@@ -200,6 +200,14 @@ arguments:
     description: A list of environments that the service is deployed to.
     schema:
       type: array
+  deployment.strategy:
+    description: The deployment strategy is the method used to deploy the application.
+    schema:
+      type: string
+      enum:
+        - "" # current default deployment strategy is RollingUpdate
+        - canary
+    default: ""
   versions.go:
     description: Go version to use
     default: "1.19.5"

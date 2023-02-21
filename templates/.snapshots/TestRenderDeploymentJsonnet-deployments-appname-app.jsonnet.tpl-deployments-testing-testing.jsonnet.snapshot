@@ -10,6 +10,7 @@ local resources = import './resources.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
+local argo = import 'kubernetes/argo.libsonnet';
 
 local sharedLabels = {
 	repo: app.name,

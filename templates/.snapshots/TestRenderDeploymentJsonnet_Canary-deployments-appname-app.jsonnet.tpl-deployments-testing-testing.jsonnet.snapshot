@@ -1,31 +1,22 @@
-{{- $appName  := .Config.Name }}
-{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
-{{- $_ := file.SetPath (printf "deployments/%s/%s.jsonnet" .Config.Name .Config.Name) }}
-// {{ stencil.ApplyTemplate "copyright" }}
+(*codegen.File)(
+// Copyright 2023 Outreach Corporation. All Rights Reserved.
 //
 // Managed: true
 
 local ok = import 'kubernetes/outreach.libsonnet';
 local segments = import '../../concourse/segments.libsonnet';
-local app = (import 'kubernetes/app.libsonnet').info('{{ $appName }}');
+local app = (import 'kubernetes/app.libsonnet').info('testing');
 local resources = import './resources.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
 local argo = import 'kubernetes/argo.libsonnet';
 
-{{- if not (empty (stencil.Arg "kubernetes.groups")) }}
-local k8sMetricsPort = 2019;
-local k8sMetricsName = 'k8s_' + app.name;
-{{ end }}
-
 local sharedLabels = {
 	repo: app.name,
 	bento: app.bento,
-	reporting_team: '{{ stencil.Arg "reportingTeam" }}',
+	reporting_team: 'test:team',
 };
-
-{{- if eq "canary" (stencil.Arg "deployment.strategy") }}
 local deploymentMetrics = [
 	argo.AnalysisMetricDatadog('cpu-usage') {
 		query:: '100 * (default_zero(avg:kubernetes.cpu.usage.total{app:%(name)s,kube_namespace:%(namespace)s, image_tag:%(version)s}.rollup(60)) / 1000000000) / avg:kubernetes.cpu.limits{app:%(name)s,kube_namespace:%(namespace)s, image_tag:%(version)s}.rollup(60)' % app,
@@ -42,7 +33,6 @@ local deploymentMetrics = [
 		successCondition: 'default(result, 0) < 80',
 		interval: '1m',
 	},
-	{{- if (has "http" (stencil.Arg "serviceActivities")) }}
 	argo.AnalysisMetricDatadog('http-success-rate') {
 		query:: '100 * count:%(name)s.http_request_seconds{!status:5xx,bento:%(bento)s,image_tag:%(version)s}.rollup(60).as_count() / count:%(name)s.http_request_seconds{bento:%(bento)s,image_tag:%(version)s}.rollup(60).as_count()' % app,
 		successCondition: 'default(result, 0) > 90',
@@ -53,11 +43,7 @@ local deploymentMetrics = [
 		successCondition: 'default(result, 0) < 2',
 		interval: '1m',
 	},
-	{{- end }}
-	{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-	{{- end }}
 ];
-{{- end }}
 
 local all = {
 	namespace: ok.Namespace(app.namespace) {
@@ -78,22 +64,14 @@ local all = {
 			sessionAffinity: 'None',
 			type: 'ClusterIP',
 			ports_:: {
-				{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-				grpc: {
-					port: 5000,
-					targetPort: 'grpc',
-				},
-				{{- end }}
 				metrics: {
 					port: 8000,
 					targetPort: 'http-prom',
 				},
-				{{- if (has "http" (stencil.Arg "serviceActivities")) }}
 				http: {
 					port: 8080,
 					targetPort: 'http',
 				},
-				{{- end }}
 			},
 			ports: ok.mapToNamedList(this.ports_),
 		},
@@ -106,7 +84,7 @@ local all = {
 	},
 	// Default configuration for the service, managed by stencil.
 	// all other configuration should be done in the
-	// {{ $appName }}.config.jsonnet file
+	// testing.config.jsonnet file
 	configmap: ok.ConfigMap('config', app.namespace) {
 		metadata+: {
 			annotations+: {
@@ -126,9 +104,7 @@ local all = {
 		data_:: {
 			OpenTelemetry: {
 				Enabled: true,
-				{{- if eq "opentelemetry" (stencil.Arg "tracing") }}
 				CollectorEndpoint:  'otel-collector-tracing.monitoring.svc.cluster.local:4317',
-				{{- end }}
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
 					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
@@ -164,7 +140,6 @@ local all = {
 			'fflags.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
-{{- if eq "canary" (stencil.Arg "deployment.strategy") }}
 	service_canary: ok.Service(app.name + '-canary', app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -197,16 +172,9 @@ local all = {
 			{ setWeight: 100 },
 		],
 		// Argo Rollouts support one service port only.
-		{{- if (has "http" (stencil.Arg "serviceActivities")) }}
 		servicePort:: 8080,
-		{{- end }}
-		{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-		servicePort:: 5000,
-		{{- end }}
-		{{- if stencil.Arg "slack" }}
-		notification_success:: {{ stencil.Arg "slack" | squote }},
-		notification_failure:: {{ stencil.Arg "slack" | squote }},
-		{{- end }}
+		notification_success:: 'hello',
+		notification_failure:: 'hello',
 		backgroundAnalysis:: if !isDev then {
 			templates: [
 				argo.AnalysisTemplateRef($.analysis_template),
@@ -223,7 +191,6 @@ local all = {
 			replicas: if isDev then 1 else 2,
 		},
 	},
-{{- end }}
 
 	deployment: ok.Deployment(app.name, app.namespace) {
 		local deployment_volume_mounts = {
@@ -241,11 +208,6 @@ local all = {
 				subPath: 'fflags.yaml',
 			},
 			// user provided secrets
-			{{- range $secret := stencil.Arg "vaultSecrets"}}
-			'secret-{{ $secret | base }}-volume' : {
-				mountPath: '/run/secrets/outreach.io/{{ $secret | base }}',
-			},
-			{{- end }}
 		},
 		metadata+: {
 			labels+: sharedLabels,
@@ -254,27 +216,10 @@ local all = {
 			replicas: if isDev then 1 else 2,
 			template+: {
 				metadata+: {
-					{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
 					labels+: sharedLabels {
-						'tollgate.outreach.io/scrape': 'true',
-						{{- if or (eq "opentelemetry" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-						'opentelemetry.io/scrape': 'true',
-						{{- end }}
 					},
-					{{- else }}
-					labels+: sharedLabels {
-						{{- if or (eq "opentelemetry" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-						'opentelemetry.io/scrape': 'true',
-						{{- end }}
-					},
-					{{- end }}
 					annotations+: {
-						{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-						'tollgate.outreach.io/group': app.name,
-						'tollgate.outreach.io/port': '5000',
-						{{- end }}
 						'iam.amazonaws.com/role': '%s_service_role' % app.name,
-						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						// https://docs.datadoghq.com/integrations/openmetrics/
 						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
 						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
@@ -289,20 +234,6 @@ local all = {
 								send_distribution_buckets: true,
 							},
 						],
-						{{- if not (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + k8sMetricsName + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + k8sMetricsName + '.init_configs']: '[{}]',
-						['ad.datadoghq.com/' + k8sMetricsName + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
-						k8s_datadog_prom_instances_:: [
-							{
-								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
-								namespace: app.name,
-								metrics: ['*'],
-								send_distribution_buckets: true,
-							},
-						],
-						{{- end }}
-						{{- end }}
 					},
 				},
 				spec+: {
@@ -338,13 +269,8 @@ local all = {
 								},
 							},
 							ports_+:: {
-								{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-								grpc: { containerPort: 5000 },
-								{{- end }}
 								'http-prom': { containerPort: 8000 },
-								{{- if (has "http" (stencil.Arg "serviceActivities")) }}
 								http: { containerPort: 8080 },
-								{{- end }}
 							},
 							resources: resources,
 						},
@@ -356,9 +282,6 @@ local all = {
 						'fflags-yaml-volume': ok.ConfigMapVolume(ok.ConfigMap('fflags-yaml', app.namespace)),
 
 						// user provided secrets
-						{{- range $secret := stencil.Arg "vaultSecrets" }}
-						'secret-{{ $secret | base }}-volume': ok.SecretVolume(ok.Secret('{{ $secret | base }}', app.namespace)),
-						{{- end }}
 					},
 				},
 			},
@@ -369,31 +292,10 @@ local all = {
 // vaultOperatorSecrets stores vault secrets for production environments
 // this is not related to the development vault secrets operator
 local vaultOperatorSecrets = {
-	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
-	{{- $secretName := ($secretPath | base) }}
-	'vs-{{ $secretName }}': ok.VaultSecret('{{ $secretName }}', app.namespace) {
-		vaultPath_:: '{{ $secretPath }}' % app,
-	},
-	{{- end }}
 };
 
 // These secrets will be included in dev by default, they are fetched from vault.
 local developmentObjects = {
-	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
-	{{- $secretName := ($secretPath | base) }}
-	'vs-{{ $secretName }}': {
-		apiVersion: 'ricoberger.de/v1alpha1',
-		kind: 'VaultSecret',
-		metadata: {
-			name: '{{ $secretName | base }}',
-			namespace: app.namespace,
-		},
-		spec: {
-			path: '{{ $secretPath }}' % app,
-			type: 'Opaque',
-		},
-	},
-	{{- end }}
 
 	service+: {
 		metadata+: {
@@ -405,13 +307,10 @@ local developmentObjects = {
 	},
 };
 
-local override = import './{{ $appName }}.override.jsonnet';
-local configuration = import './{{ $appName }}.config.jsonnet';
+local override = import './testing.override.jsonnet';
+local configuration = import './testing.config.jsonnet';
 
 local mixins = [
-	{{- range $mixin := sortAlpha (concat (stencil.Arg "mixins") (stencil.GetModuleHook "mixins")) }}
-	import './mixins/{{ $mixin }}.jsonnet',
-	{{- end }}
 ];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});
 
@@ -424,3 +323,4 @@ ok.FilteredList() {
 	+ override
 	+ configuration)
 }
+)
