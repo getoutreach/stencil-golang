@@ -46,6 +46,7 @@ func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 		"service": true,
 		"serviceActivities": []interface{}{
 			"http",
+			"grpc",
 		},
 		"slack": "hello",
 	})
