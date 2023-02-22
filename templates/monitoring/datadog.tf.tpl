@@ -35,11 +35,6 @@ variable "alert_on_panics" {
   description = "Enables/Disables the panics monitor defined based on the logs"
 }
 
-variable available_pods_low_count {
-  type    = number
-  default = {{ stencil.Arg "terraform.datadog.pods.thresholds.availableLowCount" | default 2 }}
-}
-
 locals {
   ddTags = concat(["{{ .Config.Name }}", "team:{{  stencil.Arg "reportingTeam" }}"], var.additional_dd_tags)
 }
@@ -143,19 +138,6 @@ resource "datadog_monitor" "pod_memory_working_set_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-}
-
-resource "datadog_monitor" "available_pods_low" {
-  type = "query alert"
-  name = "{{ .Config.Name | title }} Available Pods Low"
-  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:{{ .Config.Name }},env:production} by {kube_namespace} < ${var.available_pods_low_count}"
-  tags = local.ddTags
-  message = <<EOF
-  The {{ .Config.Name | title }} replica count should be at least ${var.available_pods_low_count}, which is also the PDB.  If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
-  Note: This P1 alert only includes production
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/available-pods-low.md"
-  Notify: ${join(" ", var.P1_notify)}
-  EOF
 }
 
 resource "datadog_monitor" "panics" {
