@@ -7,10 +7,10 @@ local ok = import 'kubernetes/outreach.libsonnet';
 local segments = import '../../concourse/segments.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('testing');
 local resources = import './resources.libsonnet';
+local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
-local argo = import 'kubernetes/argo.libsonnet';
 
 local sharedLabels = {
 	repo: app.name,
