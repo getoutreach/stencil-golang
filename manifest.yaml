@@ -207,6 +207,27 @@ arguments:
       type:
         - string
         - number
+  versions.nodejs:
+    description: Nodejs version to use for build tooling (e.g., semantic-release)
+    default: "18.14.1"
+    schema:
+      type:
+        - string
+        - number
+  versions.grpcClients.nodejs:
+    description: Nodejs version to use for gRPC clients
+    default: "16.19.0"
+    schema:
+      type:
+        - string
+        - number
+  versions.grpcClients.ruby:
+    description: Ruby version to use for gRPC clients
+    default: "2.7.5"
+    schema:
+      type:
+        - string
+        - number
   versions.alpine:
     description: Alpine version to use
     default: "3.16"
@@ -217,10 +238,10 @@ arguments:
   versions.terraform:
     schema:
       type: string
-    default: "0.14.11"
+    default: "0.15.5"
     description: The version of terraform that is used.
   disableGrpcGeneration:
-    description: Disable gRPC generation if you are using protoAPI generation
+    description: Disable gRPC generation
     schema:
       type: boolean
   go.stanza:
