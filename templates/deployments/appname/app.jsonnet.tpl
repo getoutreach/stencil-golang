@@ -9,10 +9,10 @@ local ok = import 'kubernetes/outreach.libsonnet';
 local segments = import '../../concourse/segments.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ $appName }}');
 local resources = import './resources.libsonnet';
+local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
-local argo = import 'kubernetes/argo.libsonnet';
 
 {{- if not (empty (stencil.Arg "kubernetes.groups")) }}
 local k8sMetricsPort = 2019;
