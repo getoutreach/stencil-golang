@@ -27,42 +27,27 @@ local sharedLabels = {
 
 {{- if eq "canary" (stencil.Arg "deployment.strategy") }}
 local deploymentMetrics = [
-	argo.AnalysisMetricDatadog('cpu-usage') {
-		query:: 'moving_rollup(default_zero(100 * avg:kubernetes.cpu.usage.total{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}) / 1000000000 / avg:kubernetes.cpu.limits{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}, 60, "max")' % app,
-		successCondition: 'default(result, 0) < 70',
-		interval: '1m',
-	},
-	argo.AnalysisMetricDatadog('memory-rss-usage') {
-		query:: 'moving_rollup(default_zero(100 * avg:kubernetes.memory.rss{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s} / avg:kubernetes.memory.limits{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
-		successCondition: 'default(result, 0) < 70',
-		interval: '1m',
-	},
-	argo.AnalysisMetricDatadog('memory-working-set-usage') {
-		query:: 'moving_rollup(default_zero(100 * avg:kubernetes.memory.working_set{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s} / avg:kubernetes.memory.limits{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
-		successCondition: 'default(result, 0) < 70',
-		interval: '1m',
-	},
 	{{- if (has "http" (stencil.Arg "serviceActivities")) }}
 	argo.AnalysisMetricDatadog('http-error-rate') {
 		query:: 'moving_rollup(default_zero(100 * count:%(name)s.http_request_seconds{status:5xx,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:deploytestservice.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "avg")' % app,
-    successCondition: 'default(result, 0) < 10',
+    successCondition: 'default(result, 0) < {{ sub 100 (stencil.Arg "terraform.datadog.http.percentiles.lowTraffic" | default 90) }}',
 		interval: '1m',
 	},
 	argo.AnalysisMetricDatadog('http-latency') {
 		query:: 'moving_rollup(default_zero(p90:%(name)s.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "avg")' % app,
-		successCondition: 'default(result, 0) < 2',
+		successCondition: 'default(result, 0) < {{ stencil.Arg "terraform.datadog.http.latency.thresholds.lowTraffic" | default 2 }}',
 		interval: '1m',
 	},
 	{{- end }}
 	{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
 	argo.AnalysisMetricDatadog('grpc-error-rate') {
 		query:: 'moving_rollup(default_zero(100 * count:%(name)s.grpc_request_handled{statuscategory:categoryservererror,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:%(name)s.grpc_request_handled{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "avg")' % app,
-		successCondition: 'default(result, 0) < 50',
+		successCondition: 'default(result, 0) < {{ sub 100 (stencil.Arg "terraform.datadog.grpc.qos.thresholds.lowTraffic" | default 50) }}',
 		interval: '1m',
 	},
   argo.AnalysisMetricDatadog('grpc-latency') {
 		query:: 'moving_rollup(default_zero(p90:%(name)s.grpc_request_handled{kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "avg")' % app,
-		successCondition: 'default(result, 0) < 2',
+		successCondition: 'default(result, 0) < {{ stencil.Arg "terraform.datadog.grpc.latency.thresholds.lowTraffic" | default 2 }}',
 		interval: '1m',
 	},
 	{{- end }}

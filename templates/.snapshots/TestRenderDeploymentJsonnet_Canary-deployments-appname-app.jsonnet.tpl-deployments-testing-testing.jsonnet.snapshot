@@ -18,21 +18,6 @@ local sharedLabels = {
 	reporting_team: 'test:team',
 };
 local deploymentMetrics = [
-	argo.AnalysisMetricDatadog('cpu-usage') {
-		query:: 'moving_rollup(default_zero(100 * avg:kubernetes.cpu.usage.total{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}) / 1000000000 / avg:kubernetes.cpu.limits{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}, 60, "max")' % app,
-		successCondition: 'default(result, 0) < 70',
-		interval: '1m',
-	},
-	argo.AnalysisMetricDatadog('memory-rss-usage') {
-		query:: 'moving_rollup(default_zero(100 * avg:kubernetes.memory.rss{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s} / avg:kubernetes.memory.limits{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
-		successCondition: 'default(result, 0) < 70',
-		interval: '1m',
-	},
-	argo.AnalysisMetricDatadog('memory-working-set-usage') {
-		query:: 'moving_rollup(default_zero(100 * avg:kubernetes.memory.working_set{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s} / avg:kubernetes.memory.limits{app:%(name)s,kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
-		successCondition: 'default(result, 0) < 70',
-		interval: '1m',
-	},
 	argo.AnalysisMetricDatadog('http-error-rate') {
 		query:: 'moving_rollup(default_zero(100 * count:%(name)s.http_request_seconds{status:5xx,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:deploytestservice.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "avg")' % app,
     successCondition: 'default(result, 0) < 10',
