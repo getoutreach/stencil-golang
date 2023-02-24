@@ -15,8 +15,10 @@ local isDev = app.environment == 'development' || app.environment == 'local_deve
 local sharedLabels = {
 	repo: app.name,
 	bento: app.bento,
-	reporting_team: '',
+	reporting_team: 'test:team',
 };
+local deploymentMetrics = [
+];
 
 local all = {
 	namespace: ok.Namespace(app.namespace) {
@@ -107,6 +109,55 @@ local all = {
 		data: {
 			// We use this.data_ to allow for ez merging in the override.
 			'fflags.yaml': std.manifestYamlDoc(this.data_),
+		},
+	},
+	service_canary: ok.Service(app.name + '-canary', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec,
+	},
+	service_stable: ok.Service(app.name + '-stable', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec
+	},
+	analysis_template: argo.AnalysisTemplate('metrics', app) {
+		metrics:: deploymentMetrics
+	},
+	canary_deployment: argo.CanaryDeployment(app.name, app.namespace) {
+		deploymentRef:: $.deployment,
+		canaryService:: $.service_canary,
+		stableService:: $.service_stable,
+		steps:: (if !isDev then [
+			{ setWeight: 25 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 50 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 75 },
+			{ pause: { duration: '5m' } },
+		] else []) + [
+			{ setWeight: 100 },
+		],
+		notification_success:: 'hello',
+		notification_failure:: 'hello',
+		backgroundAnalysis:: if !isDev then {
+			templates: [
+				argo.AnalysisTemplateRef($.analysis_template),
+			],
+			startingStep: 2,
+		},
+		metadata+: {
+			labels+: sharedLabels,
+			annotations+: {
+				'link.argocd.argoproj.io/external-link': 'https://argorollouts.%(bento)s.%(region)s.outreach.cloud/rollouts/rollout/%(namespace)s/%(name)s' % app,
+			},
+		},
+		spec+: {
+			replicas: if isDev then 1 else 2,
 		},
 	},
 
@@ -228,9 +279,6 @@ local override = import './testing.override.jsonnet';
 local configuration = import './testing.config.jsonnet';
 
 local mixins = [
-	import './mixins/a.jsonnet',
-	import './mixins/b.jsonnet',
-	import './mixins/c.jsonnet',
 ];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});
 
