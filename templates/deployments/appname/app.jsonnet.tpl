@@ -27,6 +27,11 @@ local sharedLabels = {
 
 {{- if eq "canary" (stencil.Arg "deployment.strategy") }}
 local deploymentMetrics = [
+  argo.AnalysisMetricDatadog('pod-restart') {
+		query:: 'default_zero(sum:kubernetes_state.container.restarts{kube_container_name:%(name)s,kube_namespace:%(namespace)s,role:canary})' % app,
+    successCondition: 'default(result, 0) <= {{ stencil.Arg "terraform.datadog.podRestart.thresholds.lowCount" | default 0 }}',
+		interval: '1m',
+	},
 	{{- if (has "http" (stencil.Arg "serviceActivities")) }}
 	argo.AnalysisMetricDatadog('http-error-rate') {
 		query:: 'moving_rollup(default_zero(100 * count:%(name)s.http_request_seconds{status:5xx,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:deploytestservice.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "max")' % app,

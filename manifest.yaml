@@ -192,6 +192,14 @@ arguments:
     schema:
       type: number
     description: Overrides the high traffic threshold in the "http_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.podRestart.thresholds.lowCount:
+    schema:
+      type: number
+    description: Overrides the pod restarts threshold in the "pod_restarts" terraform module in monitoring/datadog.tf.
+  terraform.datadog.podRestart.thresholds.highCount:
+    schema:
+      type: number
+    description: Overrides the high pod restarts threshold in the "pod_restarts_high" terraform module in monitoring/datadog.tf.
   deployment.serviceDomains:
     description: The service domains that the service is deployed to.
     schema:
