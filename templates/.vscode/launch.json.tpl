@@ -31,7 +31,11 @@
       "substitutePath": [
         {
           "from": "${workspaceRoot}",
-          "to": "/home/dev/app"
+          "to": "github.com/getoutreach/{{ .Config.Name }}"
+        },
+        {
+          "from": "${env:HOME}/.asdf/installs/golang/{{ stencil.ApplyTemplate "goVersion" }}/packages/pkg/mod",
+          "to": ""
         },
         {
           "from": "${env:HOME}/.asdf/installs/golang/{{ stencil.ApplyTemplate "goVersion" }}/packages/pkg/mod",
