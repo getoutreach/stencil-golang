@@ -17,7 +17,6 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/getoutreach/gobox/pkg/app"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/trace"

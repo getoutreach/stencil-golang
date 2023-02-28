@@ -14,8 +14,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getoutreach/gobox/pkg/events"
-	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/httpx/pkg/handlers"
 
   {{- $additionalImports := stencil.GetModuleHook "internal/http/additionalImports" }}
