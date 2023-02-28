@@ -13,6 +13,7 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
+  "fmt"
 )
 
 // Server is the actual server implementation of the API.

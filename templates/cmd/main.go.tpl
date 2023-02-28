@@ -11,22 +11,29 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
-	"golang.org/x/sync/errgroup"
-	"go.uber.org/automaxprocs/maxprocs"
-
 	"github.com/getoutreach/gobox/pkg/app"
+	"github.com/getoutreach/gobox/pkg/async"
 	"github.com/getoutreach/gobox/pkg/env"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/trace"
-	"github.com/getoutreach/tollmon/pkg/tollgate"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/shutdown"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/gomaxprocs"
+	"github.com/pkg/errors"
 
 	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
+
+	{{- $additionalImports := stencil.GetModuleHook "main/additionalImports" }}
+	{{- if $additionalImports }}
+
+	// Code inserted by modules
+		{{- range $additionalImports  }}
+	{{ . | quote }}
+		{{- end }}
+	// End code inserted by modules
+	{{- end }}
 
 	// Place any extra imports for your startup code here
 	// <<Stencil::Block(imports)>>
