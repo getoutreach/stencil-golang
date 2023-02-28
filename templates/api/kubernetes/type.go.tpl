@@ -34,13 +34,6 @@ type {{ $r.kind }}Spec struct {
 	// <</Stencil::Block>>
 }
 
-// Hash returns the hash of all the spec fields, it is used to detect changes in the spec.
-// If spec's hash does not change, Reconcile can (and should) be skipped to ensure controller does not
-// loop on status-only events.
-func (s *{{ $r.kind }}Spec) Hash() (string, error) {
-	return resources.Hash(s)
-}
-
 // {{ $r.kind }}Status holds the status metadata for {{ $r.kind }} resource.
 type {{ $r.kind }}Status struct {
   resources.ResourceStatus
@@ -66,12 +59,6 @@ type {{ $r.kind }} struct {
 	// <<Stencil::Block(crFields)>>
 {{ file.Block "crFields" }}
 	// <</Stencil::Block>>
-}
-
-// GetSpec allows reconciler to perform generic operations on
-// the spec, such as Hash.
-func (r *{{ $r.kind }}) GetSpec() resources.ResourceSpec {
-	return &r.Spec
 }
 
 // GetStatus returns the emdedded ResourceStatus portion of the status.

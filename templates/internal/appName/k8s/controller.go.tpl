@@ -22,6 +22,7 @@ import (
 	"github.com/getoutreach/services/pkg/k8s/resources"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+    ctrl "sigs.k8s.io/controller-runtime"
 
 	api{{ $g.version }} "github.com/getoutreach/{{ .Config.Name }}/api/k8s/{{if not (empty $g.package)}}{{ $g.package }}/{{end}}{{ $g.version }}"
 
@@ -42,20 +43,24 @@ type {{ $ctrlStruct }} struct {
 
 // New{{ $ctrlStruct }} creates a new instance of {{ $ctrlStruct }}
 // to serve "{{ $r.kind }}" CRs.
-func New{{ $ctrlStruct }} (cl client.Client) *{{ $ctrlStruct }} {
-	ctrl := &{{ $ctrlStruct }} {}
+func New{{ $ctrlStruct }} (cl client.Client, options controller.Options) *{{ $ctrlStruct }} {
+	r := &{{ $ctrlStruct }} {}
 	// use the controller as the Handler for Reconciler
-	ctrl.Reconciler = controllers.NewReconciler(cl, "{{ $r.kind }}", "{{ $g.version }}", ctrl)
-	return ctrl
+	r.Reconciler = controllers.NewReconciler(cl, 
+      "{{ $r.kind }}",
+      "{{ $g.version }}", 
+      r,
+      options)
+	return r
 }
 
 // CreateResource returns new, empty {{ $r.kind }} object, it implements controllers.Handler.
 func (r *{{ $ctrlStruct }}) CreateResource() resources.Resource {
 	{{- if $isCustomResource }}
-	// To ensure proper custom status handling, force the conversion
-	// of the CR type to the resources.CustomResource interface before serving it to the Reconciler.
-	// If the input does not fully satisfies the CustomResource interface, the Reconciler silently
-	// ignores custom status presence.
+    // To ensure proper custom status handling, force the conversion of the CR type
+    // to the resources.CustomResource interface before serving it to the Reconciler.
+    // If the input does not fully satisfy the CustomResource interface, the
+    // Reconciler silently ignores custom status presence.
 	var cr resources.CustomResource = &api{{ $g.version }}.{{ $r.kind }}{}
 	return cr
 	{{- else }}
@@ -63,25 +68,15 @@ func (r *{{ $ctrlStruct }}) CreateResource() resources.Resource {
 	{{- end }}
 }
 
-// EndReconcile is invoked when Reconciler completes, it implements controllers.Handler.
-// This method is for logging and metrics.
-//nolint:unparam // Why: args ok to ignore
-func (r *{{ $ctrlStruct }}) EndReconcile(
-	ctx context.Context, req *logging.ReconcileRequest, rr controllers.ReconcileResult) {
-	// <<Stencil::Block(endReconcile)>>
-{{ file.Block "endReconcile" }}
-	// <</Stencil::Block>>
-}
 
 // Reconcile is invoked when controller receives {{ $r.kind }} resource CR that hasn't been applied yet.
 //nolint:unparam // Why: ctx or other params might be ignored.
 func (r *{{ $ctrlStruct }}) Reconcile(
-	ctx context.Context, inRes resources.Resource, req *logging.ReconcileRequest) controllers.ReconcileResult {
+	ctx context.Context, inRes resources.Resource, req *logging.ReconcileRequest) (ctrl.Result, error) {
 	// inRes was created by CreateResource, cast is totally safe
 	in := inRes.(*api{{ $g.version }}.{{ $r.kind }})
-	rr := controllers.ReconcileResult{}
 
-	logger := log.With(req, &rr)
+	logger := log.With(req)
 
 	// <<Stencil::Block(controllerImpl)>>
 	{{- if file.Block "controllerImpl" }}
@@ -94,32 +89,8 @@ func (r *{{ $ctrlStruct }}) Reconcile(
 	{{- end }}
 	// <</Stencil::Block>>
 
-	logger.Info(ctx, "Reconcile completed.")
-	return rr
-}
-
-// NotFound callback is called when resource is detected as Not Found (e.g. deleted). Be careful
-// handling deleted database resources, accidental delete of the CR can lead to a total data loss!
-//nolint:unparam // Why: ctx or other params might be ignored.
-func (r *{{ $ctrlStruct }}) NotFound(
-	ctx context.Context, req *logging.ReconcileRequest) controllers.ReconcileResult {
-	rr := controllers.ReconcileResult{}
-
-	logger := log.With(req, &rr)
-
-	// <<Stencil::Block(notFoundImpl)>>
-	{{- if file.Block "notFoundImpl" }}
-{{ file.Block "notFoundImpl" }}
-	{{- else }}
-
-	// Be careful handling deleted database resources, accidental delete of the CR can lead to a total data loss!
-	// It this operator deals with business data, is OK to leave this code empty and perform the cleanup manually.
-
-	{{- end }}
-	// <</Stencil::Block>>
-
-	logger.Info(ctx, "NotFound completed.")
-	return rr
+	logger.Info(ctx, "reconcile completed.")
+	return ctrl.Result{}, nil
 }
 
 // Close cleans up the controller upon exit

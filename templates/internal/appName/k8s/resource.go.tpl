@@ -2,7 +2,7 @@
 {{- $_ := file.SetPath (printf "internal/k8s/%s" (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 
-// Description: This file defines the Resouce interface for controllers/webhooks
+// Description: This file defines the Resource interface for controllers/webhooks
 // Managed: true
 
 // Package k8s holds definitions common to all controllers and webhooks in k8s

@@ -1,5 +1,5 @@
 // {{ stencil.ApplyTemplate "copyright" }}
-{{- $_ := file.SetPath (printf "internal/%s/kubernetes.go" .Config.Name) }}
+  {{- $_ := file.SetPath (printf "internal/%s/kubernetes.go" .Config.Name) }}
 {{- $_ := stencil.ApplyTemplate "kubernetes.skipIfNot" }}
 {{- $root := . }}
 {{- $createController := (eq (stencil.ApplyTemplate "kubernetes.createController") "true") }}
@@ -29,6 +29,7 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	logadapters "github.com/getoutreach/gobox/pkg/log/adapters"
 	ctrl "sigs.k8s.io/controller-runtime"
+    "sigs.k8s.io/controller-runtime/pkg/controller"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -66,8 +67,9 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 	ctrl.SetLogger(logadapters.NewLogrLogger(ctx))
 
 	s.registerSchemes()
-
-	options := ctrl.Options{
+  
+    // manager options
+    managerOptions := ctrl.Options{
 		Scheme:         s.scheme,
 		Port:           9443,
 
@@ -86,12 +88,15 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 		LeaderElectionNamespace: app.Info().Namespace,
 	}
 
+    // controller runtime options
+    ctrlOptions := controller.Options{}
+
 	// Set or override manager options here
 	// <<Stencil::Block(setOptions)>>
 {{ file.Block "setOptions" }}
 	// <</Stencil::Block>>
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), options)
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), managerOptions)
 	if err != nil {
 		return errors.Wrap(err, "failed to create manager")
 	}
@@ -109,6 +114,7 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 	{{- if $r.generate.controller }}
 	ctrl{{ $var }} := ctrl_{{ $pv }}.New{{ $r.kind }}Reconciler(
 		mgr.GetClient(),
+        ctrlOptions,
 		// Other fields should be initialized in initResources block (see below).
 	)
 	s.resources = append(s.resources, ctrl{{ $var }})
