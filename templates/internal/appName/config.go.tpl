@@ -10,13 +10,12 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
-	"os"
-	"strings"
 
 	"github.com/getoutreach/gobox/pkg/cfg"
 	"github.com/getoutreach/gobox/pkg/log"
-	"github.com/getoutreach/gobox/pkg/events"
+	{{- if has "kafka" (stencil.Arg "serviceActivities") }}
 	"github.com/getoutreach/services/pkg/find"
+  {{- end }}
 	// <<Stencil::Block(configImports)>>
 {{ file.Block "configImports" }}
 	// <</Stencil::Block>>
