@@ -29,11 +29,6 @@ local common_status_properties = {
   reconcileFailCount: {
     type: 'integer',
   },
-  nextReconcileTime: {
-    type: 'string',
-    format: 'date-time',
-    nullable: true,
-  },
   conditions: {
     type: 'array',
     items: {
