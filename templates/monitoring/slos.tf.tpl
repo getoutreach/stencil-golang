@@ -35,11 +35,10 @@ resource "datadog_service_level_objective" "grpc_success" {
   }
 }
 {{- end }}
+{{- end }}
 
 {{- range (stencil.GetModuleHook "monitoring.slos") }}
 {{ . }}
-{{- end }}
-
 {{- end }}
 
 // <<Stencil::Block(tfCustomSLODatadog)>>
