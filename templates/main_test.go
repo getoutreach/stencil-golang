@@ -292,3 +292,32 @@ func TestSLOsTf(t *testing.T) {
 	})
 	st.Run(true)
 }
+
+func TestSkipSLOsTf(t *testing.T) {
+	st := stenciltest.New(t, "monitoring/slos.tf.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"reportingTeam": "test:team",
+		"terraform": map[string]interface{}{
+			"datadog": map[string]interface{}{
+				"monitoring": map[string]interface{}{
+					"generateSLOs": false,
+				},
+			},
+		},
+		"deployment": map[string]interface{}{
+			"environments": []interface{}{
+				"staging",
+				"production",
+			},
+			"serviceDomains": []interface{}{
+				"bento",
+			},
+		},
+		"service": true,
+		"serviceActivities": []interface{}{
+			"http",
+			"grpc",
+		},
+	})
+	st.Run(true)
+}
