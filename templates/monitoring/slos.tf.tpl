@@ -1,3 +1,4 @@
+{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
 {{- if (stencil.Arg "terraform.datadog.monitoring.generateSLOs") -}}
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 resource "datadog_service_level_objective" "http_success" {

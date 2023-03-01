@@ -15,8 +15,35 @@ local isDev = app.environment == 'development' || app.environment == 'local_deve
 local sharedLabels = {
 	repo: app.name,
 	bento: app.bento,
-	reporting_team: '',
+	reporting_team: 'test:team',
 };
+local deploymentMetrics = [
+  argo.AnalysisMetricDatadog('pod-restart') {
+		query:: 'default_zero(sum:kubernetes_state.container.restarts{kube_container_name:%(name)s,kube_namespace:%(namespace)s,role:canary})' % app,
+    successCondition: 'default(result, 0) <= 0',
+		interval: '1m',
+	},
+	argo.AnalysisMetricDatadog('http-error-rate') {
+		query:: 'moving_rollup(default_zero(100 * count:%(name)s.http_request_seconds{status:5xx,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:deploytestservice.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "max")' % app,
+    successCondition: 'default(result, 0) < 10',
+		interval: '1m',
+	},
+	argo.AnalysisMetricDatadog('http-latency') {
+		query:: 'moving_rollup(default_zero(p90:%(name)s.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
+		successCondition: 'default(result, 0) < 2',
+		interval: '1m',
+	},
+	argo.AnalysisMetricDatadog('grpc-error-rate') {
+		query:: 'moving_rollup(default_zero(100 * count:%(name)s.grpc_request_handled{statuscategory:categoryservererror,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:%(name)s.grpc_request_handled{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "max")' % app,
+		successCondition: 'default(result, 0) < 50',
+		interval: '1m',
+	},
+  argo.AnalysisMetricDatadog('grpc-latency') {
+		query:: 'moving_rollup(default_zero(p90:%(name)s.grpc_request_handled{kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
+		successCondition: 'default(result, 0) < 2',
+		interval: '1m',
+	},
+];
 
 local all = {
 	namespace: ok.Namespace(app.namespace) {
@@ -37,9 +64,17 @@ local all = {
 			sessionAffinity: 'None',
 			type: 'ClusterIP',
 			ports_:: {
+				grpc: {
+					port: 5000,
+					targetPort: 'grpc',
+				},
 				metrics: {
 					port: 8000,
 					targetPort: 'http-prom',
+				},
+				http: {
+					port: 8080,
+					targetPort: 'http',
 				},
 			},
 			ports: ok.mapToNamedList(this.ports_),
@@ -109,6 +144,56 @@ local all = {
 			'fflags.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
+	service_canary: ok.Service(app.name + '-canary', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec,
+	},
+	service_stable: ok.Service(app.name + '-stable', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec
+	},
+	analysis_template: argo.AnalysisTemplate('metrics', app) {
+		metrics:: deploymentMetrics
+	},
+	canary_deployment: argo.CanaryDeployment(app.name, app.namespace) {
+		deploymentRef:: $.deployment,
+		canaryService:: $.service_canary,
+		stableService:: $.service_stable,
+		steps:: (if !isDev then [
+			{ setWeight: 25 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 50 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 75 },
+			{ pause: { duration: '5m' } },
+		] else []) + [
+			{ setWeight: 100 },
+		],
+		servicePort:: 5000,
+		notification_success:: 'hello',
+		notification_failure:: 'hello',
+		backgroundAnalysis:: if !isDev then {
+			templates: [
+				argo.AnalysisTemplateRef($.analysis_template),
+			],
+			startingStep: 2,
+		},
+		metadata+: {
+			labels+: sharedLabels,
+			annotations+: {
+				'link.argocd.argoproj.io/external-link': 'https://argorollouts.%(bento)s.%(region)s.outreach.cloud/rollouts/rollout/%(namespace)s/%(name)s' % app,
+			},
+		},
+		spec+: {
+			replicas: if isDev then 1 else 2,
+		},
+	},
 
 	deployment: ok.Deployment(app.name, app.namespace) {
 		local deployment_volume_mounts = {
@@ -135,8 +220,11 @@ local all = {
 			template+: {
 				metadata+: {
 					labels+: sharedLabels {
+						'tollgate.outreach.io/scrape': 'true',
 					},
 					annotations+: {
+						'tollgate.outreach.io/group': app.name,
+						'tollgate.outreach.io/port': '5000',
 						'iam.amazonaws.com/role': '%s_service_role' % app.name,
 						// https://docs.datadoghq.com/integrations/openmetrics/
 						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
@@ -187,7 +275,9 @@ local all = {
 								},
 							},
 							ports_+:: {
+								grpc: { containerPort: 5000 },
 								'http-prom': { containerPort: 8000 },
+								http: { containerPort: 8080 },
 							},
 							resources: resources,
 						},
@@ -228,9 +318,6 @@ local override = import './testing.override.jsonnet';
 local configuration = import './testing.config.jsonnet';
 
 local mixins = [
-	import './mixins/a.jsonnet',
-	import './mixins/b.jsonnet',
-	import './mixins/c.jsonnet',
 ];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});
 

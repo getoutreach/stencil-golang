@@ -9,6 +9,7 @@ local ok = import 'kubernetes/outreach.libsonnet';
 local segments = import '../../concourse/segments.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ $appName }}');
 local resources = import './resources.libsonnet';
+local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
@@ -23,6 +24,40 @@ local sharedLabels = {
 	bento: app.bento,
 	reporting_team: '{{ stencil.Arg "reportingTeam" }}',
 };
+
+{{- if eq "canary" (stencil.Arg "deployment.strategy") }}
+local deploymentMetrics = [
+  argo.AnalysisMetricDatadog('pod-restart') {
+		query:: 'default_zero(sum:kubernetes_state.container.restarts{kube_container_name:%(name)s,kube_namespace:%(namespace)s,role:canary})' % app,
+    successCondition: 'default(result, 0) <= {{ stencil.Arg "terraform.datadog.podRestart.thresholds.lowCount" | default 0 }}',
+		interval: '1m',
+	},
+	{{- if (has "http" (stencil.Arg "serviceActivities")) }}
+	argo.AnalysisMetricDatadog('http-error-rate') {
+		query:: 'moving_rollup(default_zero(100 * count:%(name)s.http_request_seconds{status:5xx,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:deploytestservice.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "max")' % app,
+    successCondition: 'default(result, 0) < {{ sub 100 (stencil.Arg "terraform.datadog.http.percentiles.lowTraffic" | default 90) }}',
+		interval: '1m',
+	},
+	argo.AnalysisMetricDatadog('http-latency') {
+		query:: 'moving_rollup(default_zero(p90:%(name)s.http_request_seconds{kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
+		successCondition: 'default(result, 0) < {{ stencil.Arg "terraform.datadog.http.latency.thresholds.lowTraffic" | default 2 }}',
+		interval: '1m',
+	},
+	{{- end }}
+	{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
+	argo.AnalysisMetricDatadog('grpc-error-rate') {
+		query:: 'moving_rollup(default_zero(100 * count:%(name)s.grpc_request_handled{statuscategory:categoryservererror,kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count() / count:%(name)s.grpc_request_handled{kube_namespace:%(namespace)s,image_tag:%(version)s}.as_count()), 60, "max")' % app,
+		successCondition: 'default(result, 0) < {{ sub 100 (stencil.Arg "terraform.datadog.grpc.qos.thresholds.lowTraffic" | default 50) }}',
+		interval: '1m',
+	},
+  argo.AnalysisMetricDatadog('grpc-latency') {
+		query:: 'moving_rollup(default_zero(p90:%(name)s.grpc_request_handled{kube_namespace:%(namespace)s,image_tag:%(version)s}), 60, "max")' % app,
+		successCondition: 'default(result, 0) < {{ stencil.Arg "terraform.datadog.grpc.latency.thresholds.lowTraffic" | default 2 }}',
+		interval: '1m',
+	},
+	{{- end }}
+];
+{{- end }}
 
 local all = {
 	namespace: ok.Namespace(app.namespace) {
@@ -129,6 +164,69 @@ local all = {
 			'fflags.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
+{{- if eq "canary" (stencil.Arg "deployment.strategy") }}
+	service_canary: ok.Service(app.name + '-canary', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec,
+	},
+	service_stable: ok.Service(app.name + '-stable', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec
+	},
+	analysis_template: argo.AnalysisTemplate('metrics', app) {
+		metrics:: deploymentMetrics
+	},
+	canary_deployment: argo.CanaryDeployment(app.name, app.namespace) {
+		deploymentRef:: $.deployment,
+		canaryService:: $.service_canary,
+		stableService:: $.service_stable,
+		steps:: (if !isDev then [
+			{ setWeight: 25 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 50 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 75 },
+			{ pause: { duration: '5m' } },
+		] else []) + [
+			{ setWeight: 100 },
+		],
+		{{- $servicePort := "" }}
+		{{- if (has "http" (stencil.Arg "serviceActivities")) }}
+		{{- $servicePort = 8080 }}
+		{{- end }}
+		{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
+		{{- $servicePort = 5000 }}
+		{{- end }}
+		{{- if $servicePort }}
+		servicePort:: {{ $servicePort }},
+		{{- end }}
+		{{- if stencil.Arg "slack" }}
+		notification_success:: {{ stencil.Arg "slack" | squote }},
+		notification_failure:: {{ stencil.Arg "slack" | squote }},
+		{{- end }}
+		backgroundAnalysis:: if !isDev then {
+			templates: [
+				argo.AnalysisTemplateRef($.analysis_template),
+			],
+			startingStep: 2,
+		},
+		metadata+: {
+			labels+: sharedLabels,
+			annotations+: {
+				'link.argocd.argoproj.io/external-link': 'https://argorollouts.%(bento)s.%(region)s.outreach.cloud/rollouts/rollout/%(namespace)s/%(name)s' % app,
+			},
+		},
+		spec+: {
+			replicas: if isDev then 1 else 2,
+		},
+	},
+{{- end }}
 
 	deployment: ok.Deployment(app.name, app.namespace) {
 		local deployment_volume_mounts = {

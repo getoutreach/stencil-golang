@@ -23,21 +23,21 @@ variable cpu_high_window {
   default = 30
 }
 
-# Number of restarts per 30m to be considered a P1 incident.
-variable pod_restart_threshold {
+variable pod_restart_low_count_threshold {
   type = number
-  default = 3
+  default = {{ stencil.Arg "terraform.datadog.podRestart.thresholds.lowCount" | default 0 }}
+}
+
+# Number of restarts per 30m to be considered a P1 incident.
+variable pod_restart_high_count_threshold {
+  type = number
+  default = {{ stencil.Arg "terraform.datadog.podRestart.thresholds.highCount" | default 3 }}
 }
 
 variable "alert_on_panics" {
   type        = bool
   default     = true
   description = "Enables/Disables the panics monitor defined based on the logs"
-}
-
-variable available_pods_low_count {
-  type    = number
-  default = {{ stencil.Arg "terraform.datadog.pods.thresholds.availableLowCount" | default 2 }}
 }
 
 locals {
@@ -79,8 +79,8 @@ resource "datadog_monitor" "argocd_application_sync_status" {
 # splitting the interval 15 mins to 3 windows (moving rollup by 5mins) and if each of them contains restart -> alert
 resource "datadog_monitor" "pod_restarts" {
   type = "query alert"
-  name = "{{ .Config.Name | title }} Pod Restarts > 0 last 15m"
-  query = "min(last_15m):moving_rollup(diff(sum:kubernetes_state.container.restarts{kube_container_name:{{ .Config.Name }},!env:development} by {kube_namespace}), 300, 'sum') > 0"
+  name = "{{ .Config.Name | title }} Pod Restarts > ${var.pod_restart_low_count_threshold} last 15m"
+  query = "min(last_15m):moving_rollup(diff(sum:kubernetes_state.container.restarts{kube_container_name:{{ .Config.Name }},!env:development} by {kube_namespace}), 300, 'sum') > ${var.pod_restart_low_count_threshold}"
   tags = local.ddTags
   message = <<EOF
   If we ever have a pod restart, we want to know.
@@ -93,8 +93,8 @@ resource "datadog_monitor" "pod_restarts" {
 
 resource "datadog_monitor" "pod_restarts_high" {
   type = "query alert"
-  name = "{{ .Config.Name | title }} Pod Restarts > ${var.pod_restart_threshold} last 30m"
-  query = "max(last_30m):diff(sum:kubernetes_state.container.restarts{kube_container_name:{{ .Config.Name }},!env:development} by {kube_namespace}) > ${var.pod_restart_threshold}"
+  name = "{{ .Config.Name | title }} Pod Restarts > ${var.pod_restart_high_count_threshold} last 30m"
+  query = "max(last_30m):diff(sum:kubernetes_state.container.restarts{kube_container_name:{{ .Config.Name }},!env:development} by {kube_namespace}) > ${var.pod_restart_high_count_threshold}"
   tags = local.ddTags
   message = <<EOF
   Several pods are being restarted.
@@ -143,19 +143,6 @@ resource "datadog_monitor" "pod_memory_working_set_high" {
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false
-}
-
-resource "datadog_monitor" "available_pods_low" {
-  type = "query alert"
-  name = "{{ .Config.Name | title }} Available Pods Low"
-  query = "avg(last_10m):sum:kubernetes_state.deployment.replicas_available{deployment:{{ .Config.Name }},env:production} by {kube_namespace} < ${var.available_pods_low_count}"
-  tags = local.ddTags
-  message = <<EOF
-  The {{ .Config.Name | title }} replica count should be at least ${var.available_pods_low_count}, which is also the PDB.  If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
-  Note: This P1 alert only includes production
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/available-pods-low.md"
-  Notify: ${join(" ", var.P1_notify)}
-  EOF
 }
 
 resource "datadog_monitor" "panics" {

@@ -192,10 +192,14 @@ arguments:
     schema:
       type: number
     description: Overrides the high traffic threshold in the "http_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.pods.thresholds.availableLowCount:
+  terraform.datadog.podRestart.thresholds.lowCount:
     schema:
       type: number
-    description: Overrides the min available replica count in the "available_pods_low" alert in terraform module in monitoring/datadog.tf.
+    description: Overrides the pod restarts threshold in the "pod_restarts" terraform module in monitoring/datadog.tf.
+  terraform.datadog.podRestart.thresholds.highCount:
+    schema:
+      type: number
+    description: Overrides the high pod restarts threshold in the "pod_restarts_high" terraform module in monitoring/datadog.tf.
   deployment.serviceDomains:
     description: The service domains that the service is deployed to.
     schema:
@@ -204,9 +208,38 @@ arguments:
     description: A list of environments that the service is deployed to.
     schema:
       type: array
+  deployment.strategy:
+    description: The deployment strategy is the method used to deploy the application.
+    schema:
+      type: string
+      enum:
+        - "" # current default deployment strategy is RollingUpdate
+        - canary
+    default: ""
   versions.go:
     description: Go version to use
     default: "1.19.5"
+    schema:
+      type:
+        - string
+        - number
+  versions.nodejs:
+    description: Nodejs version to use for build tooling (e.g., semantic-release)
+    default: "18.14.1"
+    schema:
+      type:
+        - string
+        - number
+  versions.grpcClients.nodejs:
+    description: Nodejs version to use for gRPC clients
+    default: "16.19.0"
+    schema:
+      type:
+        - string
+        - number
+  versions.grpcClients.ruby:
+    description: Ruby version to use for gRPC clients
+    default: "2.7.5"
     schema:
       type:
         - string
@@ -221,10 +254,10 @@ arguments:
   versions.terraform:
     schema:
       type: string
-    default: "0.14.11"
+    default: "0.15.5"
     description: The version of terraform that is used.
   disableGrpcGeneration:
-    description: Disable gRPC generation if you are using protoAPI generation
+    description: Disable gRPC generation
     schema:
       type: boolean
   go.stanza:
