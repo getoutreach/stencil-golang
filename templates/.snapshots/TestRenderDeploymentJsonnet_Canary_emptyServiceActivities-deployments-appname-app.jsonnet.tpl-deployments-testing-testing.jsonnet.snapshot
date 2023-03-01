@@ -18,6 +18,11 @@ local sharedLabels = {
 	reporting_team: 'test:team',
 };
 local deploymentMetrics = [
+  argo.AnalysisMetricDatadog('pod-restart') {
+		query:: 'default_zero(sum:kubernetes_state.container.restarts{kube_container_name:%(name)s,kube_namespace:%(namespace)s,role:canary})' % app,
+    successCondition: 'default(result, 0) <= 0',
+		interval: '1m',
+	},
 ];
 
 local all = {
