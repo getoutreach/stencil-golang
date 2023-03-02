@@ -325,9 +325,9 @@ ok.FilteredList() {
 	// Note: configuration overrides the <appName>.override.jsonnet file,
 	// which then overrides the objects found in this file.
 	// This is done via a simple key merge, and jsonnet object '+:' notation.
-	items_+:: std.prune(all + (if isDev then developmentObjects else if app.clusterType == 'legacy' then {} else vaultOperatorSecrets)
+	items_+:: all + (if isDev then developmentObjects else if app.clusterType == 'legacy' then {} else vaultOperatorSecrets)
 	+ mergedMixins
 	+ override
-	+ configuration)
+	+ configuration
 }
 )
