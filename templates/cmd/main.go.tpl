@@ -57,10 +57,10 @@ type dependencies struct{
   {{- if has "grpc" (stencil.Arg "serviceActivities") }}
   gRPC {{ $pkgName }}.GRPCDependencies
   {{- end }}
-  {{- $additionaldependencies := stencil.GetModuleHook "additionaldependencies" }}
-  {{- if $additionaldependencies }}
-  // additionaldependencies injected by modules
-    {{- range $additionaldependencies }}
+  {{- $maindependencies := stencil.GetModuleHook "main.dependencies" }}
+  {{- if $maindependencies }}
+  // additional dependencies injected by modules
+    {{- range $maindependencies }}
   {{ . }}
     {{- end }}
   // end additionaldependencies injected by modules
