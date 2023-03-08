@@ -57,15 +57,11 @@ type dependencies struct{
   {{- if has "grpc" (stencil.Arg "serviceActivities") }}
   gRPC {{ $pkgName }}.GRPCDependencies
   {{- end }}
-  {{- $maindependencies := stencil.GetModuleHook "main.dependencies" }}
-  {{- if $maindependencies }}
-  // additional dependencies injected by modules
-    {{- range $maindependencies }}
-  {{ . }}
-    {{- end }}
-  // end additionaldependencies injected by modules
+  {{- range stencil.GetModuleHook "main.dependencies" }}
+  {{- range $k, $v := . }}
+  {{ $k }} {{ $v }}
   {{- end }}
-
+  {{- end }}
   // <<Stencil::Block(customServiceActivityDependencyInjection)>>
 {{ file.Block "customServiceActivityDependencyInjection" }}
 	// <</Stencil::Block>>

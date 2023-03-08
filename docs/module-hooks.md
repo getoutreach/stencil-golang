@@ -94,15 +94,18 @@ Extra service rpcs to add to the `api.proto` file.
 ```
 ### `main.dependencies`
 
-**Type**: `string`
+**Type**: ``map[string]interface{}``
 
 **File**: `main.go.tpl`
 
 Additional dependencies to add to the `main.go` file.
 
 ```tpl
-{{ $myDependency := "foo string" }}
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "main.dependencies" (list $myDependency) }}
+{{  stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "main.dependencies"
+        (list
+            (dict "count" "int")
+        )
+    }}
 ```
 ### `mixins`
 
