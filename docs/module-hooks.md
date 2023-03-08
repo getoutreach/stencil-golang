@@ -92,7 +92,21 @@ Extra service rpcs to add to the `api.proto` file.
 {{ $myService := "rpc MyMethod (MyMessage) returns (MyMessage) {}" }}
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "api.proto.service" (list $myService) }}
 ```
+### `main.dependencies`
 
+**Type**: ``map[string]interface{}``
+
+**File**: `main.go.tpl`
+
+Additional dependencies to add to the `main.go` file.
+
+```tpl
+{{  stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "main.dependencies"
+        (list
+            (dict "count" "int")
+        )
+    }}
+```
 ### `mixins`
 
 **Type**: `string`
