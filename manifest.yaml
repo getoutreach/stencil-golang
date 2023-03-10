@@ -98,7 +98,13 @@ arguments:
       type: array
       items:
         type: string
-    description: List of secrets to consume from Vault, if Vault is enabled in the box config
+    description: |-
+      List of secrets to consume from Vault, if Vault is enabled in the box config
+
+      Example Secrets:
+
+       vaultSecrets:
+        - kvstore/path # Read from kvstore at path
   mixins:
     schema:
       type: array
