@@ -130,9 +130,6 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewGRPCService(cfg, &deps.gRPC),
 		{{- end }}
-		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewKafkaConsumerService(cfg),
-		{{- end }}
 		{{- if stencil.Arg "kubernetes.groups" }}
 		{{ $pkgName }}.NewKubernetesService(cfg),
 		{{- end }}
