@@ -28,6 +28,15 @@ import (
 
 	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 
+  {{- $additionalImports := stencil.GetModuleHook "main/additionalImports" }}
+	{{- if $additionalImports }}
+	// imports added by modules
+		{{- range $additionalImports }}
+	{{ . | quote }}
+		{{- end }}
+	// end imports added by modules
+	{{- end }}
+
 	// Place any extra imports for your startup code here
 	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
