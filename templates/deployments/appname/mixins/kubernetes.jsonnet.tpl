@@ -169,7 +169,7 @@ local controllers = {
   {{- range $r := $g.resources }}
   {{- $snakeKind := $r.kind | lower | snakecase }}
   {{- if $r.generate.controller }}
-  {{ $snakeKind }} : ok.CRDv1('{{ $r.kind }}', '{{ $g.group }}', '{{ $g.version }}') {
+  {{ $snakeKind }} : ok.CRDv1('{{ $r.kind }}', '{{ $g.group }}', 'apiextensions.k8s.io/v1', ['{{ $g.version }}']) {
     metadata+: {
       labels+: {
         reporting_team: team,
