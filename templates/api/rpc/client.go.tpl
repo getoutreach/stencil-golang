@@ -117,3 +117,7 @@ func (c client) Pong(ctx context.Context, message string) (string, error) {
 	}
 	return resp.Message, nil
 }
+
+{{- range stencil.GetModuleHook "api.rpc.client" }}
+{{- . }}
+{{- end }}

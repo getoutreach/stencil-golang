@@ -11,6 +11,12 @@
 
 package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 
+{{- $server_definition_overrides := stencil.GetModuleHook "internal/rpc/server_definition_overrides" }}
+{{- if $server_definition_overrides }}
+{{- range $server_definition_overrides }}
+{{ . }}
+{{- end }}
+{{- else }}
 import (
 	"context"
   "fmt"
@@ -44,3 +50,4 @@ func (s *Server) Pong(ctx context.Context, message string) (string, error) {
 func (s *Server) Close(_ context.Context) error {
 	return fmt.Errorf("closing the server is not allowed")
 }
+{{- end}}
