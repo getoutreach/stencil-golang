@@ -23,7 +23,17 @@ arguments:
       type: boolean
     description: Whether or not this application is a runnable service. This flag provides the service activity interface and everything necessary for releasing and deploying a service.
   serviceActivities:
-    from: github.com/getoutreach/stencil-base
+    schema:
+      type: array
+      items:
+        type: string
+        enum:
+          - http
+          - grpc
+          - temporal
+          - kafka
+          - python
+    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, and `kafka`.
   oss:
     schema:
       type: boolean
@@ -257,6 +267,4 @@ arguments:
     schema:
       type:
         - string
-modules:
-  - name: github.com/getoutreach/stencil-base
 ## <</Stencil::Block>>
