@@ -1,4 +1,4 @@
-{{- if not (has "grpc" (stencil.Arg "serviceActivities")) }}
+{{- if or (not (has "grpc" (stencil.Arg "serviceActivities"))) (has "python" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
@@ -181,8 +181,8 @@ func (gs *GRPCService) StartServers(ctx context.Context, servers *Servers, opts.
 	// end gRPC RPCs injected by modules
 	{{- end }}
 
-	// Register default server
-	api.Register{{ title $pkgName }}Server(s, rpcserver{servers.DefaultServer})
+	// Register default server, title function won't work well when use underscore, so we make it dash first
+	api.Register{{ $pkgName | replace "_" "-" | title | replace "-" "" }}Server(s, rpcserver{servers.DefaultServer})
 
   // Register your additional RPC servers here
  	// <<Stencil::Block(registrations)>>

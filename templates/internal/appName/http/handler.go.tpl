@@ -1,4 +1,4 @@
-{{- if not (has "http" (stencil.Arg "serviceActivities")) }}
+{{- if or (not (has "http" (stencil.Arg "serviceActivities"))) (has "python" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a HTTP service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
