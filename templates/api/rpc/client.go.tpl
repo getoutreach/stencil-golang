@@ -3,7 +3,7 @@
 {{- end }}
 {{- $_ := file.SetPath (printf "api/%s/%s" .Config.Name (base file.Path)) }}
 {{- $_ := file.Static }}
-{{- $pkgName := stencil.ApplyTemplate "goPackageSafeName" }}
+{{- $titleName := stencil.ApplyTemplate "goTitleCaseName" }}
 // {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file contains the gRPC client implementation for the
@@ -72,7 +72,7 @@ func New(ctx context.Context) (api.Service, error) {
 			{{- end }}
 			func(_ context.Context) error { return conn.Close() },
 		},
-	  {{ title $pkgName }}Client: api.New{{ title $pkgName }}Client(conn),
+	  {{ $titleName }}Client: api.New{{ $titleName }}Client(conn),
 	}, nil
 }
 
@@ -80,7 +80,7 @@ func New(ctx context.Context) (api.Service, error) {
 // a gRPC client for the rms service as per the protobuf files.
 type client struct {
 	closers []func(ctx context.Context) error
-	api.{{ title $pkgName }}Client
+	api.{{ $titleName }}Client
 	// Place your client struct data here
 }
 
@@ -102,7 +102,7 @@ func (c client) Close(ctx context.Context) error {
 // Place any client handler functions for your service here
 func (c client) Ping(ctx context.Context, message string) (string, error) {
 	in := &api.PingRequest{Message: message}
-	resp, err := c.{{ title $pkgName }}Client.Ping(ctx, in)
+	resp, err := c.{{ $titleName }}Client.Ping(ctx, in)
 	if err != nil {
 		return "", err
 	}
@@ -111,7 +111,7 @@ func (c client) Ping(ctx context.Context, message string) (string, error) {
 
 func (c client) Pong(ctx context.Context, message string) (string, error) {
 	in := &api.PongRequest{Message: message}
-	resp, err := c.{{ title $pkgName }}Client.Pong(ctx, in)
+	resp, err := c.{{ $titleName }}Client.Pong(ctx, in)
 	if err != nil {
 		return "", err
 	}

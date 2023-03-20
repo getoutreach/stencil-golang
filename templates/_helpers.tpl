@@ -37,6 +37,12 @@
 {{- regexReplaceAll "\\W+" .Config.Name "_"  }}
 {{- end }}
 
+# Return a title cased name from repo name
+# that's safe to be used in GRPC codes
+{{- define "goTitleCaseName" }}
+{{- .Config.Name | replace "_" "-" | title | replace "-" "" -}}
+{{- end }}
+
 # Skips the current file if a node client shouldn't be generated
 # {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {{- define "skipGrpcClient" }}
