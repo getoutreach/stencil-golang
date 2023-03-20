@@ -42,7 +42,13 @@ arguments:
     schema:
       type: array
       items:
-        type: string
+        anyOf:
+          - type: string
+          - type: object
+            properties:
+              unmanaged:
+                type: boolean
+                description: If true, stencil will not generate an entrypoint go file for this CLI (`cmd/<name>/<name>.go`), but still will build and distribute it.
     description: List of CLI commands to generate for this repository
   grpcClients:
     schema:

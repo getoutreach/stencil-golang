@@ -1,5 +1,22 @@
 {{ file.Skip "Virtual file to generate CLIs" }}
 
+{{- define "main-cli-unmanaged" -}}
+{{- $_ := file.Static -}}
+// {{ stencil.ApplyTemplate "copyright" }}
+
+// Description: This file is the entrypoint for the {{ .cmdName }} CLI
+// command for {{ .Config.Name }}.
+// Managed: false
+
+// Package main implements the {{ .cmdName }} CLI.
+package main
+
+func main() {
+
+}
+
+{{- end }}
+
 {{- define "main-cli" -}}
 // {{ stencil.ApplyTemplate "copyright" }}
 
@@ -83,7 +100,34 @@ func main() {
 {{- end -}}
 
 {{ $root := . }}
-{{- range stencil.Arg "commands" }}
-{{ file.Create (printf "cmd/%s/%s.go" . .) 0600 now }}
-{{ file.SetContents (stencil.ApplyTemplate "main-cli" (dict "Config" $root.Config "cmdName" . )) }}
+{{- range $i, $v := stencil.Arg "commands" }}
+
+# Options
+{{- $shouldGenerateEntrypoint := true }}
+{{- $cmdName := $v }}
+
+
+{{- if kindIs "map" $v }}
+# Get the name from the first key in the map.
+{{- $cmdName = (index (keys $v) 0) }}
+{{- $opts := (index $v $cmdName) }}
+
+# In case the options are not set somehow, set them to an empty map.
+{{- if not $opts }}
+{{- $opts = (dict) }}
+{{- end }}
+
+# Determine if we should generate an entrypoint for this command or not.
+{{- if $opts.unmanaged }}
+{{- $shouldGenerateEntrypoint = false }}
+{{- end }}
+{{- end }}
+
+{{- $templateName := "main-cli" }}
+{{- if not $shouldGenerateEntrypoint }}
+{{- $templateName = "main-cli-unmanaged" }}
+{{- end }}
+
+{{ file.Create (printf "cmd/%s/%s.go" $cmdName $cmdName) 0600 now }}
+{{ file.SetContents (stencil.ApplyTemplate $templateName (dict "Config" $root.Config "cmdName" $cmdName )) }}
 {{- end }}
