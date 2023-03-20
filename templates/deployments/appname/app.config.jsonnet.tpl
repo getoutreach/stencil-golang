@@ -62,9 +62,11 @@ local configurationOverride = {
       {{- $configmapData := stencil.GetModuleHook "app.config.jsonnet/configmapData" }}
       {{- if $configmapData }}
       {{- range $configmapData }}
-      {{ . }}
-      {{- end -}}
-      {{- end -}}
+      {{- range $k, $v := . }}
+      {{ $k }} {{ $v }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
 			},
 		},
 		{{- end }}
