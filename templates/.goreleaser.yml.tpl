@@ -1,7 +1,7 @@
 {{- if not (stencil.Arg "commands") }}
 {{ file.Skip "No commands defined" }}
 {{- end }}
-# Documentation for this file: http://goreleaser.com
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 before:
   hooks:
     - make dep
