@@ -63,7 +63,7 @@ local configurationOverride = {
       {{- if $configmapData }}
       {{- range $configmapData }}
       {{ . }}
-      {{- end -}}
+      {{- end }}
       {{- end -}}
 			},
 		},
