@@ -1,4 +1,4 @@
-{{- if or (not (has "grpc" (stencil.Arg "serviceActivities"))) (has "python" (stencil.Arg "serviceActivities")) }}
+{{- if not (has "grpc" (stencil.Arg "serviceActivities")) }}
 {{ file.Skip "Not a gRPC service" }}
 {{- end }}
 {{- $_ := file.SetPath (printf "internal/%s/%s" .Config.Name (base file.Path)) }}
@@ -9,6 +9,10 @@
 // {{ .Config.Name }} API defined in api/{{ .Config.Name }}.proto. The concrete implementation
 // exists in the server.go file in this same directory.
 // Managed: true
+{{- $extraComments := (stencil.GetModuleHook "grpc/extraComments") }}
+{{- range $extraComments }}
+{{- .}}
+{{- end }}
 
 package {{ $pkgName }} //nolint:revive // Why: We allow [-_].
 
@@ -16,6 +20,10 @@ import (
 	"context"
 	"fmt"
 	"net"
+{{- $extraStandardImports := (stencil.GetModuleHook "grpc/extraStandardImports") }}
+{{- range $extraStandardImports }}
+{{- .}}
+{{- end }}
 
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
