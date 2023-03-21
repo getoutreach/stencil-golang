@@ -3,5 +3,5 @@
 go 1.19
 
 require (
-	github.com/getoutreach/gobox v1.65.1
+	github.com/getoutreach/gobox v1.66.0
 ))
