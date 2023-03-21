@@ -3,6 +3,6 @@ dependencies:
   optional:
     - "ghi"
   required:
-    - "abc"
     - "def"
+    - "abc"
 )
