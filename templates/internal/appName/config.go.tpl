@@ -13,9 +13,15 @@ import (
 
 	"github.com/getoutreach/gobox/pkg/cfg"
 	"github.com/getoutreach/gobox/pkg/log"
-	{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-	"github.com/getoutreach/services/pkg/find"
+  {{- $additionalImports := stencil.GetModuleHook "internal/config.go/additionalImports" }}
+  {{- if $additionalImports }}
+	// Code inserted by modules
+	{{- range $additionalImports  }}
+	{{ . | quote }}
+	{{- end }}
+	// End code inserted by modules
   {{- end }}
+
 	// <<Stencil::Block(configImports)>>
 {{ file.Block "configImports" }}
 	// <</Stencil::Block>>
@@ -31,13 +37,18 @@ type Config struct {
 	{{- if has "grpc" (stencil.Arg "serviceActivities") }}
 	GRPCPort int `yaml:"GRPCPort"`
 	{{- end }}
-	{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-	KafkaHosts []string `yaml:"KafkaHosts"`
-	KafkaConsumerGroupID string `yaml:"KafkaConsumerGroupID"`
-	KafkaConsumerTopic string `yaml:"KafkaConsumerTopic"`
-	{{- end }}
-	// <<Stencil::Block(config)>>
-{{ file.Block "config"}}
+
+  {{- $configFields := stencil.GetModuleHook "internal/config.go/additionalConfigFields" }}
+  {{- if $configFields }}
+  // Code inserted by modules
+  {{- range $configFields }}
+  {{ . }}
+  {{- end }}
+  // End code inserted by modules
+  {{- end }}
+	
+  // <<Stencil::Block(config)>>
+{{ file.Block "config" }}
 	// <</Stencil::Block>>
 }
 
@@ -80,16 +91,14 @@ func LoadConfig(ctx context.Context) (*Config, error) {
 		return nil, err
 	}
 
-	{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-	if len(c.KafkaHosts) == 0 {
-		brokerDNS, err := find.Service(ctx, find.KafkaPublishBrokers)
-		if err != nil {
-			log.Fatal(ctx, "missing kafka brokers configuration")
-		}
-
-		c.KafkaHosts = []string{brokerDNS + ":9092"}
-	}
-	{{- end }}
+  {{ $configCode := stencil.GetModuleHook "internal/config.go/additionalConfigLogic" }}
+  {{- if $configCode }}
+  // Code inserted by modules
+  {{- range $configCode }}
+  {{ . }}
+  {{- end }}
+  // End code inserted by modules
+  {{- end }}
 
 	// Do any necessary tweaks/augmentations to your configuration here
 	// <<Stencil::Block(configtweak)>>
