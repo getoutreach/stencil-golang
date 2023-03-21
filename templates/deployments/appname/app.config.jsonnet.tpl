@@ -59,11 +59,14 @@ local configurationOverride = {
 		{{- else }}
 		configmap+: {
 			data_+:: {
-			{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-				// Change these as needed
-				KafkaConsumerGroupID: "{{ .Config.Name | lower | snakecase }}",
-				KafkaConsumerTopic: "{{ .Config.Name | lower | snakecase }}",
-			{{- end }}
+      {{- $configmapData := stencil.GetModuleHook "app.config.jsonnet/configmapData" }}
+      {{- if $configmapData }}
+      {{- range $configmapData }}
+      {{- range $k, $v := . }}
+      {{ $k }} {{ $v }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
 			},
 		},
 		{{- end }}
