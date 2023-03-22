@@ -33,12 +33,14 @@ import (
 	"github.com/sirupsen/logrus"
 	gcli "github.com/getoutreach/gobox/pkg/cli"
 	"github.com/urfave/cli/v2"
+	"github.com/getoutreach/gobox/pkg/cfg"
 
 	// Place any extra imports for your startup code here
 	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
 	// <</Stencil::Block>>
 )
+{{- if not .opts.delibird }}
 
 // HoneycombTracingKey gets set by the Makefile at compile-time which is pulled
 // down by devconfig.sh.
@@ -58,11 +60,13 @@ var TeleforkAPIKey = "NOTSET" //nolint:gochecknoglobals // Why: We can't compile
 const HoneycombDataset = ""
 {{- end }}
 // <</Stencil::Block>>
+{{- end }}
 
 // <<Stencil::Block(global)>>
 {{ file.Block "global" }}
 // <</Stencil::Block>>
 
+// main is the entrypoint for the {{ .cmdName }} CLI.
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	log := logrus.New()
@@ -94,7 +98,19 @@ func main() {
 	// <</Stencil::Block>>
 
 	// Insert global flags, tracing, updating and start the application.
-	gcli.HookInUrfaveCLI(ctx, cancel, &app, log, HoneycombTracingKey, HoneycombDataset, TeleforkAPIKey)
+	gcli.Run(ctx, cancel, &app, &gcli.Config{
+		Logger:    log,
+		Telemetry: gcli.TelemetryConfig{
+			{{- if .opts.delibird }}
+			UseDelibird: true,
+			{{- else }}
+			Otel: gcli.TelemetryOtelConfig{
+				Dataset:         HoneycombDataset,
+				HoneycombAPIKey: cfg.SecretData(HoneycombTracingKey),
+			},
+			{{- end }}
+		},
+	})
 }
 
 {{- end -}}
@@ -105,17 +121,12 @@ func main() {
 # Options
 {{- $shouldGenerateEntrypoint := true }}
 {{- $cmdName := $v }}
-
+{{- $opts := (dict) }}
 
 {{- if kindIs "map" $v }}
 # Get the name from the first key in the map.
 {{- $cmdName = (index (keys $v) 0) }}
-{{- $opts := (index $v $cmdName) }}
-
-# In case the options are not set somehow, set them to an empty map.
-{{- if not $opts }}
-{{- $opts = (dict) }}
-{{- end }}
+{{- $opts = (index $v $cmdName | default (dict)) }}
 
 # Determine if we should generate an entrypoint for this command or not.
 {{- if $opts.unmanaged }}
@@ -129,5 +140,5 @@ func main() {
 {{- end }}
 
 {{ file.Create (printf "cmd/%s/%s.go" $cmdName $cmdName) 0600 now }}
-{{ file.SetContents (stencil.ApplyTemplate $templateName (dict "Config" $root.Config "cmdName" $cmdName )) }}
+{{ file.SetContents (stencil.ApplyTemplate $templateName (dict "Config" $root.Config "cmdName" $cmdName "opts" $opts )) }}
 {{- end }}
