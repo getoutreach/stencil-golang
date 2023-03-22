@@ -141,7 +141,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 
 		// Service activities inserted by modules here
 			{{- range $svcActs  }}
-			{{ . }},
+			{{ . }}
 			{{- end }}
 		// End service activities inserted by modules
 		{{- end }}
