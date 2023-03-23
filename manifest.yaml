@@ -47,6 +47,11 @@ arguments:
           - type: string
           - type: object
             properties:
+              delibird:
+                type: boolean
+                description: |-
+                  Opt into using using local files for tracing/session recording for usage with Delibird. This is used to prevent telemetry from leaving a user's
+                  machine, without an accompanying daemon component running that uploads them to delibird. The primary usecase is for being OSS friendly.
               unmanaged:
                 type: boolean
                 description: If true, stencil will not generate an entrypoint go file for this CLI (`cmd/<name>/<name>.go`), but still will build and distribute it.
