@@ -9,7 +9,7 @@
 // {{ .Config.Name }} API defined in api/{{ .Config.Name }}.proto. The concrete implementation
 // exists in the server.go file in this same directory.
 // Managed: true
-{{- $extraComments := (stencil.GetModuleHook "grpc/extraComments") }}
+{{- $extraComments := (stencil.GetModuleHook "internal/rpc/extraComments") }}
 {{- range $extraComments }}
 {{- .}}
 {{- end }}
@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 	"net"
-{{- $extraStandardImports := (stencil.GetModuleHook "grpc/extraStandardImports") }}
+{{- $extraStandardImports := (stencil.GetModuleHook "internal/rpc/extraStandardImports") }}
 {{- range $extraStandardImports }}
 {{- .}}
 {{- end }}

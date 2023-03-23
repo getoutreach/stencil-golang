@@ -39,10 +39,14 @@ func Handler() http.Handler {
 	// Replace this with your routes
 	routes.Handle("/ping", handlers.Endpoint("ping", svc.ping))
 	routes.Handle("/pong", handlers.Endpoint("pong", svc.pong))
+
+	// start: other routing added from other modules
 {{- $extraRoutes := (stencil.GetModuleHook "http/extraRoutes") }}
 {{- range $extraRoutes }}
 {{- .}}
 {{- end }}
+  // end: other routing added from other modules
+
 	return routes
 }
 
@@ -63,7 +67,9 @@ func (s service) pong(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// start: other functions inserted by other modules
 {{- $extraFuncs := (stencil.GetModuleHook "http/extraFuncs") }}
 {{- range $extraFuncs }}
 {{- .}}
 {{- end }}
+// end: other functions inserted by other modules
