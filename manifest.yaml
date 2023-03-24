@@ -123,6 +123,12 @@ arguments:
       items:
         type: string
     description: Dependencies your repository needs, but not always (e.g. E2E tests).
+  pagerduty.p1:
+    schema:
+      type: string
+  pagerduty.p2:
+    schema:
+      type: string
   dependencies.required:
     schema:
       type: array

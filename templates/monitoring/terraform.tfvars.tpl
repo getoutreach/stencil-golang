@@ -4,8 +4,8 @@
 {{- if file.Block "tfNotificationPriorities" }}
 {{ file.Block "tfNotificationPriorities" }}
 {{- else }}
-P1_notify = []
-P2_notify = []
+P1_notify = [ {{ stencil.Arg "pagerduty.p1" }} ]
+P2_notify = [ {{ stencil.Arg "pagerduty.p2" }} ]
 {{- end }}
 // <</Stencil::Block>>
 
