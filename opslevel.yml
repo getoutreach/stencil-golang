@@ -14,7 +14,8 @@ service:
   framework: stencil
   description: >
     Stencil Module for Golang Applications
-  lifecycle: in_development
+  lifecycle: public_ga
+  tier: tier_2
   ## <<Stencil::Block(extraServiceMetadata)>>
 
   ## <</Stencil::Block>>
