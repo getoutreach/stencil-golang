@@ -15,6 +15,7 @@ var libaryTmpls = []string{
 	"_helpers.tpl",
 }
 
+// TestRenderAPIGoSuccess tests the api.go template
 func TestRenderAPIGoSuccess(t *testing.T) {
 	// NOTE: 2022-07-06 For the moment, we cannot change the `Name` field of
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
