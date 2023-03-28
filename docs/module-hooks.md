@@ -107,6 +107,49 @@ Additional dependencies to add to the `main.go` file.
         )
     }}
 ```
+
+### `http/*`
+
+**Type**: `string`
+
+**File**: `internal/appName/http/handler.go.tpl`
+
+Insert to different parts for extension of `handler.go`
+
+- `http/extraComments` add extra comment in top of the file
+- `http/extraStandardImports` add extra standard imports 
+- `http/additionalImports` add extra other imports 
+- `http/extraRoutes` add extra handlers for routing
+- `http/extraFuncs` add extra functions for routing's usages
+
+```tpl
+{{  stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "http/xxxx"
+        (stencil.applyTemplate "<template-name>")
+    }}
+```
+
+### `internal/rpc/*`
+
+**Type**: `string`
+
+**File**: `internal/appName/rpc/rpc.go.tpl`
+
+Insert to different parts for extension of `rpc.go`
+
+- `internal/rpc/extraComments` add extra comment in top of the file
+- `internal/rpc/extraStandardImports` add extra standard imports
+- `internal/rpc/additionalImports` add extra non-standard imports
+- `internal/rpc/grpcServerOptionInit` add extra init statements by modules
+- `internal/rpc/grpcServerOptions` add extra options by modules
+- `internal/rpc/additionalGRPCRPCS` add extra gRPC RPCs injected by modules
+- `internal/rpc/additionalDefaultHandlers` add extra functions
+
+```tpl
+{{  stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "internal/rpc/xxxx"
+        (stencil.applyTemplate "<template-name>")
+    }}
+```
+
 ### `mixins`
 
 **Type**: `string`
