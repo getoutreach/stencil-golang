@@ -276,13 +276,7 @@ local all = {
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
 						'iam.amazonaws.com/role': '%s_service_role' % app.name,
-						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-						// https://docs.datadoghq.com/integrations/openmetrics/
-            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
-						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
-						datadog_prom_instances_:: [
+            datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
@@ -292,19 +286,19 @@ local all = {
 								send_distribution_buckets: true,
 							},
 						],
+						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
+						// https://docs.datadoghq.com/integrations/openmetrics/
+            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
+						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
+						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
             {{- else }}
+            // This is duplicated as k8s metrics collection requires a different port as we collect them using the
+            // prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
 						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics"]',
 						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}]',
 						['ad.datadoghq.com/' +  app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
-						k8s_datadog_prom_instances_:: [
-              {
-								prometheus_url: 'http://%%host%%:' +
-																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
-																'/metrics',
-								namespace: app.name,
-								metrics: ['*'],
-								send_distribution_buckets: true,
-							},
+						k8s_datadog_prom_instances_:: self.datadog_prom_instances_+[
 							{
 								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
 								namespace: app.name,
