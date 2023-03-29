@@ -9,6 +9,10 @@
 // {{ .Config.Name }} API defined in api/{{ .Config.Name }}.proto. The concrete implementation
 // exists in the server.go file in this same directory.
 // Managed: true
+{{- $extraComments := (stencil.GetModuleHook "internal/rpc/extraComments") }}
+{{- range $extraComments }}
+{{- .}}
+{{- end }}
 
 package {{ $pkgName }} //nolint:revive // Why: We allow [-_].
 
@@ -16,6 +20,10 @@ import (
 	"context"
 	"fmt"
 	"net"
+{{- $extraStandardImports := (stencil.GetModuleHook "internal/rpc/extraStandardImports") }}
+{{- range $extraStandardImports }}
+{{- .}}
+{{- end }}
 
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
@@ -181,8 +189,8 @@ func (gs *GRPCService) StartServers(ctx context.Context, servers *Servers, opts.
 	// end gRPC RPCs injected by modules
 	{{- end }}
 
-	// Register default server
-	api.Register{{ title $pkgName }}Server(s, rpcserver{servers.DefaultServer})
+	// Register default server, title function won't work well when use underscore, so we make it dash first
+	api.Register{{ stencil.ApplyTemplate "goTitleCaseName" }}Server(s, rpcserver{servers.DefaultServer})
 
   // Register your additional RPC servers here
  	// <<Stencil::Block(registrations)>>

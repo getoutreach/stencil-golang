@@ -3,7 +3,7 @@ module github.com/getoutreach/stencil-golang/pkg
 go 1.17
 
 require (
-	github.com/getoutreach/gobox v1.51.0
+	github.com/getoutreach/gobox v1.68.0
 	go.uber.org/automaxprocs v1.5.1
 )
 
