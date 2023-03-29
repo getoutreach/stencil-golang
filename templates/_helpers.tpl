@@ -37,6 +37,12 @@
 {{- regexReplaceAll "\\W+" .Config.Name "_"  }}
 {{- end }}
 
+# Return a title cased name from repo name
+# that's safe to be used in GRPC codes
+{{- define "goTitleCaseName" }}
+{{- .Config.Name | replace "_" "-" | title | replace "-" "" -}}
+{{- end }}
+
 # Skips the current file if a node client shouldn't be generated
 # {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {{- define "skipGrpcClient" }}
@@ -95,7 +101,7 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.54.0
+  version: v1.68.0
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: google.golang.org/grpc

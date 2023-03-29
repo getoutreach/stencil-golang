@@ -57,7 +57,11 @@ type dependencies struct{
   {{- if has "grpc" (stencil.Arg "serviceActivities") }}
   gRPC {{ $pkgName }}.GRPCDependencies
   {{- end }}
-
+  {{- range stencil.GetModuleHook "main.dependencies" }}
+  {{- range $k, $v := . }}
+  {{ $k }} {{ $v }}
+  {{- end }}
+  {{- end }}
   // <<Stencil::Block(customServiceActivityDependencyInjection)>>
 {{ file.Block "customServiceActivityDependencyInjection" }}
 	// <</Stencil::Block>>
@@ -125,9 +129,6 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		{{- end }}
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewGRPCService(cfg, &deps.gRPC),
-		{{- end }}
-		{{- if has "kafka" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewKafkaConsumerService(cfg),
 		{{- end }}
 		{{- if stencil.Arg "kubernetes.groups" }}
 		{{ $pkgName }}.NewKubernetesService(cfg),

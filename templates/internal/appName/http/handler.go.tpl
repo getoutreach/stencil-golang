@@ -6,15 +6,28 @@
 // {{ stencil.ApplyTemplate "copyright" }}
 
 // Description: This file exposes the public HTTP service for {{ .Config.Name }}.
+{{- $extraComments := (stencil.GetModuleHook "http/extraComments") }}
+{{- range $extraComments }}
+{{- .}}
+{{- end }}
 
 package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
 import (
 	"net/http"
+{{- $extraStandardImports := (stencil.GetModuleHook "http/extraStandardImports") }}
+{{- range $extraStandardImports }}
+{{- .}}
+{{- end }}
 
 	"github.com/getoutreach/httpx/pkg/handlers"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/gorilla/mux"
+	{{- $additionalImports := stencil.GetModuleHook "http/additionalImports" }}
+  {{- range $additionalImports }}
+  {{ . | quote }}
+  {{- end }}
+
 )
 
 // Handler returns the main http handler for this service
@@ -26,6 +39,13 @@ func Handler() http.Handler {
 	// Replace this with your routes
 	routes.Handle("/ping", handlers.Endpoint("ping", svc.ping))
 	routes.Handle("/pong", handlers.Endpoint("pong", svc.pong))
+
+	// start: other routing added from other modules
+{{- $extraRoutes := (stencil.GetModuleHook "http/extraRoutes") }}
+{{- range $extraRoutes }}
+{{- .}}
+{{- end }}
+  // end: other routing added from other modules
 
 	return routes
 }
@@ -46,3 +66,10 @@ func (s service) pong(w http.ResponseWriter, r *http.Request) {
 		log.Debug(r.Context(), "io write error", events.NewErrorInfo(err))
 	}
 }
+
+// start: other functions inserted by other modules
+{{- $extraFuncs := (stencil.GetModuleHook "http/extraFuncs") }}
+{{- range $extraFuncs }}
+{{- .}}
+{{- end }}
+// end: other functions inserted by other modules

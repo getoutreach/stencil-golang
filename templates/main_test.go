@@ -180,6 +180,33 @@ func TestDatadogTf(t *testing.T) {
 	st.Run(true)
 }
 
+func TestDatadogTf_Override(t *testing.T) {
+	st := stenciltest.New(t, "monitoring/datadog.tf.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"reportingTeam": "test:team",
+		"deployment": map[string]interface{}{
+			"environments": []interface{}{
+				"staging",
+				"production",
+			},
+			"serviceDomains": []interface{}{
+				"bento",
+			},
+		},
+		"terraform": map[string]interface{}{
+			"datadog": map[string]interface{}{
+				"podRestart": map[string]interface{}{
+					"thresholds": map[string]interface{}{
+						"lowCount":  7,
+						"highCount": 11,
+					},
+				},
+			},
+		},
+	})
+	st.Run(true)
+}
+
 func TestGRPCTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/grpc.tf.tpl", libaryTmpls...)
 	st.Args(map[string]interface{}{
@@ -247,7 +274,42 @@ func TestSLOsTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/slos.tf.tpl", libaryTmpls...)
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
-		"terraform.datadog.monitoring.generateSLOs": true,
+		"terraform": map[string]interface{}{
+			"datadog": map[string]interface{}{
+				"monitoring": map[string]interface{}{
+					"generateSLOs": true, // DEFAULT CASE
+				},
+			},
+		},
+		"deployment": map[string]interface{}{
+			"environments": []interface{}{
+				"staging",
+				"production",
+			},
+			"serviceDomains": []interface{}{
+				"bento",
+			},
+		},
+		"service": true,
+		"serviceActivities": []interface{}{
+			"http",
+			"grpc",
+		},
+	})
+	st.Run(true)
+}
+
+func TestSkipSLOsTf(t *testing.T) {
+	st := stenciltest.New(t, "monitoring/slos.tf.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"reportingTeam": "test:team",
+		"terraform": map[string]interface{}{
+			"datadog": map[string]interface{}{
+				"monitoring": map[string]interface{}{
+					"generateSLOs": false,
+				},
+			},
+		},
 		"deployment": map[string]interface{}{
 			"environments": []interface{}{
 				"staging",
