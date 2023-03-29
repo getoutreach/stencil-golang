@@ -276,7 +276,8 @@ local all = {
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
 						'iam.amazonaws.com/role': '%s_service_role' % app.name,
-            datadog_prom_instances_:: [
+						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
+             datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
@@ -286,7 +287,6 @@ local all = {
 								send_distribution_buckets: true,
 							},
 						],
-						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						// https://docs.datadoghq.com/integrations/openmetrics/
             {{- if (empty (stencil.Arg "kubernetes.groups")) }}
 						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
