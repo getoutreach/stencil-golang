@@ -46,6 +46,8 @@ github.com/fatih/color v1.14.1/go.mod h1:2oHN61fhTpgcxD3TSWCgKDiH1+x4OiDVVGH8Wlg
 github.com/frankban/quicktest v1.14.3 h1:FJKSZTDHjyhriyC81FLQ0LY93eSai0ZyR/ZIkd3ZUKE=
 github.com/getoutreach/gobox v1.57.4 h1:hR443X7su77X8/1GTRpE56JQTZtBQOVKwbI4dDNhi+4=
 github.com/getoutreach/gobox v1.57.4/go.mod h1:9vElYMRvifv232g372/8hD6jeRu3QcUep/1p7jsGznQ=
+github.com/getoutreach/smartstore v1.104.6-0.20230329213839-e65bc58042d1 h1:g/GIhbMBKqrwwt0CVi8NUNvqCPWOl1gcWMU1FqbFLus=
+github.com/getoutreach/smartstore v1.104.6-0.20230329213839-e65bc58042d1/go.mod h1:/E7z1o41x6/Y6tYeuaWiHEOYsbTGr7gqrdutPvXSe6U=
 github.com/getoutreach/stencil v1.30.0 h1:O+pvgc/HlN6B2ifBrdIKdCYNFYiSFC8fqt48ux+V2Bw=
 github.com/getoutreach/stencil v1.30.0/go.mod h1:Dp5eqq+NxHH3cHrO4maVJb4kJRDs4UXWEdhBze02nSE=
 github.com/gliderlabs/ssh v0.3.5 h1:OcaySEmAQJgyYcArR+gGGTHCyE7nvhEMTlYY+Dp8CpY=
@@ -286,6 +288,7 @@ google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp0
 google.golang.org/protobuf v1.26.0/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
 google.golang.org/protobuf v1.28.1 h1:d0NfwRgPtno5B1Wa6L2DAG+KivqkdutMf1UhdNx175w=
 google.golang.org/protobuf v1.28.1/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
+google.golang.org/protobuf v1.29.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
