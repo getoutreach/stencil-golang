@@ -4,6 +4,11 @@
 {{ file.Block "customDockerImages" }}
 ## <</Stencil::Block>>
 
+{{- $extraImageConfigHook := (stencil.GetModuleHook "docker/extraImageConfig") }}
+{{- range $extraImageConfigHook }}
+{{ toYaml .}}
+{{- end }}
+
 {{- range $_, $githubActionsArgs := (stencil.GetModuleHook ".github/workflows/actions/docker") }}
 {{- range $githubActionName, $githubActionParams := $githubActionsArgs}}
 {{ $githubActionName }}:

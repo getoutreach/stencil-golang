@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://app.opslevel.com/public/opslevel.schema.yml
+
+# Available options are listed here: https://app.opslevel.com/account
+# To find the alias for a given lifecycle: https://www.opslevel.com/docs/api/opslevel-yml/#finding-the-alias-for-a-lifecycle
+# To find the alias for a given tier: https://www.opslevel.com/docs/api/opslevel-yml/#finding-the-alias-for-a-tier
+# More examples: https://opslevel.com/docs/api/opslevel-yml/#example-service-opslevelyml
+
+version: 1
+service:
+  name: stencil-golang
+  product: Outreach
+  owner: fnd-dt
+  language: Golang
+  framework: stencil
+  description: >
+    Stencil Module for Golang Applications
+  lifecycle: public_ga
+  tier: tier_2
+  ## <<Stencil::Block(extraServiceMetadata)>>
+
+  ## <</Stencil::Block>>
+  aliases:
+    ## <<Stencil::Block(extraAliases)>>
+
+    ## <</Stencil::Block>>
+    - stencil-golang
+  tags:
+    ## <<Stencil::Block(extraTags)>>
+
+    ## <</Stencil::Block>>
+    - key: repo
+      value: "https://github.com/getoutreach/stencil-golang"
+    - key: reporting_team
+      value: "fnd-dt"
+    - key: app
+      value: "stencil-golang"
+    - key: name
+      value: "stencil-golang"
+    - key: stencil_version
+      value: "v1.32.0"
+    - key: golang_version
+      value: "1.19.5"
+    - key: cli
+      value: "false"
+    - key: service
+      value: "false"
+      # This is necessary for filters in OpsLevel because we have to assume all things are
+      # services if they don't have the `service` tag. So we can guarantee this tag for
+      # bootstrapped CLIs/Libraries.
+    - key: notservice
+      value: "true"
+  repositories:
+    - name: getoutreach/stencil-golang
+      path: "/"
+      provider: github
