@@ -16,7 +16,6 @@ local isDev = app.environment == 'development' || app.environment == 'local_deve
 
 {{- if not (empty (stencil.Arg "kubernetes.groups")) }}
 local k8sMetricsPort = 2019;
-local k8sMetricsName = 'k8s_' + app.name;
 {{ end }}
 
 local sharedLabels = {
@@ -274,6 +273,7 @@ local all = {
 						'iam.amazonaws.com/role': '%s_service_role' % app.name,
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						// https://docs.datadoghq.com/integrations/openmetrics/
+            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
 						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
 						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
 						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
@@ -287,11 +287,19 @@ local all = {
 								send_distribution_buckets: true,
 							},
 						],
-						{{- if not (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + k8sMetricsName + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + k8sMetricsName + '.init_configs']: '[{}]',
-						['ad.datadoghq.com/' + k8sMetricsName + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
+            {{- else }}
+						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics"]',
+						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}]',
+						['ad.datadoghq.com/' +  app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
 						k8s_datadog_prom_instances_:: [
+              {
+								prometheus_url: 'http://%%host%%:' +
+																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
+																'/metrics',
+								namespace: app.name,
+								metrics: ['*'],
+								send_distribution_buckets: true,
+							},
 							{
 								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
 								namespace: app.name,
