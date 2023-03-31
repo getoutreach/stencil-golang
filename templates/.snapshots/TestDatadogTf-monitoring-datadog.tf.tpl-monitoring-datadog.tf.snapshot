@@ -46,7 +46,7 @@ locals {
 resource "datadog_monitor" "argocd_application_health_status" {
   type = "query alert"
   name = "Testing argocd application health status"
-  query = "max(last_15m):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:testing,health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  query = "max(last_15m):default_zero(clamp_max(sum:application_controller.argocd_app_info{name:testing,health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
   tags = local.ddTags
   message = <<EOF
   ArgoCD Health status has been unhealthy over the window last_15m.
@@ -59,7 +59,7 @@ resource "datadog_monitor" "argocd_application_health_status" {
 resource "datadog_monitor" "argocd_application_sync_status" {
   type = "query alert"
   name = "Testing argocd application sync status"
-  query = "max(last_15m):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:testing,sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  query = "max(last_15m):default_zero(clamp_max(sum:application_controller.argocd_app_info{name:testing,sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
   tags = local.ddTags
   message = <<EOF
   ArgoCD Sync status has not been synced over the window last_15m.
