@@ -1,0 +1,382 @@
+(*codegen.File)(version: v2beta1
+# `name` is required for v2beta1
+name: testing
+
+# `vars` specifies variables which may be used as ${VAR_NAME} in devspace.yaml
+vars:
+  # These env vars are passed in automatically by devenv
+
+  # ================================================
+  # ========== DO NOT REORDER THESE VARS! ==========
+  # ================================================
+  # The vars are used to switch service label selectors in profiles
+  # It's probably not the best approach, but it works well.
+  DEVENV_DEPLOY_APPNAME:
+    source: env
+    default: testing
+
+  DEV_CONTAINER_EXECUTABLE: ${DEVENV_DEPLOY_APPNAME}
+  # ================================================
+
+  DEPLOY_TO_DEV_VERSION:
+    source: env
+    default: "latest"
+  DEVENV_DEPLOY_VERSION:
+    source: env
+    default: "latest"
+  DEVENV_DEPLOY_IMAGE_SOURCE:
+    source: env
+    default: local
+  DEVENV_DEPLOY_DEV_IMAGE_REGISTRY:
+    source: env
+    default: devenv.local
+  DEVENV_DEPLOY_BOX_IMAGE_REGISTRY:
+    source: env
+    default: gcr.io/outreach-docker
+  DEVENV_DEPLOY_IMAGE_REGISTRY:
+    source: env
+    default: ${DEVENV_DEPLOY_BOX_IMAGE_REGISTRY}
+  DEVENV_TYPE:
+    source: env
+  DEVENV_DEV_TERMINAL:
+    source: env
+    default: "false"
+  DEVENV_DEV_SKIP_PORTFORWARDING:
+    source: env
+    default: "false"
+  DEVENV_DEV_DEPLOYMENT_PROFILE:
+    source: env
+    default: deployment__testing
+  
+
+  # devenv passes in paths to binaries it uses (ensuring the supported versions are used)
+  # devenv bin that triggered devspace
+  # orc setup installs devenv bin so we can fallback to that if needed
+  DEVENV_BIN:
+    source: env
+    default: devenv
+  # devspace bin for running devspace commands (e.g. devspace run build-jsonnet)
+  # orc setup installs devspace bin so we can fallback to that if needed
+  DEVENV_DEVSPACE_BIN:
+    source: env
+    default: devspace
+  # kind bin for loading images into local dev-environment
+  # this var is passed in only when deploying to local dev-environment
+  DEVENV_KIND_BIN:
+    source: env
+
+  # This var isn't produced by devenv, but can be produced by user scripts to override the namespace.
+  DEVENV_DEPLOY_NAMESPACE:
+    source: env
+    default: ${DEVENV_DEPLOY_APPNAME}--bento1a
+
+  GH_TOKEN: $(yq -r '.["github.com"].oauth_token' "$HOME/.config/gh/hosts.yml")
+  NPM_TOKEN: $(grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g')
+  APP_VERSION: $(make version)
+  BOX_REPOSITORY_URL: $(yq -r '.storageURL' "$HOME/.outreach/.config/box/box.yaml")
+
+  DLV_PORT: 42097
+  DEV_CONTAINER_WORKDIR: /home/dev/app
+  DEV_CONTAINER_IMAGE: gcr.io/outreach-docker/bootstrap/dev:stable
+  DEV_CONTAINER_LOGFILE: /tmp/app.log
+  DEV_CONTAINER_CACHE: /tmp/cache
+
+images:
+  app:
+    image: ${DEVENV_DEPLOY_IMAGE_REGISTRY}/${DEVENV_DEPLOY_APPNAME}
+    dockerfile: deployments/${DEVENV_DEPLOY_APPNAME}/Dockerfile
+    context: ./
+    rebuildStrategy: default
+    createPullSecret: true
+    skipPush: true
+    buildKit:
+      args:
+        - "--ssh"
+        - default
+        - "--build-arg"
+        - VERSION=${APP_VERSION}
+
+# `deployments` tells DevSpace how to deploy this project
+deployments:
+  app:
+    namespace: ${DEVENV_DEPLOY_NAMESPACE}
+    # This deployment uses `kubectl` but you can also define `helm` deployments
+    kubectl:
+      manifests:
+        - deployments/${DEVENV_DEPLOY_APPNAME}.yaml
+
+# `dev` only applies when you run `devspace dev`
+dev:
+  app:
+    labelSelector: 
+      app: ${DEVENV_DEPLOY_APPNAME}
+    namespace: ${DEVENV_DEPLOY_NAMESPACE}
+
+    # Specifies the dev container to use. In this case gcr.io/outreach-docker/bootstrap/dev:stable
+    devImage: ${DEV_CONTAINER_IMAGE}
+
+    # `dev.app.ports` specifies all ports that should be forwarded while `devspace dev` is running
+    # Port-forwarding lets you access your application via localhost on your local machine
+    ports:
+      - port: 8000
+      # Remote debugging port
+      - port: ${DLV_PORT}
+
+    # `dev.sync` configures a file sync between our Pods in k8s and your local project files
+    sync:
+      # path is localSubPath>:<containerPath>
+      # https://www.devspace.sh/docs/configuration/dev/connections/file-sync
+      - path: ./:${DEV_CONTAINER_WORKDIR}
+        waitInitialSync: true
+        excludePaths:
+          - bin
+          - ./vendor
+          - node_modules
+
+    # Since our Helm charts and manifests deployments are often optimized for production,
+    # DevSpace let's you swap out Pods dynamically to get a better dev environment
+    patches:
+      - op: replace
+        path: spec.containers[0].command
+        value:
+          - bash
+      - op: replace
+        path: spec.containers[0].args
+        value:
+          - "-c"
+          - "while ! tail -f ${DEV_CONTAINER_LOGFILE} 2> /dev/null; do sleep 1; done"
+      - op: replace
+        path: spec.containers[0].imagePullPolicy
+        value: Always
+      - op: remove
+        path: spec.containers[0].securityContext
+      - op: remove
+        path: spec.containers[0].resources
+      - op: remove
+        path: spec.containers[0].livenessProbe
+      - op: remove
+        path: spec.containers[0].readinessProbe
+
+      # credentials for package managers
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: GH_TOKEN
+          value: ${GH_TOKEN}
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: NPM_TOKEN
+          value: ${NPM_TOKEN}
+
+      # variables for scripts
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: DEVENV_DEV_TERMINAL
+          value: "$!{DEVENV_DEV_TERMINAL}"
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: DEV_CONTAINER_LOGFILE
+          value: ${DEV_CONTAINER_LOGFILE}
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: SKIP_DEVCONFIG
+          value: "true"
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: DLV_PORT
+          value: "$!{DLV_PORT}"
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: DEV_CONTAINER_EXECUTABLE
+          value: ${DEV_CONTAINER_EXECUTABLE}
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: BOX_REPOSITORY_URL
+          value: ${BOX_REPOSITORY_URL}
+
+      # Package caching
+      - op: add
+        path: spec.volumes
+        value:
+          name: pkgcache
+          persistentVolumeClaim:
+            claimName: pkgcache
+      - op: add
+        path: spec.containers[0].volumeMounts
+        value:
+          mountPath: ${DEV_CONTAINER_CACHE}
+          name: pkgcache
+
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: GOCACHE
+          value: ${DEV_CONTAINER_CACHE}/go/build
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: GOMODCACHE
+          value: ${DEV_CONTAINER_CACHE}/go/mod
+
+      # Lint caching
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: GOLANGCI_LINT_CACHE
+          value: ${DEV_CONTAINER_CACHE}/golangci-lint
+
+      # Storage for sources - this way we don't have to sync everything every time, makes startup faster
+      - op: add
+        path: spec.volumes
+        value:
+          name: appcache
+          persistentVolumeClaim:
+            claimName: appcache
+      - op: add
+        path: spec.containers[0].volumeMounts
+        value:
+          mountPath: ${DEV_CONTAINER_WORKDIR}
+          name: appcache
+
+commands:
+  # The image tags get replaced by devspace automatically.
+  build-jsonnet: |-
+    ./scripts/shell-wrapper.sh build-jsonnet.sh show > deployments/${DEVENV_DEPLOY_APPNAME}.yaml
+
+hooks:
+  - name: render-manifests
+    command: "${DEVENV_DEVSPACE_BIN} run build-jsonnet"
+    events: ["before:deploy"]
+  - name: delete-jobs
+    command: |-
+      "$DEVENV_BIN" --skip-update k --namespace "${DEVENV_DEPLOY_NAMESPACE}" delete jobs --all
+    events: ["before:deploy"]
+  - name: auth-refresh
+    command: "${DEVENV_BIN} --skip-update auth refresh"
+    events: ["before:build"]
+  # Since we do not use LOFT put the KIND image loading here
+  - name: kind-load-image
+    command: "${DEVENV_KIND_BIN} load docker-image --name dev-environment ${runtime.images.app}"
+    events: ["after:build:app"]
+
+profiles:
+  - name: devTerminal
+    description: dev command opens a terminal into dev container. Automatically activated based on $DEVENV_DEV_TERMINAL == true var.
+    activation:
+      - vars:
+          DEVENV_DEV_TERMINAL: "true"
+    patches:
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev
+          events: ["devCommand:after:execute"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
+    merge:
+      dev:
+        app:
+          # https://www.devspace.sh/docs/configuration/dev/#dev-terminal
+          terminal:
+            enabled: true
+            disableReplace: true
+            workDir: ${DEV_CONTAINER_WORKDIR}
+            command: |-
+              ./scripts/shell-wrapper.sh devspace_start.sh
+
+  - name: devStartService
+    description: dev command starts service in dev container. Automatically activated based on $DEVENV_DEV_TERMINAL == false var.
+    activation:
+      - vars:
+          DEVENV_DEV_TERMINAL: "false"
+    patches:
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev-interrupt
+          events: ["devCommand:interrupt"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev-error
+          events: ["error:sync:app"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
+      - op: add
+        path: hooks
+        value:
+          name: make-dev
+          events: ["after:initialSync:app"]
+          command: |-
+            cd "${DEV_CONTAINER_WORKDIR}"
+            "${DEV_CONTAINER_WORKDIR}/scripts/shell-wrapper.sh" devspace_start.sh
+          container:
+            imageSelector: ${DEV_CONTAINER_IMAGE}
+            labelSelector: 
+              app: ${DEVENV_DEPLOY_APPNAME}
+
+  - name: remoteAppImages
+    description: Use app images built in CI. Automatically activated based on $DEVENV_DEPLOY_IMAGE_SOURCE == remote var.
+    activation:
+      - vars:
+          DEVENV_DEPLOY_IMAGE_SOURCE: remote
+    patches:
+      - op: remove
+        path: images.app
+      - op: update
+        path: deployments.app.updateImageTags
+        value: false
+
+  - name: skipPortForwarding
+    description: Skip port-forwarding for all but the DLV port.
+    activation:
+      - vars:
+          DEVENV_DEV_SKIP_PORTFORWARDING: "true"
+    patches:
+      - op: replace
+        path: dev.app.ports
+        value: 
+          - port: ${DLV_PORT}
+
+  - name: e2e
+    activation:
+      - env:
+          E2E: "true"
+    patches:
+      - op: add
+        path: dev.app.patches
+        value:
+          op: replace
+          path: spec.serviceAccountName
+          value: "testing-e2e-client-svc"
+      - op: add
+        path: dev.app.patches
+        value:
+          op: add
+          path: spec.containers[0].env
+          value:
+            name: E2E
+            value: "true"
+
+  # App Profiles
+  # Profiles starting with deployment__ are treated specially by devenv.
+  # You get to choose from them which app you want to substitute with the dev container.
+  - name: deployment__testing
+    description: Default app profile. This doesn't change configuration, because it's set by default.
+    activation:
+      - vars:
+          DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__testing
+
+  ## <<Stencil::Block(profiles)>>
+
+  ## <</Stencil::Block>>
+)
