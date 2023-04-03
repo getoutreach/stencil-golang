@@ -32,7 +32,8 @@ arguments:
           - grpc
           - temporal
           - kafka
-    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, and `kafka`.
+          - python
+    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, `python` and `kafka`.
   oss:
     schema:
       type: boolean
@@ -229,7 +230,7 @@ arguments:
     default: ""
   versions.go:
     description: Go version to use
-    default: "1.19.5"
+    default: "1.20.2"
     schema:
       type:
         - string
@@ -265,7 +266,7 @@ arguments:
   versions.terraform:
     schema:
       type: string
-    default: "0.15.5"
+    default: "1.4.4"
     description: The version of terraform that is used.
   disableGrpcGeneration:
     description: Disable gRPC generation
