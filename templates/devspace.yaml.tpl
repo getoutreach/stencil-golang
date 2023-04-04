@@ -82,21 +82,6 @@ vars:
   DEV_CONTAINER_LOGFILE: /tmp/app.log
   DEV_CONTAINER_CACHE: /tmp/cache
 
-images:
-  app:
-    image: ${DEVENV_DEPLOY_IMAGE_REGISTRY}/${DEVENV_DEPLOY_APPNAME}
-    dockerfile: deployments/${DEVENV_DEPLOY_APPNAME}/Dockerfile
-    context: ./
-    rebuildStrategy: default
-    createPullSecret: true
-    skipPush: true
-    buildKit:
-      args:
-        - "--ssh"
-        - default
-        - "--build-arg"
-        - VERSION=${APP_VERSION}
-
 # `deployments` tells DevSpace how to deploy this project
 deployments:
   app:
@@ -283,11 +268,7 @@ hooks:
   - name: auth-refresh
     command: "${DEVENV_BIN} --skip-update auth refresh"
     events: ["before:build"]
-  # Since we do not use LOFT put the KIND image loading here
-  - name: kind-load-image
-    command: "${DEVENV_KIND_BIN} load docker-image --name dev-environment ${runtime.images.app}"
-    events: ["after:build:app"]
-
+  
 profiles:
   - name: devTerminal
     description: dev command opens a terminal into dev container. Automatically activated based on $DEVENV_DEV_TERMINAL == true var.
@@ -346,17 +327,36 @@ profiles:
             labelSelector: 
               app: ${DEVENV_DEPLOY_APPNAME}
 
-  - name: remoteAppImages
-    description: Use app images built in CI. Automatically activated based on $DEVENV_DEPLOY_IMAGE_SOURCE == remote var.
+  - name: localAppImages
+    description: Build local image and use that. Only activated if $DEVENV_DEPLOY_IMAGE_SOURCE=local
     activation:
       - vars:
-          DEVENV_DEPLOY_IMAGE_SOURCE: remote
+          DEVENV_DEPLOY_IMAGE_SOURCE: local
+    merge:
+      images:
+        app:
+          image: ${DEVENV_DEPLOY_IMAGE_REGISTRY}/${DEVENV_DEPLOY_APPNAME}
+          dockerfile: deployments/${DEVENV_DEPLOY_APPNAME}/Dockerfile
+          context: ./
+          rebuildStrategy: default
+          createPullSecret: true
+          skipPush: true
+          buildKit:
+            args:
+              - "--ssh"
+              - default
+              - "--build-arg"
+              - VERSION=${APP_VERSION}
     patches:
-      - op: remove
-        path: images.app
-      - op: update
+      - op: add
+        path: hooks
+        value:
+          name: kind-load-image
+          command: "${DEVENV_KIND_BIN} load docker-image --name dev-environment ${runtime.images.app}"
+          events: ["after:build:app"]
+      - op: add
         path: deployments.app.updateImageTags
-        value: false
+        value: true
 
   - name: skipPortForwarding
     description: Skip port-forwarding for all but the DLV port.
