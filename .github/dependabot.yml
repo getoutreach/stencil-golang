@@ -11,8 +11,8 @@ updates:
       - dependency-name: github.com/getoutreach/datastores/v2
       - dependency-name: github.com/getoutreach/mint
       - dependency-name: github.com/getoutreach/httpx
-      - dependency-name: github.com/getoutreach/services
       - dependency-name: github.com/getoutreach/stencil
+      - dependency-name: github.com/getoutreach/services
 
   # Ignore semantic-release, this code is only executed in CI.
   - package-ecosystem: "npm"

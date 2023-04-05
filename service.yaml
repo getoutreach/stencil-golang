@@ -19,8 +19,14 @@ arguments:
     slackChannel: "#dt-notifications"
 modules:
   - name: github.com/getoutreach/stencil-template-base
+    channel: rc
   - name: github.com/getoutreach/stencil-outreach # Required for opslevel.yml
+    channel: rc
   - name: github.com/getoutreach/stencil-circleci
+    channel: rc
   - name: github.com/getoutreach/stencil-base
+    channel: rc
   - name: github.com/getoutreach/devbase
+    channel: rc
   - name: github.com/getoutreach/stencil-golang
+    channel: rc
