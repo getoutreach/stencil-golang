@@ -44,8 +44,8 @@ github.com/fatih/color v1.13.0/go.mod h1:kLAiJbzzSOZDVNGyDpeOxJ47H46qBXwg5ILebYF
 github.com/fatih/color v1.14.1 h1:qfhVLaG5s+nCROl1zJsZRxFeYrHLqWroPOQ8BWiNb4w=
 github.com/fatih/color v1.14.1/go.mod h1:2oHN61fhTpgcxD3TSWCgKDiH1+x4OiDVVGH8WlgGZGg=
 github.com/frankban/quicktest v1.14.3 h1:FJKSZTDHjyhriyC81FLQ0LY93eSai0ZyR/ZIkd3ZUKE=
-github.com/getoutreach/gobox v1.67.1 h1:jNONUQ3Cod3QlVEuzryDnlMDwisk6sOqjIU0IsBXxHE=
-github.com/getoutreach/gobox v1.67.1/go.mod h1:D4CJbOmGrdAAFxgY/3sFVwgag3639Nd0fOFrkdBoU8s=
+github.com/getoutreach/gobox v1.68.1 h1:rYsfEvgBqIXlL7/MovlqTXOWGw3q7qwz9j5rh6PE8CM=
+github.com/getoutreach/gobox v1.68.1/go.mod h1:OUNenxrlCtCy3aWyRfWz78lcXQZU2gvTHWrMjyGS2eU=
 github.com/getoutreach/stencil v1.32.0 h1:Y96AEiPIEnAnq+D9Pw5dscRx1uGHIvBxanddv/ZXHH4=
 github.com/getoutreach/stencil v1.32.0/go.mod h1:LOqU8NMErrkZCnVX8+EPKkZHGSg3dvBqA9wPXmhJ8wM=
 github.com/gliderlabs/ssh v0.3.5 h1:OcaySEmAQJgyYcArR+gGGTHCyE7nvhEMTlYY+Dp8CpY=
