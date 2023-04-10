@@ -76,7 +76,7 @@ vars:
 
   - name: GH_TOKEN
     source: command
-    command: yq -r '.["github.com"].oauth_token' "$HOME/.config/gh/hosts.yml"
+    command: gh auth token
   - name: NPM_TOKEN
     source: command
     command: grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g'
