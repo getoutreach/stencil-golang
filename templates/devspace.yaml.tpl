@@ -327,37 +327,6 @@ profiles:
             labelSelector: 
               app: ${DEVENV_DEPLOY_APPNAME}
 
-  - name: localAppImages
-    description: Build local image and use that. Only activated if $DEVENV_DEPLOY_IMAGE_SOURCE=local
-    activation:
-      - vars:
-          DEVENV_DEPLOY_IMAGE_SOURCE: local
-    merge:
-      images:
-        app:
-          image: ${DEVENV_DEPLOY_IMAGE_REGISTRY}/${DEVENV_DEPLOY_APPNAME}
-          dockerfile: deployments/${DEVENV_DEPLOY_APPNAME}/Dockerfile
-          context: ./
-          rebuildStrategy: default
-          createPullSecret: true
-          skipPush: true
-          buildKit:
-            args:
-              - "--ssh"
-              - default
-              - "--build-arg"
-              - VERSION=${APP_VERSION}
-    patches:
-      - op: add
-        path: hooks
-        value:
-          name: kind-load-image
-          command: "${DEVENV_KIND_BIN} load docker-image --name dev-environment ${runtime.images.app}"
-          events: ["after:build:app"]
-      - op: add
-        path: deployments.app.updateImageTags
-        value: true
-
   - name: skipPortForwarding
     description: Skip port-forwarding for all but the DLV port.
     activation:
@@ -380,6 +349,10 @@ profiles:
           op: replace
           path: spec.serviceAccountName
           value: "{{ .Config.Name }}-e2e-client-svc"
+      # For E2E we want to sync files once and stop.
+      - op: add
+        path: dev.app.sync[*].noWatch
+        value: true
       - op: add
         path: dev.app.patches
         value:
