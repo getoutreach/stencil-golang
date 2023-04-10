@@ -70,7 +70,7 @@ vars:
     source: env
     default: ${DEVENV_DEPLOY_APPNAME}--bento1a
 
-  GH_TOKEN: $(yq -r '.["github.com"].oauth_token' "$HOME/.config/gh/hosts.yml")
+  GH_TOKEN: $(gh auth token)
   NPM_TOKEN: $(grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g')
   APP_VERSION: $(make version)
   BOX_REPOSITORY_URL: $(yq -r '.storageURL' "$HOME/.outreach/.config/box/box.yaml")
