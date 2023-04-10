@@ -101,7 +101,7 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.68.0
+  version: v1.68.1
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: google.golang.org/grpc
