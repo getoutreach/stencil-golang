@@ -133,7 +133,7 @@ local all = {
 					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
 				},
 				Dataset: if isDev then 'dev' else 'outreach',
-				SamplePercent: if isDev then 100 else 1,
+				SamplePercent: if isDev then 100 else 0.25,
 			},
 		} + if isDev then {
 			GlobalTags+: {
