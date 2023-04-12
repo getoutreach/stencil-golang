@@ -76,7 +76,12 @@ vars:
 
   - name: GH_TOKEN
     source: command
-    command: gh auth token
+    # GH_TOKEN is set to null when running the provided command. This conflicts
+    # with the 'gh auth token' logic which will always use the env var over the
+    # keyring or config file. To handle this, we unset GH_TOKEN only when it is
+    # set to "null". This enables us to ignore it when it's not set but still
+    # allow GH_TOKEN to be set and supported (as 'gh auth token' does support it)
+    command: '[[ "$GH_TOKEN" == "null" ]] && unset GH_TOKEN; gh auth token'
   - name: NPM_TOKEN
     source: command
     command: grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g'
