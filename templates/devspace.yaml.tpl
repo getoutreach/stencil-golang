@@ -133,10 +133,12 @@ dev:
       {{- range (stencil.GetModuleHook "devspace.sync") }}
       # path is <localSubPath>:<containerPath>
       - path: {{ print .localSubPath ":" .containerPath }}
-        waitInitialSync: true
+        {{- if .waitInitialSync }}
+        {{ toYaml .waitInitialSync | indent 8}}
+        {{- end }}
         {{- if .excludePaths }}
         excludePaths:
-  {{ toYaml .excludePaths | indent 8 }}
+{{ toYaml .excludePaths | indent 10  }}
         {{- end }}
       {{- end }}
 
