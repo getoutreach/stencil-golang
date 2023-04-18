@@ -11,6 +11,7 @@ updates:
       - dependency-name: github.com/getoutreach/gobox
       - dependency-name: google.golang.org/grpc
       - dependency-name: github.com/getoutreach/orgservice
+      - dependency-name: github.com/getoutreach/services
 
   # Ignore semantic-release, this code is only executed in CI.
   - package-ecosystem: "npm"
