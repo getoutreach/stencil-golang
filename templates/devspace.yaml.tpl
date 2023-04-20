@@ -71,10 +71,11 @@ vars:
     source: env
     default: ${DEVENV_DEPLOY_APPNAME}--bento1a
 
-  GH_TOKEN: $(gh auth token)
+  GH_TOKEN: $([[ "$GH_TOKEN" == "null" ]] && unset GH_TOKEN; gh auth token)
   NPM_TOKEN: $(grep -E "registry.npmjs.org(.+)_authToken=(.+)" $HOME/.npmrc | sed 's/.*=//g')
   APP_VERSION: $(make version)
   BOX_REPOSITORY_URL: $(yq -r '.storageURL' "$HOME/.outreach/.config/box/box.yaml")
+
 
   DLV_PORT: 42097
   DEV_CONTAINER_WORKDIR: /home/dev/app
