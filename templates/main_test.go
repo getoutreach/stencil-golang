@@ -327,3 +327,11 @@ func TestSkipSLOsTf(t *testing.T) {
 	})
 	st.Run(true)
 }
+
+func TestDevspaceYaml(t *testing.T) {
+	st := stenciltest.New(t, "devspace.yaml.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"service": true,
+	})
+	st.Run(true)
+}
