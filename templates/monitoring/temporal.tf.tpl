@@ -1,6 +1,26 @@
 {{- if not (and (stencil.Arg "service") (has "temporal" (stencil.Arg "serviceActivities"))) -}}
   {{- file.Skip "Not a service or does not have temporal in the serviceActivities" -}}
 {{- end -}}
+variable temporal_frontend_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+variable temporal_history_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+variable temporal_matching_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+variable temporal_worker_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
 resource "datadog_monitor" "temporal_frontend_pod_restarts" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Temporal Frontend Pod Restarts > 3 last 30m"
@@ -60,10 +80,10 @@ resource "datadog_monitor" "temporal_history_pod_restarts" {
 resource "datadog_monitor" "temporal_frontend_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal frontend Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-frontend,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-frontend,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.temporal_frontend_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The {{ .Config.Name | title }} temporal frontend replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
+  The {{ .Config.Name | title }} temporal frontend replica count should be at least ${var.temporal_frontend_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
@@ -73,10 +93,10 @@ resource "datadog_monitor" "temporal_frontend_available_pods_low" {
 resource "datadog_monitor" "temporal_history_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal history Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-history,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-history,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.temporal_history_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The {{ .Config.Name | title }} temporal history replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
+  The {{ .Config.Name | title }} temporal history replica count should be at least ${var.temporal_history_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
@@ -86,10 +106,10 @@ resource "datadog_monitor" "temporal_history_available_pods_low" {
 resource "datadog_monitor" "temporal_matching_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal matching Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-matching,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-matching,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.temporal_matching_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The {{ .Config.Name | title }} temporal matching replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
+  The {{ .Config.Name | title }} temporal matching replica count should be at least ${var.temporal_matching_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
@@ -99,10 +119,10 @@ resource "datadog_monitor" "temporal_matching_available_pods_low" {
 resource "datadog_monitor" "temporal_worker_available_pods_low" {
   type = "query alert"
   name = "{{ .Config.Name | title }} Available Temporal worker Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-worker,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-worker,kube_namespace:{{ stencil.ApplyTemplate "goPackageSafeName" }}*,env:production} by {kube_namespace} < ${var.temporal_worker_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The {{ .Config.Name | title }} temporal worker replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
+  The {{ .Config.Name | title }} temporal worker replica count should be at least ${var.temporal_worker_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of {{ .Config.Name | title }}.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}

@@ -1,4 +1,24 @@
-(*codegen.File)(resource "datadog_monitor" "temporal_frontend_pod_restarts" {
+(*codegen.File)(variable temporal_frontend_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+variable temporal_history_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+variable temporal_matching_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+variable temporal_worker_available_pods_low_count {
+  type    = number
+  default = 2
+}
+
+resource "datadog_monitor" "temporal_frontend_pod_restarts" {
   type = "query alert"
   name = "Testing Temporal Frontend Pod Restarts > 3 last 30m"
   query = "max(last_30m):diff(sum:kubernetes_state.container.restarts{kube_container_name:temporal-frontend,kube_namespace:testing*,!env:development} by {kube_namespace}) > 3"
@@ -57,10 +77,10 @@ resource "datadog_monitor" "temporal_history_pod_restarts" {
 resource "datadog_monitor" "temporal_frontend_available_pods_low" {
   type = "query alert"
   name = "Testing Available Temporal frontend Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-frontend,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-frontend,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.temporal_frontend_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The Testing temporal frontend replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
+  The Testing temporal frontend replica count should be at least ${var.temporal_frontend_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/testing/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
@@ -70,10 +90,10 @@ resource "datadog_monitor" "temporal_frontend_available_pods_low" {
 resource "datadog_monitor" "temporal_history_available_pods_low" {
   type = "query alert"
   name = "Testing Available Temporal history Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-history,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-history,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.temporal_history_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The Testing temporal history replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
+  The Testing temporal history replica count should be at least ${var.temporal_history_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/testing/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
@@ -83,10 +103,10 @@ resource "datadog_monitor" "temporal_history_available_pods_low" {
 resource "datadog_monitor" "temporal_matching_available_pods_low" {
   type = "query alert"
   name = "Testing Available Temporal matching Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-matching,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-matching,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.temporal_matching_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The Testing temporal matching replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
+  The Testing temporal matching replica count should be at least ${var.temporal_matching_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/testing/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
@@ -96,10 +116,10 @@ resource "datadog_monitor" "temporal_matching_available_pods_low" {
 resource "datadog_monitor" "temporal_worker_available_pods_low" {
   type = "query alert"
   name = "Testing Available Temporal worker Pods Low"
-  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-worker,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.available_pods_low_count}"
+  query = "max(last_10m):avg:kubernetes_state.deployment.replicas_available{deployment:temporal-worker,kube_namespace:testing*,env:production} by {kube_namespace} < ${var.temporal_worker_available_pods_low_count}"
   tags = local.ddTags
   message = <<EOF
-  The Testing temporal worker replica count should be at least ${var.available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
+  The Testing temporal worker replica count should be at least ${var.temporal_worker_available_pods_low_count}, which is also the PDB. If it's lower, that's below the PodDisruptionBudget and we're likely headed toward a total outage of Testing.
   Note: This P1 alert only includes production
   Runbook: "https://github.com/getoutreach/testing/blob/main/documentation/runbooks/available-pods-low.md"
   Notify: ${join(" ", var.P1_notify)}
