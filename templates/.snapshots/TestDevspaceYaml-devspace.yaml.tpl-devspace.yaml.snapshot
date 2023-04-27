@@ -1,7 +1,6 @@
-{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
-version: v2beta1
+(*codegen.File)(version: v2beta1
 # `name` is required for v2beta1
-name: {{ .Config.Name }}
+name: testing
 
 # `vars` specifies variables which may be used as ${VAR_NAME} in devspace.yaml
 vars:
@@ -14,7 +13,7 @@ vars:
   # It's probably not the best approach, but it works well.
   DEVENV_DEPLOY_APPNAME:
     source: env
-    default: {{ .Config.Name }}
+    default: testing
 
   DEV_CONTAINER_EXECUTABLE: ${DEVENV_DEPLOY_APPNAME}
   # ================================================
@@ -47,7 +46,7 @@ vars:
     default: "false"
   DEVENV_DEV_DEPLOYMENT_PROFILE:
     source: env
-    default: deployment__{{ .Config.Name }}
+    default: deployment__testing
   
 
   # devenv passes in paths to binaries it uses (ensuring the supported versions are used)
@@ -106,15 +105,6 @@ dev:
     # Port-forwarding lets you access your application via localhost on your local machine
     ports:
       - port: 8000
-    {{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-      - port: 5000
-    {{- end }}
-    {{- if (has "http" (stencil.Arg "serviceActivities")) }}
-      - port: 8080
-    {{- end }}
-    {{- range (stencil.GetModuleHook "devspace.ports") }}
-      - port: {{ . }}
-    {{- end }}
       # Remote debugging port
       - port: ${DLV_PORT}
 
@@ -128,20 +118,6 @@ dev:
           - bin
           - ./vendor
           - node_modules
-          {{- if (has "node" (stencil.Arg "grpcClients")) }}
-          - api/clients/node/node_modules/
-          {{- end }}
-      {{- range (stencil.GetModuleHook "devspace.sync") }}
-      # path is <localSubPath>:<containerPath>
-      - path: {{ print .localSubPath ":" .containerPath }}
-        {{- if .waitInitialSync }}
-        {{ toYaml .waitInitialSync | indent 8}}
-        {{- end }}
-        {{- if .excludePaths }}
-        excludePaths:
-{{ toYaml .excludePaths | indent 10  }}
-        {{- end }}
-      {{- end }}
 
     # Since our Helm charts and manifests deployments are often optimized for production,
     # DevSpace let's you swap out Pods dynamically to get a better dev environment
@@ -351,7 +327,7 @@ profiles:
         value:
           op: replace
           path: spec.serviceAccountName
-          value: "{{ .Config.Name }}-e2e-client-svc"
+          value: "testing-e2e-client-svc"
       # For E2E we want to sync files once and stop.
       - op: add
         path: dev.app.sync[*].noWatch
@@ -368,27 +344,13 @@ profiles:
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
   # You get to choose from them which app you want to substitute with the dev container.
-  - name: deployment__{{ .Config.Name }}
+  - name: deployment__testing
     description: Default app profile. This doesn't change configuration, because it's set by default.
     activation:
       - vars:
-          DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__{{ .Config.Name }}
-
-{{- range (stencil.GetModuleHook "devspace.profiles") }}
-  - name: {{ .name }}
-    {{- if .description }}
-    description: {{ .description }}
-    {{- end }}
-    activation:
-      {{- if .activation }}
-{{ toYaml .activation | indent 6 }}
-      {{- end }}
-    {{- if .patches }}
-    patches:
-{{ toYaml .patches | indent 6 }}
-    {{- end }}
-{{- end }}
+          DEVENV_DEV_DEPLOYMENT_PROFILE: deployment__testing
 
   ## <<Stencil::Block(profiles)>>
-{{ file.Block "profiles" }}
+
   ## <</Stencil::Block>>
+)

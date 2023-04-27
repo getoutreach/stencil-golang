@@ -47,7 +47,7 @@ locals {
 resource "datadog_monitor" "argocd_application_health_status" {
   type = "query alert"
   name = "{{ .Config.Name | title }} argocd application health status"
-  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:{{ .Config.Name }},health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:application_controller.argocd_app_info{name:{{ .Config.Name }},health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
   tags = local.ddTags
   message = <<EOF
   ArgoCD Health status has been unhealthy over the window {{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}.
@@ -63,7 +63,7 @@ resource "datadog_monitor" "argocd_application_health_status" {
 resource "datadog_monitor" "argocd_application_sync_status" {
   type = "query alert"
   name = "{{ .Config.Name | title }} argocd application sync status"
-  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:{{ .Config.Name }},sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:application_controller.argocd_app_info{name:{{ .Config.Name }},sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
   tags = local.ddTags
   message = <<EOF
   ArgoCD Sync status has not been synced over the window {{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}.

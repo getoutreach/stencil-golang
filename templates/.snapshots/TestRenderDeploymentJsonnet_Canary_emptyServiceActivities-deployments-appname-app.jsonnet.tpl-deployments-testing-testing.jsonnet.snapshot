@@ -86,7 +86,7 @@ local all = {
 					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
 				},
 				Dataset: if isDev then 'dev' else 'outreach',
-				SamplePercent: if isDev then 100 else 1,
+				SamplePercent: if isDev then 100 else 0.25,
 			},
 		} + if isDev then {
 			GlobalTags+: {
@@ -194,11 +194,7 @@ local all = {
 					},
 					annotations+: {
 						'iam.amazonaws.com/role': '%s_service_role' % app.name,
-						// https://docs.datadoghq.com/integrations/openmetrics/
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
-						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
-						datadog_prom_instances_:: [
+             datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
@@ -208,6 +204,10 @@ local all = {
 								send_distribution_buckets: true,
 							},
 						],
+						// https://docs.datadoghq.com/integrations/openmetrics/
+						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
+						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
 					},
 				},
 				spec+: {

@@ -230,7 +230,7 @@ arguments:
     default: ""
   versions.go:
     description: Go version to use
-    default: "1.19.5"
+    default: "1.19.8"
     schema:
       type:
         - string
@@ -266,7 +266,7 @@ arguments:
   versions.terraform:
     schema:
       type: string
-    default: "0.15.5"
+    default: "1.4.4"
     description: The version of terraform that is used.
   disableGrpcGeneration:
     description: Disable gRPC generation
