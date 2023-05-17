@@ -5,6 +5,10 @@
 require "{{ .Config.Name }}_client/{{ .Config.Name }}_pb"
 require "{{ .Config.Name }}_client/{{ .Config.Name }}_services_pb"
 
+## <<Stencil::Block(rubyModuleGlobalSpaceInclusions)>>
+{{ file.Block "rubyModuleGlobalSpaceInclusions" }}
+## <</Stencil::Block>>
+
 module {{ title .Config.Name }}Client
   class Client < {{ title .Config.Name }}::Stub
     class Interceptor < GRPC::ClientInterceptor
@@ -50,10 +54,18 @@ module {{ title .Config.Name }}Client
     def initialize(host, token, interceptors: [])
       super(host, :this_channel_is_insecure, interceptors: interceptors.push(Interceptor.new(token)))
     end
+
+    ## <<Stencil::Block(rubyClientExtensions)>>
+{{ file.Block "rubyClientExtensions" }}
+    ## <</Stencil::Block>>
   end
 
   def self.create(bento, token, interceptors: [])
     host = "{{ .Config.Name }}.{{ .Config.Name }}--#{bento}.svc.cluster.local:5000"
     Client.new(host, token, interceptors: interceptors)
   end
+
+  ## <<Stencil::Block(rubyModuleExtensions)>>
+{{ file.Block "rubyModuleExtensions" }}
+  ## <</Stencil::Block>>
 end
