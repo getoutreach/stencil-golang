@@ -1,4 +1,4 @@
-{
+(*codegen.File)({
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -11,7 +11,7 @@
       "mode": "debug",
       "envFile": "${workspaceRoot}/.vscode/private.env",
       "go.testEnvFile": "${workspaceRoot}/.vscode/private.env",
-      "program": "${workspaceRoot}/cmd/{{ .Config.Name }}/",
+      "program": "${workspaceRoot}/cmd/testing/",
       "buildFlags": "-tags=or_dev"
     },
     {
@@ -21,14 +21,9 @@
       "request": "attach",
       "mode": "remote",
       // <<Stencil::Block(vscodeRemoteDebug)>>
-{{- if file.Block "vscodeRemoteDebug" }}
-{{ file.Block "vscodeRemoteDebug" }}
-{{- else }}
       "host": "127.0.0.1",
       "port": 42097,
-{{- end }}
       // <</Stencil::Block>>
-      {{- $goVersion := stencil.ApplyTemplate "goVersion" }}
       // Paths to replace when running the debugger. "from" is the host
       // path and "to" is the path in the devspace.
       "substitutePath": [
@@ -43,19 +38,20 @@
         // Maps the go module cache on the host to the persistent volume used by devspaces.
         // See the value of `go env GOMODCACHE` on the host and devspace.
         {
-          "from": "${env:HOME}/.asdf/installs/golang/{{ $goVersion }}/packages/pkg/mod",
+          "from": "${env:HOME}/.asdf/installs/golang/1.19.8/packages/pkg/mod",
           "to": "/tmp/cache/go/mod/"
         },
         {
           // Maps the standard library location on the host to the location in the devspace.
           // This enables debugging standard library code.
-          "from": "${env:HOME}/.asdf/installs/golang/{{ $goVersion }}/go/src",
-          "to": "/home/dev/.asdf/installs/golang/{{ $goVersion }}/go/src"
+          "from": "${env:HOME}/.asdf/installs/golang/1.19.8/go/src",
+          "to": "/home/dev/.asdf/installs/golang/1.19.8/go/src"
         }
       ],
     },
     // <<Stencil::Block(vscodeLaunchConfigs)>>
-{{ file.Block "vscodeLaunchConfigs" }}
+
     // <</Stencil::Block>>
   ]
 }
+)
