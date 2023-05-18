@@ -335,3 +335,11 @@ func TestDevspaceYaml(t *testing.T) {
 	})
 	st.Run(true)
 }
+
+func TestVSCodeLaunchConfig(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/launch.json.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"service": true,
+	})
+	st.Run(true)
+}
