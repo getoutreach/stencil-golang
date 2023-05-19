@@ -101,6 +101,9 @@ issues:
       text: "SA5011"
       linters:
         - staticcheck
+    - linters:
+        - lll
+      source: "^//go:generate "
 
 output:
   format: colored-line-number
