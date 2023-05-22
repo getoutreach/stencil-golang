@@ -28,6 +28,11 @@ variable pod_restart_low_count_threshold {
   default = {{ stencil.Arg "terraform.datadog.podRestart.thresholds.lowCount" | default 0 }}
 }
 
+variable available_pods_low_count {
+  type = number
+  default = 2
+}
+
 # Number of restarts per 30m to be considered a P1 incident.
 variable pod_restart_high_count_threshold {
   type = number
