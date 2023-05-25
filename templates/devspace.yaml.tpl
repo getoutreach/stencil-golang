@@ -343,6 +343,7 @@ profiles:
     activation:
       - env:
           E2E: "true"
+          DEVENV_DEV_TERMINAL: "false"
     patches:
       - op: add
         path: dev.app.patches
@@ -354,6 +355,27 @@ profiles:
       - op: add
         path: dev.app.sync[*].noWatch
         value: true
+      - op: add
+        path: dev.app.patches
+        value:
+          op: add
+          path: spec.containers[0].env
+          value:
+            name: E2E
+            value: "true"
+
+  - name: e2eWithTerminal
+    activation:
+      - env:
+          E2E: "true"
+          DEVENV_DEV_TERMINAL: "true"
+    patches:
+      - op: add
+        path: dev.app.patches
+        value:
+          op: replace
+          path: spec.serviceAccountName
+          value: "{{ .Config.Name }}-e2e-client-svc"
       - op: add
         path: dev.app.patches
         value:
