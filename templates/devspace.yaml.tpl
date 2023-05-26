@@ -161,6 +161,8 @@ dev:
       - op: remove
         path: spec.containers[0].securityContext
       - op: remove
+        path: spec.containers.*.resources.requests
+      - op: remove
         path: spec.containers[0].livenessProbe
       - op: remove
         path: spec.containers[0].readinessProbe
