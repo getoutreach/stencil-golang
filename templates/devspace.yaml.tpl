@@ -128,6 +128,7 @@ dev:
           - bin
           - ./vendor
           - node_modules
+          - monitoring/.terraform
           {{- if (has "node" (stencil.Arg "grpcClients")) }}
           - api/clients/node/node_modules/
           {{- end }}
