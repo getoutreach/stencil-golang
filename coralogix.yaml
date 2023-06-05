@@ -1,0 +1,15 @@
+apiVersion: ricoberger.de/v1alpha1
+kind: VaultSecret
+metadata:
+  annotations: {}
+  labels:
+    name: coralogix
+  name: coralogix
+  namespace: monitoring
+spec:
+  keys:
+  - CORALOGIX_TOKEN
+  path: dev/coralogix/dev-env
+  templates:
+    CORALOGIX_TOKEN: '{% .Secrets.CORALOGIX_TOKEN %}'
+  type: Opaque
