@@ -77,7 +77,9 @@ vars:
   BOX_REPOSITORY_URL: $(yq -r '.storageURL' "$HOME/.outreach/.config/box/box.yaml")
 
 
-  DLV_PORT: 42097
+  DLV_PORT:
+    source: env
+    default: 42097
   DEV_CONTAINER_WORKDIR: /home/dev/app
   DEV_CONTAINER_IMAGE: gcr.io/outreach-docker/bootstrap/dev:stable
   DEV_CONTAINER_LOGFILE: /tmp/app.log
@@ -329,15 +331,13 @@ profiles:
               app: ${DEVENV_DEPLOY_APPNAME}
 
   - name: skipPortForwarding
-    description: Skip port-forwarding for all but the DLV port.
+    description: Skip port-forwarding entirely
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
     patches:
-      - op: replace
+      - op: remove
         path: dev.app.ports
-        value: 
-          - port: ${DLV_PORT}
 
   - name: e2e
     activation:
