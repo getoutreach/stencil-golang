@@ -24,6 +24,24 @@ local sharedLabels = {
 	reporting_team: '{{ stencil.Arg "reportingTeam" }}',
 };
 
+{{- if (stencil.Arg "hpa.enabled") }}
+local hpaReplicasConfig = {
+  staging: {
+    minReplicas: {{ (stencil.Arg "hpa.env.staging.minReplicas") }},
+    maxReplicas: {{ (stencil.Arg "hpa.env.staging.maxReplicas") }},
+  },
+  production: {
+    minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
+    maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
+  },
+};
+
+local currentHpaReplicaConfig = if isDev then {
+	minReplicas: 1,
+	maxReplicas: 1,
+} else hpaReplicasConfig[app.environment];
+{{- end }}
+
 {{- if eq "canary" (stencil.Arg "deployment.strategy") }}
 local deploymentMetrics = [
   argo.AnalysisMetricDatadog('pod-restart') {
@@ -253,7 +271,9 @@ local all = {
 			labels+: sharedLabels,
 		},
 		spec+: {
-			replicas: if isDev then 1 else 2,
+			{{- if not (stencil.Arg "hpa.enabled") }}
+      replicas: if isDev then 1 else 2,
+      {{- end }}
 			template+: {
 				metadata+: {
 					{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
@@ -369,6 +389,40 @@ local all = {
 			},
 		},
 	},
+  {{- if (stencil.Arg "hpa.enabled") }}
+    hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
+      apiVersion: 'autoscaling/v2beta2',
+      target:: $.deployment,
+      spec+: {
+        minReplicas: currentHpaReplicaConfig.minReplicas,
+        maxReplicas: currentHpaReplicaConfig.maxReplicas,
+        behavior: {
+          {{- if (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") }}
+          scaleDown: {
+            stabilizationWindowSeconds: {{ stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds" }},
+          },
+          {{- end }}
+          {{- if (stencil.Arg "hpa.scaleUp.stabilizationWindowSeconds") }}
+          scaleUp: {
+            stabilizationWindowSeconds: {{ stencil.Arg "hpa.scaleUp.stabilizationWindowSeconds" }},
+          },
+          {{- end }}
+        },
+        {{- if (stencil.Arg "hpa.metrics.cpu.averageUtilization") }}
+        metrics: [{
+          type: 'Resource',
+          resource: {
+            name: 'cpu',
+            target: {
+              type: 'Utilization',
+              averageUtilization: {{ stencil.Arg "hpa.metrics.cpu.averageUtilization" }},
+            },
+          },
+        }],
+        {{- end }}
+      },
+    },
+  {{- end }}
 };
 
 // vaultOperatorSecrets stores vault secrets for production environments
