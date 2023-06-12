@@ -19,6 +19,7 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/trace"
+	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/automemlimit"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/shutdown"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/gomaxprocs"
 	"github.com/pkg/errors"
@@ -123,6 +124,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	acts := []async.Runner{
 		shutdown.New(),
 		gomaxprocs.New(),
+    automemlimit.New(),
 		{{ $pkgName }}.NewHTTPService(cfg, &deps.privateHTTP),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP),
