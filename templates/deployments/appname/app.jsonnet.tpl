@@ -271,9 +271,9 @@ local all = {
 			labels+: sharedLabels,
 		},
 		spec+: {
-			{{- if not (stencil.Arg "hpa.enabled") }}
-      replicas: if isDev then 1 else 2,
-      {{- end }}
+		{{- if not (stencil.Arg "hpa.enabled") }}
+			replicas: if isDev then 1 else 2,
+		{{- end }}
 			template+: {
 				metadata+: {
 					{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
