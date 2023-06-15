@@ -343,7 +343,6 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
-          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: replace
         path: dev.app.ports
@@ -421,7 +420,7 @@ profiles:
           path: spec.containers[0].resources.limits
           value:
             cpu: 200m
-            memory: 200Mi
+            memory: 400Mi
       - op: add
         path: hooks
         value:

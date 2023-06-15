@@ -54,6 +54,22 @@
         }
       ],
     },
+    {
+      "name": "Attach to dev container (in binary mode)",
+      "type": "go",
+      "debugAdapter": "dlv-dap",
+      "request": "attach",
+      "mode": "remote",
+      // <<Stencil::Block(vscodeRemoteDebug)>>
+{{- if file.Block "vscodeRemoteDebug" }}
+{{ file.Block "vscodeRemoteDebug" }}
+{{- else }}
+      "host": "127.0.0.1",
+      "port": 42097,
+{{- end }}
+      // <</Stencil::Block>>
+      {{- $goVersion := stencil.ApplyTemplate "goVersion" }}
+    },
     // <<Stencil::Block(vscodeLaunchConfigs)>>
 {{ file.Block "vscodeLaunchConfigs" }}
     // <</Stencil::Block>>
