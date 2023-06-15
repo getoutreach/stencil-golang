@@ -89,7 +89,7 @@ vars:
   DEV_CONTAINER_WORKDIR: /home/dev/app
   DEV_CONTAINER_IMAGE: gcr.io/outreach-docker/bootstrap/dev:stable
   DEV_CONTAINER_LOGFILE: /tmp/app.log
-  DEV_CONTAINER_CACHE: /tmp/cache
+  DEV_CONTAINER_CACHE: /home/dev/.cache
 
 # `deployments` tells DevSpace how to deploy this project
 deployments:
@@ -217,49 +217,44 @@ dev:
           name: BOX_REPOSITORY_URL
           value: ${BOX_REPOSITORY_URL}
 
-      # Package caching
+      # Cache for packages, build cache, etc.
       - op: add
         path: spec.volumes
         value:
-          name: pkgcache
+          name: devspace-cache
           persistentVolumeClaim:
-            claimName: pkgcache
+            claimName: devspace-cache
       - op: add
         path: spec.containers[0].volumeMounts
         value:
           mountPath: ${DEV_CONTAINER_CACHE}
-          name: pkgcache
+          name: devspace-cache
 
+      # asdf installs cache
       - op: add
-        path: spec.containers[0].env
+        path: spec.volumes
         value:
-          name: GOCACHE
-          value: ${DEV_CONTAINER_CACHE}/go/build
+          name: devspace-asdfcache
+          persistentVolumeClaim:
+            claimName: devspace-asdfcache
       - op: add
-        path: spec.containers[0].env
+        path: spec.containers[0].volumeMounts
         value:
-          name: GOMODCACHE
-          value: ${DEV_CONTAINER_CACHE}/go/mod
-
-      # Lint caching
-      - op: add
-        path: spec.containers[0].env
-        value:
-          name: GOLANGCI_LINT_CACHE
-          value: ${DEV_CONTAINER_CACHE}/golangci-lint
+          mountPath: /home/dev/.asdf/installs
+          name: devspace-asdfcache
 
       # Storage for sources - this way we don't have to sync everything every time, makes startup faster
       - op: add
         path: spec.volumes
         value:
-          name: appcache
+          name: devspace-appcache
           persistentVolumeClaim:
-            claimName: appcache
+            claimName: devspace-appcache
       - op: add
         path: spec.containers[0].volumeMounts
         value:
           mountPath: ${DEV_CONTAINER_WORKDIR}
-          name: appcache
+          name: devspace-appcache
 
 commands:
   # The image tags get replaced by devspace automatically.
@@ -430,6 +425,41 @@ profiles:
             workDir: ${DEV_CONTAINER_WORKDIR}
             command: |-
               entrypoint
+
+  - name: Loft
+    description: >
+      Enables deploying to Loft. 
+      Automatically activated based on $DEVENV_TYPE var.
+    activation:
+      - vars:
+          DEVENV_TYPE: loft
+    patches:
+      - op: add
+        path: dev.app.patches
+        value:
+          op: add
+          path: spec.containers[0].nodeSelector
+          value:
+            cloud.google.com/gke-nodepool: devspace
+      - op: add
+        path: dev.app.patches
+        value:
+          op: add
+          path: spec.tolerations
+          value:
+            - key: "devspace"
+              operator: "Equal"
+              value: "true"
+              effect: "NoSchedule"
+      - op: add
+        path: dev.app.patches
+        value:
+          op: add
+          path: spec.securityContext
+          value:
+            runAsUser: 1000
+            fsGroup: 1000
+            runAsGroup: 1000
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
