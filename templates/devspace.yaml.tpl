@@ -438,7 +438,7 @@ profiles:
             disableReplace: true
             workDir: ${DEV_CONTAINER_WORKDIR}
             command: |-
-              ./entrypoint.sh
+              ../entrypoint.sh
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
