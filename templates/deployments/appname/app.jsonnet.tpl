@@ -484,5 +484,5 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
-  + (if (stencil.Arg "hpa.enabled") horizontalPodScaler else {})
+  + (if (stencil.Arg "hpa.enabled") then horizontalPodScaler else {})
 }
