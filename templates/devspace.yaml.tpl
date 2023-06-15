@@ -279,32 +279,6 @@ hooks:
     events: ["before:build"]
   
 profiles:
-  - name: binarySync
-    description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod
-    activation:
-      - vars:
-          DEVENV_SYNC_BINARIES: "true"
-    patches:
-      - op: replace
-        path: dev.app.devImage
-        value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
-      - op: replace
-        path: dev.app.sync
-        value: 
-          - path: ./bin:${DEV_CONTAINER_WORKDIR}
-            printLogs: true
-            disableDownload: true
-            waitInitialSync: true
-    merge:
-      dev:
-        app:
-          # https://www.devspace.sh/docs/configuration/dev/#dev-terminal
-          terminal:
-            enabled: true
-            disableReplace: true
-            workDir: ${DEV_CONTAINER_WORKDIR}
-            command: |-
-              ./entrypoint.sh
   - name: devTerminal
     description: dev command opens a terminal into dev container. Automatically activated based on $DEVENV_DEV_TERMINAL == true var.
     activation:
@@ -418,6 +392,41 @@ profiles:
           value:
             name: E2E
             value: "true"
+
+  - name: binarySync
+    description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod
+    activation:
+      - vars:
+          DEVENV_SYNC_BINARIES: "true"
+    patches:
+      - op: replace
+        path: dev.app.devImage
+        value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
+      - op: replace
+        path: dev.app.sync
+        value:
+          - path: ./bin:${DEV_CONTAINER_WORKDIR}
+            printLogs: true
+            disableDownload: true
+            waitInitialSync: true
+      - op: add
+        path: dev.app.patches
+        value: 
+          op: replace
+          path: spec.containers[0].resources.limits
+          value:
+            cpu: 200m
+            memory: 200Mi
+    merge: 
+      dev:
+        app:
+          # https://www.devspace.sh/docs/configuration/dev/#dev-terminal
+          terminal:
+            enabled: true
+            disableReplace: true
+            workDir: ${DEV_CONTAINER_WORKDIR}
+            command: |-
+              ./entrypoint.sh
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
