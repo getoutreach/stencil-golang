@@ -24,24 +24,6 @@ local sharedLabels = {
 	reporting_team: '{{ stencil.Arg "reportingTeam" }}',
 };
 
-{{- if (stencil.Arg "hpa.enabled") }}
-local hpaReplicasConfig = {
-  staging: {
-    minReplicas: {{ (stencil.Arg "hpa.env.staging.minReplicas") }},
-    maxReplicas: {{ (stencil.Arg "hpa.env.staging.maxReplicas") }},
-  },
-  production: {
-    minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
-    maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
-  },
-};
-
-local currentHpaReplicaConfig = if isDev then {
-	minReplicas: 1,
-	maxReplicas: 1,
-} else hpaReplicasConfig[app.environment];
-{{- end }}
-
 {{- if eq "canary" (stencil.Arg "deployment.strategy") }}
 local deploymentMetrics = [
   argo.AnalysisMetricDatadog('pod-restart') {
@@ -391,7 +373,23 @@ local all = {
 	},
 };
 
-// horizontalPodScaler will be included depending on if hpa is enabled
+{{- if (stencil.Arg "hpa.enabled") }}
+local hpaReplicasConfig = {
+  staging: {
+    minReplicas: {{ (stencil.Arg "hpa.env.staging.minReplicas") }},
+    maxReplicas: {{ (stencil.Arg "hpa.env.staging.maxReplicas") }},
+  },
+  production: {
+    minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
+    maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
+  },
+};
+
+local currentHpaReplicaConfig = if isDev then {
+	minReplicas: 1,
+	maxReplicas: 1,
+} else hpaReplicasConfig[app.environment];
+
 local horizontalPodScaler = {
   hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
       apiVersion: 'autoscaling/v2',
@@ -426,6 +424,7 @@ local horizontalPodScaler = {
       },
     },
 };
+{{- end }}
 
 // vaultOperatorSecrets stores vault secrets for production environments
 // this is not related to the development vault secrets operator
@@ -484,5 +483,5 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
-  + (if (stencil.Arg "hpa.enabled") then horizontalPodScaler else {})
+  + {{ if (stencil.Arg "hpa.enabled") }} horizontalPodScaler {{else}} {} {{ end }}
 }

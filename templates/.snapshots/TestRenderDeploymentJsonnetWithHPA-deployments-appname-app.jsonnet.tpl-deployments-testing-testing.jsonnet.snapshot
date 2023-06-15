@@ -17,21 +17,6 @@ local sharedLabels = {
 	bento: app.bento,
 	reporting_team: '',
 };
-local hpaReplicasConfig = {
-  staging: {
-    minReplicas: 1,
-    maxReplicas: 4,
-  },
-  production: {
-    minReplicas: 1,
-    maxReplicas: 32,
-  },
-};
-
-local currentHpaReplicaConfig = if isDev then {
-	minReplicas: 1,
-	maxReplicas: 1,
-} else hpaReplicasConfig[app.environment];
 
 local all = {
 	namespace: ok.Namespace(app.namespace) {
@@ -219,8 +204,22 @@ local all = {
 		},
 	},
 };
+local hpaReplicasConfig = {
+  staging: {
+    minReplicas: 1,
+    maxReplicas: 4,
+  },
+  production: {
+    minReplicas: 1,
+    maxReplicas: 32,
+  },
+};
 
-// horizontalPodScaler will be included depending on if hpa is enabled
+local currentHpaReplicaConfig = if isDev then {
+	minReplicas: 1,
+	maxReplicas: 1,
+} else hpaReplicasConfig[app.environment];
+
 local horizontalPodScaler = {
   hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
       apiVersion: 'autoscaling/v2',
@@ -283,6 +282,6 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
-  + (if (stencil.Arg "hpa.enabled") then horizontalPodScaler else {})
+  +  horizontalPodScaler 
 }
 )
