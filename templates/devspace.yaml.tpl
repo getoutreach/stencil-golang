@@ -284,6 +284,7 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_TERMINAL: "true"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: hooks
@@ -308,6 +309,7 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_TERMINAL: "false"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: hooks
@@ -341,6 +343,7 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: replace
         path: dev.app.ports
@@ -352,6 +355,7 @@ profiles:
       - env:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "false"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: dev.app.patches
@@ -377,6 +381,7 @@ profiles:
       - env:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "true"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: dev.app.patches
@@ -417,6 +422,13 @@ profiles:
           value:
             cpu: 200m
             memory: 200Mi
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev
+          events: ["devCommand:after:execute"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
     merge: 
       dev:
         app:
