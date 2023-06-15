@@ -67,10 +67,6 @@ vars:
   DEVENV_DEVSPACE_BIN:
     source: env
     default: devspace
-  # kind bin for loading images into local dev-environment
-  # this var is passed in only when deploying to local dev-environment
-  DEVENV_KIND_BIN:
-    source: env
 
   # This var isn't produced by devenv, but can be produced by user scripts to override the namespace.
   DEVENV_DEPLOY_NAMESPACE:
@@ -428,7 +424,7 @@ profiles:
 
   - name: Loft
     description: >
-      Enables deploying to Loft. 
+      Enables deploying to Loft.
       Automatically activated based on $DEVENV_TYPE var.
     activation:
       - vars:
@@ -460,6 +456,18 @@ profiles:
             runAsUser: 1000
             fsGroup: 1000
             runAsGroup: 1000
+      - op: add
+        path: dev.app.patches
+        value:
+          op: replace
+          path: spec.containers[0].resources
+          value:
+            limits:
+              cpu: 4
+              memory: 12Gi
+            requests:
+              cpu: 3 # 4 cores on the VM right now, so we can't request more than that
+              memory: 12Gi
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
