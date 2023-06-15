@@ -389,9 +389,12 @@ local all = {
 			},
 		},
 	},
-  {{- if (stencil.Arg "hpa.enabled") }}
-    hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
-      apiVersion: 'autoscaling/v2beta2',
+};
+
+// horizontalPodScaler will be included depending on if hpa is enabled
+local horizontalPodScaler = {
+  hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
+      apiVersion: 'autoscaling/v2',
       target:: $.deployment,
       spec+: {
         minReplicas: currentHpaReplicaConfig.minReplicas,
@@ -422,7 +425,6 @@ local all = {
         {{- end }}
       },
     },
-  {{- end }}
 };
 
 // vaultOperatorSecrets stores vault secrets for production environments
@@ -482,4 +484,5 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
+  + (if (stencil.Arg "hpa.enabled") horizontalPodScaler else {})
 }
