@@ -278,4 +278,37 @@ arguments:
     schema:
       type:
         - string
+  # HPA fields
+  hpa.enabled:
+    description: Enable HPA for the primary deployment
+    schema:
+      type: boolean
+  hpa.scaleDown.stabilizationWindowSeconds:
+    description: Stabilization window for HPA for scaling down
+    schema:
+      type: number
+  hpa.scaleUp.stabilizationWindowSeconds:
+    description: Stabilization window for HPA for scaling up
+    schema:
+      type: number
+  hpa.metrics.cpu.averageUtilization:
+    description: Use CPU average utilization for HPA
+    schema:
+      type: number
+  hpa.env.staging.maxReplicas:
+    description: Max replicas for staging envs
+    schema:
+      type: number
+  hpa.env.staging.minReplicas:
+    description: Min replicas for staging envs
+    schema:
+      type: number
+  hpa.env.production.maxReplicas:
+    description: Max replicas for production envs
+    schema:
+      type: number
+  hpa.env.production.minReplicas:
+    description: Min replicas for production envs
+    schema:
+      type: number
 ## <</Stencil::Block>>

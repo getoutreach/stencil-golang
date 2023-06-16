@@ -131,7 +131,6 @@ local all = {
 			labels+: sharedLabels,
 		},
 		spec+: {
-			replicas: if isDev then 1 else 2,
 			template+: {
 				metadata+: {
 					labels+: sharedLabels {
@@ -205,6 +204,50 @@ local all = {
 		},
 	},
 };
+local hpaReplicasConfig = {
+  staging: {
+    minReplicas: 1,
+    maxReplicas: 4,
+  },
+  production: {
+    minReplicas: 1,
+    maxReplicas: 32,
+  },
+};
+
+local currentHpaReplicaConfig = if isDev then {
+	minReplicas: 1,
+	maxReplicas: 1,
+} else hpaReplicasConfig[app.environment];
+
+local horizontalPodScaler = {
+  hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
+      apiVersion: 'autoscaling/v2',
+      target:: $.deployment,
+      spec+: {
+        minReplicas: currentHpaReplicaConfig.minReplicas,
+        maxReplicas: currentHpaReplicaConfig.maxReplicas,
+        behavior: {
+          scaleDown: {
+            stabilizationWindowSeconds: 1200,
+          },
+          scaleUp: {
+            stabilizationWindowSeconds: 300,
+          },
+        },
+        metrics: [{
+          type: 'Resource',
+          resource: {
+            name: 'cpu',
+            target: {
+              type: 'Utilization',
+              averageUtilization: 75,
+            },
+          },
+        }],
+      },
+    },
+};
 
 // vaultOperatorSecrets stores vault secrets for production environments
 // this is not related to the development vault secrets operator
@@ -228,9 +271,6 @@ local override = import './testing.override.jsonnet';
 local configuration = import './testing.config.jsonnet';
 
 local mixins = [
-	import './mixins/a.jsonnet',
-	import './mixins/b.jsonnet',
-	import './mixins/c.jsonnet',
 ];
 local mergedMixins = std.foldl(function(x, y) (x + y), mixins, {});
 
@@ -242,6 +282,6 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
-  +  {} 
+  +  horizontalPodScaler 
 }
 )
