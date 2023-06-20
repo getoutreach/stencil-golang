@@ -414,15 +414,6 @@ profiles:
             disableDownload: true
             waitInitialSync: true
       - op: add
-        path: dev.app.patches
-        value: 
-          op: replace
-          path: spec.containers[0].resources
-          value:
-            limits:
-              cpu: 200m
-              memory: 400Mi
-      - op: add
         path: hooks
         value:
           name: reset-dev
