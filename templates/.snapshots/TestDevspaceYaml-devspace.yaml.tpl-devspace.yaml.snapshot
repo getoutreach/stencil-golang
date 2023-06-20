@@ -393,10 +393,11 @@ profiles:
         path: dev.app.patches
         value: 
           op: replace
-          path: spec.containers[0].resources.limits
+          path: spec.containers[0].resources
           value:
-            cpu: 200m
-            memory: 400Mi
+            limits:
+              cpu: 200m
+              memory: 400Mi
       - op: add
         path: hooks
         value:

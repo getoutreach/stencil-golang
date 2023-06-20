@@ -55,7 +55,7 @@
       "debugAdapter": "dlv-dap",
       "request": "attach",
       "mode": "remote",
-      // <<Stencil::Block(vscodeRemoteDebug)>>
+      // <<Stencil::Block(vscodeRemoteDebugDevspaceBinary)>>
       "host": "127.0.0.1",
       "port": 42097,
       // <</Stencil::Block>>
