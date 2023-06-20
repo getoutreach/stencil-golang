@@ -329,6 +329,5 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
-  +  {} 
 }
 )

@@ -253,9 +253,7 @@ local all = {
 			labels+: sharedLabels,
 		},
 		spec+: {
-		{{- if not (stencil.Arg "hpa.enabled") }}
 			replicas: if isDev then 1 else 2,
-		{{- end }}
 			template+: {
 				metadata+: {
 					{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
@@ -373,59 +371,6 @@ local all = {
 	},
 };
 
-{{- if (stencil.Arg "hpa.enabled") }}
-local hpaReplicasConfig = {
-  staging: {
-    minReplicas: {{ (stencil.Arg "hpa.env.staging.minReplicas") }},
-    maxReplicas: {{ (stencil.Arg "hpa.env.staging.maxReplicas") }},
-  },
-  production: {
-    minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
-    maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
-  },
-};
-
-local currentHpaReplicaConfig = if isDev then {
-	minReplicas: 1,
-	maxReplicas: 1,
-} else hpaReplicasConfig[app.environment];
-
-local horizontalPodScaler = {
-  hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
-      apiVersion: 'autoscaling/v2',
-      target:: $.deployment,
-      spec+: {
-        minReplicas: currentHpaReplicaConfig.minReplicas,
-        maxReplicas: currentHpaReplicaConfig.maxReplicas,
-        behavior: {
-          {{- if (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") }}
-          scaleDown: {
-            stabilizationWindowSeconds: {{ stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds" }},
-          },
-          {{- end }}
-          {{- if (stencil.Arg "hpa.scaleUp.stabilizationWindowSeconds") }}
-          scaleUp: {
-            stabilizationWindowSeconds: {{ stencil.Arg "hpa.scaleUp.stabilizationWindowSeconds" }},
-          },
-          {{- end }}
-        },
-        {{- if (stencil.Arg "hpa.metrics.cpu.averageUtilization") }}
-        metrics: [{
-          type: 'Resource',
-          resource: {
-            name: 'cpu',
-            target: {
-              type: 'Utilization',
-              averageUtilization: {{ stencil.Arg "hpa.metrics.cpu.averageUtilization" }},
-            },
-          },
-        }],
-        {{- end }}
-      },
-    },
-};
-{{- end }}
-
 // vaultOperatorSecrets stores vault secrets for production environments
 // this is not related to the development vault secrets operator
 local vaultOperatorSecrets = {
@@ -483,5 +428,4 @@ ok.FilteredList() {
 	+ mergedMixins
 	+ override
 	+ configuration
-  + {{ if (stencil.Arg "hpa.enabled") }} horizontalPodScaler {{else}} {} {{ end }}
 }
