@@ -24,6 +24,12 @@ vars:
   DEVENV_DEPLOY_VERSION:
     source: env
     default: "latest"
+  # DEVENV_SYNC_BINARIES:
+  # false: Devspace is build machine that synchronizes source code and runs it
+  # true: Devspace synchronizes binaries and run them
+  DEVENV_SYNC_BINARIES:
+    source: env
+    default: "false"
   DEVENV_DEPLOY_IMAGE_SOURCE:
     source: env
     default: local
@@ -254,6 +260,7 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_TERMINAL: "true"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: hooks
@@ -278,6 +285,7 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_TERMINAL: "false"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: hooks
@@ -322,6 +330,7 @@ profiles:
       - env:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "false"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: dev.app.patches
@@ -347,6 +356,7 @@ profiles:
       - env:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "true"
+          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: dev.app.patches
@@ -362,6 +372,40 @@ profiles:
           value:
             name: E2E
             value: "true"
+
+  - name: binarySync
+    description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod
+    activation:
+      - vars:
+          DEVENV_SYNC_BINARIES: "true"
+    patches:
+      - op: replace
+        path: dev.app.devImage
+        value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
+      - op: replace
+        path: dev.app.sync
+        value:
+          - path: ./bin:${DEV_CONTAINER_WORKDIR}
+            printLogs: true
+            disableDownload: true
+            waitInitialSync: true
+      - op: add
+        path: hooks
+        value:
+          name: reset-dev
+          events: ["devCommand:after:execute"]
+          command: |-
+            "${DEVENV_DEVSPACE_BIN}" reset pods -s
+    merge: 
+      dev:
+        app:
+          # https://www.devspace.sh/docs/configuration/dev/#dev-terminal
+          terminal:
+            enabled: true
+            disableReplace: true
+            workDir: ${DEV_CONTAINER_WORKDIR}
+            command: |-
+              entrypoint
 
   # App Profiles
   # Profiles starting with deployment__ are treated specially by devenv.
