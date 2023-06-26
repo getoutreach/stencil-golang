@@ -75,6 +75,11 @@ arguments:
       items:
         type: object
     description: List of Kubernetes groups to generate
+  kubernetes.leaderElection:
+    schema:
+      type: boolean
+    default: true
+    description: Have stencil render code related to leader election for kubernetes operators/webhooks/controllers
   lintroller:
     schema:
       type: string
