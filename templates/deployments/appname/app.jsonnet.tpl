@@ -163,70 +163,6 @@ local all = {
 			'fflags.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
-{{- if eq "canary" (stencil.Arg "deployment.strategy") }}
-	service_canary: ok.Service(app.name + '-canary', app.namespace) {
-		target_pod:: $.deployment.spec.template,
-		metadata+: {
-			labels+: sharedLabels,
-		},
-		spec+: $.service.spec,
-	},
-	service_stable: ok.Service(app.name + '-stable', app.namespace) {
-		target_pod:: $.deployment.spec.template,
-		metadata+: {
-			labels+: sharedLabels,
-		},
-		spec+: $.service.spec
-	},
-	analysis_template: argo.AnalysisTemplate('metrics', app) {
-		metrics:: deploymentMetrics
-	},
-	canary_deployment: argo.CanaryDeployment(app.name, app.namespace) {
-		deploymentRef:: $.deployment,
-		canaryService:: $.service_canary,
-		stableService:: $.service_stable,
-		steps:: (if !isDev then [
-			{ setWeight: 25 },
-			{ pause: { duration: '5m' } },
-			{ setWeight: 50 },
-			{ pause: { duration: '5m' } },
-			{ setWeight: 75 },
-			{ pause: { duration: '5m' } },
-		] else []) + [
-			{ setWeight: 100 },
-		],
-		{{- $servicePort := "" }}
-		{{- if (has "http" (stencil.Arg "serviceActivities")) }}
-		{{- $servicePort = 8080 }}
-		{{- end }}
-		{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
-		{{- $servicePort = 5000 }}
-		{{- end }}
-		{{- if $servicePort }}
-		servicePort:: {{ $servicePort }},
-		{{- end }}
-		{{- if stencil.Arg "slack" }}
-		notification_success:: {{ stencil.Arg "slack" | squote }},
-		notification_failure:: {{ stencil.Arg "slack" | squote }},
-		{{- end }}
-		backgroundAnalysis:: if !isDev then {
-			templates: [
-				argo.AnalysisTemplateRef($.analysis_template),
-			],
-			startingStep: 2,
-		},
-		metadata+: {
-			labels+: sharedLabels,
-			annotations+: {
-				'link.argocd.argoproj.io/external-link': 'https://argorollouts.%(bento)s.%(region)s.outreach.cloud/rollouts/rollout/%(namespace)s/%(name)s' % app,
-			},
-		},
-		spec+: {
-			replicas: if isDev then 1 else 2,
-		},
-	},
-{{- end }}
-
 	deployment: ok.Deployment(app.name, app.namespace) {
 		local deployment_volume_mounts = {
 			// default configuration files
@@ -373,30 +309,101 @@ local all = {
 	},
 };
 
-{{- if (stencil.Arg "hpa.enabled") }}
-local hpaReplicasConfig = {
-  staging: {
-    minReplicas: {{ (stencil.Arg "hpa.env.staging.minReplicas") }},
-    maxReplicas: {{ (stencil.Arg "hpa.env.staging.maxReplicas") }},
-  },
-  production: {
-    minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
-    maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
-  },
-};
+// nonDevelopmentObjects defines objects for staging/production environments.
+// Note: The vault secrets here are not related to the development vault secrets operator.
+local nonDevelopmentObjects = {
+  // VaultSecrets to be deployed
+	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
+	{{- $secretName := ($secretPath | base) }}
+	'vs-{{ $secretName }}': ok.VaultSecret('{{ $secretName }}', app.namespace) {
+		vaultPath_:: '{{ $secretPath }}' % app,
+	},
+	{{- end }}
 
-local currentHpaReplicaConfig = if isDev then {
-	minReplicas: 1,
-	maxReplicas: 1,
-} else hpaReplicasConfig[app.environment];
+  {{- if eq "canary" (stencil.Arg "deployment.strategy") }}
+  // ArgoRollouts objects
+	service_canary: ok.Service(app.name + '-canary', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec,
+	},
+	service_stable: ok.Service(app.name + '-stable', app.namespace) {
+		target_pod:: $.deployment.spec.template,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+		spec+: $.service.spec
+	},
+	analysis_template: argo.AnalysisTemplate('metrics', app) {
+		metrics:: deploymentMetrics
+	},
+	canary_deployment: argo.CanaryDeployment(app.name, app.namespace) {
+		deploymentRef:: $.deployment,
+		canaryService:: $.service_canary,
+		stableService:: $.service_stable,
+		steps:: (if !isDev then [
+			{ setWeight: 25 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 50 },
+			{ pause: { duration: '5m' } },
+			{ setWeight: 75 },
+			{ pause: { duration: '5m' } },
+		] else []) + [
+			{ setWeight: 100 },
+		],
+		{{- $servicePort := "" }}
+		{{- if (has "http" (stencil.Arg "serviceActivities")) }}
+		{{- $servicePort = 8080 }}
+		{{- end }}
+		{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
+		{{- $servicePort = 5000 }}
+		{{- end }}
+		{{- if $servicePort }}
+		servicePort:: {{ $servicePort }},
+		{{- end }}
+		{{- if stencil.Arg "slack" }}
+		notification_success:: {{ stencil.Arg "slack" | squote }},
+		notification_failure:: {{ stencil.Arg "slack" | squote }},
+		{{- end }}
+		backgroundAnalysis:: if !isDev then {
+			templates: [
+				argo.AnalysisTemplateRef($.analysis_template),
+			],
+			startingStep: 2,
+		},
+		metadata+: {
+			labels+: sharedLabels,
+			annotations+: {
+				'link.argocd.argoproj.io/external-link': 'https://argorollouts.%(bento)s.%(region)s.outreach.cloud/rollouts/rollout/%(namespace)s/%(name)s' % app,
+			},
+		},
+		spec+: {
+			replicas: if isDev then 1 else 2,
+		},
+	},
+  {{- end }}
 
-local horizontalPodScaler = {
+  {{- if (stencil.Arg "hpa.enabled") }}
+  // HPA configuration/objects
+  local hpaReplicasConfig = {
+    staging: {
+      minReplicas: {{ (stencil.Arg "hpa.env.staging.minReplicas") }},
+      maxReplicas: {{ (stencil.Arg "hpa.env.staging.maxReplicas") }},
+    },
+    production: {
+      minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
+      maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
+    },
+  };
+
   hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
       apiVersion: 'autoscaling/v2',
       target:: $.deployment,
       spec+: {
-        minReplicas: currentHpaReplicaConfig.minReplicas,
-        maxReplicas: currentHpaReplicaConfig.maxReplicas,
+        minReplicas: hpaReplicasConfig[environment].minReplicas,
+        maxReplicas: hpaReplicasConfig[environment].maxReplicas,
         behavior: {
           {{- if (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") }}
           scaleDown: {
@@ -423,18 +430,7 @@ local horizontalPodScaler = {
         {{- end }}
       },
     },
-};
-{{- end }}
-
-// vaultOperatorSecrets stores vault secrets for production environments
-// this is not related to the development vault secrets operator
-local vaultOperatorSecrets = {
-	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
-	{{- $secretName := ($secretPath | base) }}
-	'vs-{{ $secretName }}': ok.VaultSecret('{{ $secretName }}', app.namespace) {
-		vaultPath_:: '{{ $secretPath }}' % app,
-	},
-	{{- end }}
+  {{- end }}
 };
 
 // These secrets will be included in dev by default, they are fetched from vault.
@@ -479,9 +475,8 @@ ok.FilteredList() {
 	// Note: configuration overrides the <appName>.override.jsonnet file,
 	// which then overrides the objects found in this file.
 	// This is done via a simple key merge, and jsonnet object '+:' notation.
-	items_+:: all + (if isDev then developmentObjects else if app.clusterType == 'legacy' then {} else vaultOperatorSecrets)
+	items_+:: all + (if isDev then developmentObjects else if app.clusterType == 'legacy' then {} else nonDevelopmentObjects)
 	+ mergedMixins
 	+ override
 	+ configuration
-  + {{ if (stencil.Arg "hpa.enabled") }} horizontalPodScaler {{else}} {} {{ end }}
 }
