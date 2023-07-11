@@ -208,7 +208,6 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
-  // VaultSecrets to be deployed
 };
 
 // These secrets will be included in dev by default, they are fetched from vault.

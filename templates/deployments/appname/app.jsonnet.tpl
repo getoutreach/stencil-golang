@@ -312,6 +312,7 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
+  {{- if stencil.Arg "vaultSecrets" }}
   // VaultSecrets to be deployed
 	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
 	{{- $secretName := ($secretPath | base) }}
@@ -319,6 +320,7 @@ local nonDevelopmentObjects = {
 		vaultPath_:: '{{ $secretPath }}' % app,
 	},
 	{{- end }}
+  {{- end }}
 
   {{- if eq "canary" (stencil.Arg "deployment.strategy") }}
   // ArgoRollouts objects
