@@ -5,7 +5,7 @@ terraform {
   required_providers {
     datadog = {
       source  = "datadog/datadog"
-      version = ">= 2.20.0, < 3.0.0"
+      version = ">= 3.0.0, < 3.27.0"
     }
     vault = {
       source = "hashicorp/vault"
