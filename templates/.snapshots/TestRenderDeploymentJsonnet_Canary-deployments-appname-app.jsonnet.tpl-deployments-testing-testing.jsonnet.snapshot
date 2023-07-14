@@ -108,7 +108,7 @@ local all = {
 		data_:: {
 			OpenTelemetry: {
 				Enabled: true,
-				CollectorEndpoint:  'otel-collector-tracing.monitoring.svc.cluster.local:4317',
+				CollectorEndpoint:  'otel-collector-singleton.monitoring.svc.cluster.local:4317',
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
 					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
