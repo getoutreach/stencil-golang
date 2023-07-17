@@ -119,32 +119,6 @@ resource "datadog_monitor" "pod_cpu_high" {
   require_full_window = false
 }
 
-resource "datadog_monitor" "pod_memory_rss_high" {
-  type = "query alert"
-  name = "{{ .Config.Name | title }} Pod Memory.rss > 80% of limit last 30m"
-  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.rss{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}), 60, 'max') >= 80"
-  tags = local.ddTags
-  message = <<EOF
-  One of the service's pods has been using over 80% of its limit memory on average for the last 30 minutes.  This almost certainly means that the service needs more memory to function properly and is being throttled in its current form due to GC patterns and/or will be OOMKilled if consumption increases.
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-memory.md"
-  Notify: ${join(" ", var.P2_notify)}
-  EOF
-  require_full_window = false
-}
-
-resource "datadog_monitor" "pod_memory_working_set_high" {
-  type = "query alert"
-  name = "{{ .Config.Name | title }} Pod Memory.working_set > 80% of limit last 30m"
-  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.working_set{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}), 60, 'max') >= 80"
-  tags = local.ddTags
-  message = <<EOF
-  One of the service's pods has been using over 80% of its limit memory on average for the last 30 minutes.  This almost certainly means that the service needs more memory to function properly and is being throttled in its current form due to GC patterns and/or will be OOMKilled if consumption increases.
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-memory.md"
-  Notify: ${join(" ", var.P2_notify)}
-  EOF
-  require_full_window = false
-}
-
 resource "datadog_monitor" "panics" {
   type    = "log alert"
   name    = "{{ .Config.Name | title }} Service panics"
