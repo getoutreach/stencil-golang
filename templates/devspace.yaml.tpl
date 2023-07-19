@@ -239,6 +239,19 @@ dev:
           mountPath: /home/dev/.asdf/installs
           name: devspace-asdfcache
 
+      # asdf shims.
+      - op: add
+        path: spec.volumes
+        value:
+          name: devspace-asdfshims
+          persistentVolumeClaim:
+            claimName: devspace-asdfshims
+      - op: add
+        path: spec.containers[0].volumeMounts
+        value:
+          mountPath: /home/dev/.asdf/shims
+          name: devspace-asdfshims
+
       # Storage for sources - this way we don't have to sync everything every time, makes startup faster
       - op: add
         path: spec.volumes
