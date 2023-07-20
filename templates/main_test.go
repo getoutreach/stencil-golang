@@ -67,6 +67,38 @@ func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
 	st.Run(true)
 }
 
+func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"hpa": map[string]interface{}{
+			"enabled":        true,
+			"cpuUtilization": 50,
+			"scaleDown": map[string]interface{}{
+				"stabilizationWindowSeconds": 1200,
+			},
+			"scaleUp": map[string]interface{}{
+				"stabilizationWindowSeconds": 300,
+			},
+			"metrics": map[string]interface{}{
+				"cpu": map[string]interface{}{
+					"averageUtilization": 75,
+				},
+			},
+			"env": map[string]interface{}{
+				"staging": map[string]interface{}{
+					"maxReplicas": 4,
+					"minReplicas": 1,
+				},
+				"production": map[string]interface{}{
+					"maxReplicas": 32,
+					"minReplicas": 1,
+				},
+			},
+		},
+	})
+	st.Run(true)
+}
+
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libaryTmpls...)
 	st.Run(true)
@@ -324,6 +356,22 @@ func TestSkipSLOsTf(t *testing.T) {
 			"http",
 			"grpc",
 		},
+	})
+	st.Run(true)
+}
+
+func TestDevspaceYaml(t *testing.T) {
+	st := stenciltest.New(t, "devspace.yaml.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"service": true,
+	})
+	st.Run(true)
+}
+
+func TestVSCodeLaunchConfig(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/launch.json.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"service": true,
 	})
 	st.Run(true)
 }

@@ -7,10 +7,13 @@ local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
 
 local dev_objects = {
-  pkgcache: ok.PersistentVolumeClaim('pkgcache', app.namespace) {
+  pkgcache: ok.PersistentVolumeClaim('devspace-cache', app.namespace) {
     storage: '10Gi',
   },
-  appcache: ok.PersistentVolumeClaim('appcache', app.namespace) {
+  asdfcache: ok.PersistentVolumeClaim('devspace-asdfcache', app.namespace) {
+    storage: '10Gi',
+  },
+  appcache: ok.PersistentVolumeClaim('devspace-appcache', app.namespace) {
     storage: '2Gi',
   },
 };

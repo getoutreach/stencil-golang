@@ -47,7 +47,7 @@ locals {
 resource "datadog_monitor" "argocd_application_health_status" {
   type = "query alert"
   name = "{{ .Config.Name | title }} argocd application health status"
-  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:{{ .Config.Name }},health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:application_controller.argocd_app_info{name:{{ .Config.Name }},health_status:healthy} by {cluster_name}.fill(zero, 3), 1)) < 1"
   tags = local.ddTags
   message = <<EOF
   ArgoCD Health status has been unhealthy over the window {{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}.
@@ -63,7 +63,7 @@ resource "datadog_monitor" "argocd_application_health_status" {
 resource "datadog_monitor" "argocd_application_sync_status" {
   type = "query alert"
   name = "{{ .Config.Name | title }} argocd application sync status"
-  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:argocd_application_controller.argocd_app_info{name:{{ .Config.Name }},sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
+  query = "max({{ stencil.Arg "terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow" | default "last_15m"}}):default_zero(clamp_max(sum:application_controller.argocd_app_info{name:{{ .Config.Name }},sync_status:synced} by {cluster_name}.fill(zero, 3), 1)) < 1"
   tags = local.ddTags
   message = <<EOF
   ArgoCD Sync status has not been synced over the window {{ stencil.Arg "terraform.datadog.monitoring.argocd.appHealth.evaluationWindow" | default "last_15m"}}.
@@ -114,32 +114,6 @@ resource "datadog_monitor" "pod_cpu_high" {
   message = <<EOF
   One of the service's pods has been using over ${var.cpu_high_threshold}% of its limit CPU on average for the last ${var.cpu_high_window} minutes.  This almost certainly means that the service needs more CPU to function properly and is being throttled in its current form.
   Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-cpu.md"
-  Notify: ${join(" ", var.P2_notify)}
-  EOF
-  require_full_window = false
-}
-
-resource "datadog_monitor" "pod_memory_rss_high" {
-  type = "query alert"
-  name = "{{ .Config.Name | title }} Pod Memory.rss > 80% of limit last 30m"
-  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.rss{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}), 60, 'max') >= 80"
-  tags = local.ddTags
-  message = <<EOF
-  One of the service's pods has been using over 80% of its limit memory on average for the last 30 minutes.  This almost certainly means that the service needs more memory to function properly and is being throttled in its current form due to GC patterns and/or will be OOMKilled if consumption increases.
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-memory.md"
-  Notify: ${join(" ", var.P2_notify)}
-  EOF
-  require_full_window = false
-}
-
-resource "datadog_monitor" "pod_memory_working_set_high" {
-  type = "query alert"
-  name = "{{ .Config.Name | title }} Pod Memory.working_set > 80% of limit last 30m"
-  query = "avg(last_30m):moving_rollup(default_zero(100 * avg:kubernetes.memory.working_set{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name} / avg:kubernetes.memory.limits{app:{{ .Config.Name }},!env:development} by {kube_namespace,pod_name}), 60, 'max') >= 80"
-  tags = local.ddTags
-  message = <<EOF
-  One of the service's pods has been using over 80% of its limit memory on average for the last 30 minutes.  This almost certainly means that the service needs more memory to function properly and is being throttled in its current form due to GC patterns and/or will be OOMKilled if consumption increases.
-  Runbook: "https://github.com/getoutreach/{{ .Config.Name }}/blob/main/documentation/runbooks/pod-memory.md"
   Notify: ${join(" ", var.P2_notify)}
   EOF
   require_full_window = false

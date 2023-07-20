@@ -76,8 +76,11 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 		// Redirect controller metrics to a dedicated port for this purpose.
 		// Same port is also scraped by datadog.
 		MetricsBindAddress: ":2019",
-
+    {{- if not (stencil.Arg "kubernetes.leaderElection") }}
+    LeaderElection: false,
+    {{- else }}
 		LeaderElection: true,
+    {{- end }}
 		// <<Stencil::Block(leaderElectionID)>>
 		{{- if file.Block "leaderElectionID" }}
 {{ file.Block "leaderElectionID" }}
@@ -87,9 +90,6 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 		// <</Stencil::Block>>
 		LeaderElectionNamespace: app.Info().Namespace,
 	}
-
-    // controller runtime options
-    ctrlOptions := controller.Options{}
 
 	// Set or override manager options here
 	// <<Stencil::Block(setOptions)>>
@@ -112,6 +112,8 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 	s.resources = append(s.resources, wh{{ $var }})
 	{{- end }}
 	{{- if $r.generate.controller }}
+  // controller runtime options
+  ctrlOptions := controller.Options{}
 	ctrl{{ $var }} := ctrl_{{ $pv }}.New{{ $r.kind }}Reconciler(
 		mgr.GetClient(),
         ctrlOptions,
@@ -143,7 +145,18 @@ func (s *KubernetesService) registerSchemes() {
 	// Register all core objects that we use
 	s.scheme.AddKnownTypes(corev1.SchemeGroupVersion,
 		&coordinationv1.Lease{},
+    {{- /* Only add ConfigMap if it is not declared as a group in service.yaml. Otherwise this causes conflicts. */}}
+    {{- $registerConfigMap := true }}
+    {{- range $g := stencil.Arg "kubernetes.groups" }}
+    {{- range $r := $g.resources }}
+    {{- if (eq "ConfigMap" $r.kind) }}
+    {{- $registerConfigMap = false }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if $registerConfigMap }}
 		&corev1.ConfigMap{},
+    {{- end }}
 	)
 
 	{{- /* Only register core types if we're not a core type, otherwise we collide */}}
