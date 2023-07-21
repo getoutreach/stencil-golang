@@ -235,14 +235,14 @@ arguments:
     default: ""
   versions.go:
     description: Go version to use
-    default: "1.19.8"
+    default: "1.19.11"
     schema:
       type:
         - string
         - number
   versions.nodejs:
     description: Nodejs version to use for build tooling (e.g., semantic-release)
-    default: "18.14.1"
+    default: "18.17.0"
     schema:
       type:
         - string
@@ -263,7 +263,7 @@ arguments:
         - number
   versions.alpine:
     description: Alpine version to use
-    default: "3.16"
+    default: "3.18"
     schema:
       type:
         - string
