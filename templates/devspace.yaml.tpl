@@ -54,6 +54,9 @@ vars:
   DEVENV_DEV_DEPLOYMENT_PROFILE:
     source: env
     default: deployment__{{ .Config.Name }}
+  E2E:
+    source: env
+    default: "false"
   
 
   # devenv passes in paths to binaries it uses (ensuring the supported versions are used)
@@ -342,7 +345,7 @@ profiles:
 
   - name: e2e
     activation:
-      - env:
+      - vars:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "false"
           DEVENV_SYNC_BINARIES: "false"
@@ -368,7 +371,7 @@ profiles:
 
   - name: e2eWithTerminal
     activation:
-      - env:
+      - vars:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "true"
           DEVENV_SYNC_BINARIES: "false"
