@@ -310,6 +310,7 @@ module "dashboard" {
   name = "Terraform: {{ .Config.Name | title }}"
   description = "Managed by terraform in github.com/getoutreach/{{ .Config.Name }}"
 
+  tags = ["team:{{  stencil.Arg "reportingTeam" }}"]
   parameters = local.dashboard_parameters
   sections = [
     local.header_section,
@@ -354,6 +355,7 @@ module "temporaldashboard" {
   name        = "Terraform: {{ .Config.Name | title }} Temporal"
   description = "Managed by terraform in github.com/getoutreach/{{ .Config.Name }}"
 
+  tags = ["team:{{  stencil.Arg "reportingTeam" }}"]
   parameters = local.dashboard_parameters
   sections = [
     module.temporal_qos.rendered,
@@ -374,6 +376,7 @@ module "temporaldashboard_otel" {
   name        = "Terraform: {{ .Config.Name | title }} Temporal OTEL"
   description = "Managed by terraform in github.com/getoutreach/{{ .Config.Name }}"
 
+  tags = ["team:{{  stencil.Arg "reportingTeam" }}"]
   parameters = local.dashboard_parameters
   sections = [
     module.temporal_qos_otel.rendered,
