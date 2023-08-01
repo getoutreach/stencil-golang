@@ -226,31 +226,25 @@ dev:
           mountPath: ${DEV_CONTAINER_CACHE}
           name: devspace-cache
 
-      # asdf installs cache
+      # asdf install volume, mounted into `installs` and `shims` directories.
       - op: add
         path: spec.volumes
         value:
-          name: devspace-asdfcache
+          name: asdf
           persistentVolumeClaim:
-            claimName: devspace-asdfcache
+            claimName: devspace-asdfinstall
       - op: add
         path: spec.containers[0].volumeMounts
         value:
           mountPath: /home/dev/.asdf/installs
-          name: devspace-asdfcache
-
-      # asdf shims.
-      - op: add
-        path: spec.volumes
-        value:
-          name: devspace-asdfshims
-          persistentVolumeClaim:
-            claimName: devspace-asdfshims
+          name: asdf
+          subPath: installs
       - op: add
         path: spec.containers[0].volumeMounts
         value:
           mountPath: /home/dev/.asdf/shims
-          name: devspace-asdfshims
+          name: asdf
+          subPath: shims
 
       # Storage for sources - this way we don't have to sync everything every time, makes startup faster
       - op: add
