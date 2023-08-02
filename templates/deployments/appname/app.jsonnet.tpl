@@ -209,6 +209,7 @@ local all = {
 					},
 					{{- end }}
 					annotations+: {
+						configmap_hash: $.configmap.md5,
 						{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
