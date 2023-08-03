@@ -333,15 +333,10 @@ profiles:
               app: ${DEVENV_DEPLOY_APPNAME}
 
   - name: skipPortForwarding
-    description: Skip port-forwarding for all but the DLV port.
+    description: Skip port-forwarding.
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
-    patches:
-      - op: replace
-        path: dev.app.ports
-        value: 
-          - port: ${DLV_PORT}
 
   - name: e2e
     activation:
