@@ -337,6 +337,9 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
+    patches:
+      - op: remove
+        path: dev.app.ports
 
   - name: e2e
     activation:
