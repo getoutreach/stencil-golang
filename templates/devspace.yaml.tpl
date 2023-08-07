@@ -332,6 +332,17 @@ profiles:
             labelSelector: 
               app: ${DEVENV_DEPLOY_APPNAME}
 
+  - name: onlyForwardDlv
+    description: Skip port-forwarding for all but the Delve port. This is the default behavior.
+    activation:
+      - vars:
+          DEVENV_DEV_ONLY_FOWARD_DLV: "true"
+    patches:
+      - op: replace
+        path: dev.app.ports
+        value:
+          - port: ${DLV_PORT}
+
   - name: skipPortForwarding
     description: Skip port-forwarding.
     activation:
