@@ -341,12 +341,11 @@ profiles:
       - op: remove
         path: dev.app.ports
 
-  - name: e2e
+  - name: e2eBase
+    description: Basic configuration override for all e2e test profiles
     activation:
       - vars:
           E2E: "true"
-          DEVENV_DEV_TERMINAL: "false"
-          DEVENV_SYNC_BINARIES: "false"
     patches:
       - op: add
         path: dev.app.patches
@@ -354,6 +353,14 @@ profiles:
           op: replace
           path: spec.serviceAccountName
           value: "{{ .Config.Name }}-e2e-client-svc"
+
+  - name: e2e
+    activation:
+      - vars:
+          E2E: "true"
+          DEVENV_DEV_TERMINAL: "false"
+          DEVENV_SYNC_BINARIES: "false"
+    patches:
       # For E2E we want to sync files once and stop.
       - op: add
         path: dev.app.sync[*].noWatch
@@ -377,9 +384,20 @@ profiles:
       - op: add
         path: dev.app.patches
         value:
-          op: replace
-          path: spec.serviceAccountName
-          value: "{{ .Config.Name }}-e2e-client-svc"
+          op: add
+          path: spec.containers[0].env
+          value:
+            name: E2E
+            value: "true"
+
+  - name: binarySyncE2e
+    description: Additional configuration for binary sync when running e2e tests (devenv apps e2e -b)
+    activation:
+      - env:
+          DEVENV_SYNC_BINARIES: "true"
+          E2E: "true"
+          DEVENV_DEV_TERMINAL: "false"
+    patches:
       - op: add
         path: dev.app.patches
         value:
@@ -388,6 +406,16 @@ profiles:
           value:
             name: E2E
             value: "true"
+      - op: add
+        path: hooks
+        value:
+          name: copy-test-results
+          events: ["devCommand:after:execute"]
+          container:
+            imageSelector: ${DEV_CONTAINER_IMAGE}
+          download:
+            containerPath: ${DEV_CONTAINER_WORKDIR}/unit-tests.xml
+            localPath: ./bin/unit-tests.xml
 
   - name: binarySync
     description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod
@@ -422,6 +450,10 @@ profiles:
             workDir: ${DEV_CONTAINER_WORKDIR}
             command: |-
               entrypoint
+          
+          # enable kubectl inside of dev pod (some e2e tests need it)
+          proxyCommands:
+            - command: kubectl
 
   - name: Loft
     description: >
