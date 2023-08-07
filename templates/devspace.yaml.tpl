@@ -393,10 +393,10 @@ profiles:
   - name: binarySyncE2e
     description: Additional configuration for binary sync when running e2e tests (devenv apps e2e -b)
     activation:
-      - env:
-          DEVENV_SYNC_BINARIES: "true"
+      - vars:
           E2E: "true"
           DEVENV_DEV_TERMINAL: "false"
+          DEVENV_SYNC_BINARIES: "true"
     patches:
       - op: add
         path: dev.app.patches
