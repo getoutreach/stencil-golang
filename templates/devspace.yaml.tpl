@@ -417,14 +417,14 @@ profiles:
             containerPath: ${DEV_CONTAINER_WORKDIR}/unit-tests.xml
             localPath: ./bin/unit-tests.xml
 
-  - name: binarySync
-    description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod
+  - name: binarySyncDev
+    description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod (devenv apps run -b)
     activation:
       - vars:
           DEVENV_SYNC_BINARIES: "true"
     patches:
       - op: replace
-        path: dev.app.devImage
+        path: vars.DEV_CONTAINER_IMAGE
         value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
       - op: replace
         path: dev.app.sync
