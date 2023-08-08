@@ -51,6 +51,9 @@ vars:
   DEVENV_DEV_SKIP_PORTFORWARDING:
     source: env
     default: "false"
+  DEVENV_DEV_ONLY_FOWARD_DLV:
+    source: env
+    default: "false"
   DEVENV_DEV_DEPLOYMENT_PROFILE:
     source: env
     default: deployment__{{ .Config.Name }}
