@@ -42,6 +42,15 @@ local resourcesOverride = {
 			// <<Stencil::Block(environmentResources)>>
 {{ file.Block "environmentResources" }}
 			// <</Stencil::Block>>
+			local_development: self.development,
+				development: {
+					requests: {
+						cpu: '2',
+						memory: '2000Mi',
+					},
+					limits: self.requests,
+				}
+			}
 		},
 
 		// Cluster-level resource overrides go here with the 1st-level keys of
