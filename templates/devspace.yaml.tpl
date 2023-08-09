@@ -51,7 +51,7 @@ vars:
   DEVENV_DEV_SKIP_PORTFORWARDING:
     source: env
     default: "false"
-  DEVENV_DEV_ONLY_FOWARD_DLV:
+  DEVENV_DEV_ONLY_FORWARD_DELVE:
     source: env
     default: "false"
   DEVENV_DEV_DEPLOYMENT_PROFILE:
@@ -339,7 +339,7 @@ profiles:
     description: Skip port-forwarding for all but the Delve port. This is the default behavior.
     activation:
       - vars:
-          DEVENV_DEV_ONLY_FOWARD_DLV: "true"
+          DEVENV_DEV_ONLY_FORWARD_DELVE: "true"
     patches:
       - op: replace
         path: dev.app.ports
