@@ -24,6 +24,7 @@ type SignalError struct {
 	Signal os.Signal
 }
 
+// NewSignalError is a simple constructor for a SignalError object
 func NewSignalError(s os.Signal) SignalError {
 	return SignalError{Signal: s}
 }
