@@ -75,22 +75,20 @@ func (s *ServiceActivity) Close(_ context.Context) error {
 }
 
 // HandleShutdownConditions encapsulates the shutdown logging logic for services into a simple function, and returns
-// a new error code to set, if any
-func HandleShutdownConditions(ctx context.Context, err error) *int {
+// a boolean indicating if it was a graceful shutdown or not
+func HandleShutdownConditions(ctx context.Context, err error) bool {
 	if err != nil {
 		var fsErr FromSignalError
 		if is := errors.As(err, &fsErr); is && (fsErr.Signal == syscall.SIGTERM) {
 			log.Info(ctx, "service gracefully shutdown due to termination", events.NewErrorInfo(err))
-			exitCode := 0
-			return &exitCode
+			return true
 		}
 
 		// Anything other than a SIGTERM to the ShutdownActivity is "unexpected"
 		log.Error(ctx, "service down unexpectedly", events.NewErrorInfo(err))
-		return nil
+		return false
 	}
 
 	log.Info(ctx, "service gracefully shutdown without error")
-	exitCode := 0
-	return &exitCode
+	return true
 }

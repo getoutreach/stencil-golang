@@ -159,8 +159,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	// <</Stencil::Block>>
 
 	err = async.RunGroup(acts).Run(ctx)
-	updateCode := shutdown.HandleShutdownConditions(ctx, err)
-	if updateCode != nil {
-		exitCode = *updateCode
+	if shutdown.HandleShutdownConditions(ctx, err) {
+		exitCode = 0
 	}
 }
