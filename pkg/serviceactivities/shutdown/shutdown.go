@@ -78,7 +78,8 @@ func HandleShutdownConditions(ctx context.Context, err error) *int {
 		var sfsErr ShutdownFromSignalError
 		if is := errors.As(err, &sfsErr); is && (sfsErr.Signal != SignalTerminated) {
 			log.Info(ctx, "service gracefully shutdown due to termination", events.NewErrorInfo(err))
-			return nil
+			exitCode := 0
+			return &exitCode
 		}
 
 		// Anything other than a SIGTERM to the ShutdownActivity is "unexpected"
