@@ -74,7 +74,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	defer func() {
 		os.Exit(exitCode)
 	}()
-	
+
   ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -86,7 +86,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		log.Error(ctx, "failed to load config", events.NewErrorInfo(err))
 		return
 	}
-	
+
 	if err := trace.InitTracer(ctx, "{{ .Config.Name }}"); err != nil {
 		log.Error(ctx, "tracing failed to start", events.NewErrorInfo(err))
 		return
@@ -158,11 +158,8 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 {{ file.Block "startup" }}
 	// <</Stencil::Block>>
 
-	if err := async.RunGroup(acts).Run(ctx); err != nil && !errors.Is(err, context.Canceled) {
-		log.Error(ctx, "shutting down service", events.NewErrorInfo(err))
-		return
+	err = async.RunGroup(acts).Run(ctx)
+	if shutdown.HandleShutdownConditions(ctx, err) {
+		exitCode = 0
 	}
-
-	exitCode = 0
-	log.Info(ctx, "graceful shutdown process successful")
 }
