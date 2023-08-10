@@ -7,12 +7,14 @@ package shutdown
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/getoutreach/gobox/pkg/async"
+	"github.com/getoutreach/gobox/pkg/events"
+	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/orerr"
 )
 
@@ -38,18 +40,24 @@ func New() *ServiceActivity {
 
 // Run runs the shutdown service activity
 func (s *ServiceActivity) Run(ctx context.Context) error {
-	// listen for interrupts and gracefully shutdown server
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
+	// listen for interrupt, terminated, and hangup signals and gracefully shutdown server
+	cInt := make(chan os.Signal, 1)
+	signal.Notify(cInt, os.Interrupt)
+	cTerm := make(chan os.Signal, 1)
+	signal.Notify(cTerm, syscall.SIGTERM)
+	cHup := make(chan os.Signal, 1)
+	signal.Notify(cHup, syscall.SIGHUP)
 
 	select {
-	case out := <-c:
+	case <-cInt:
 		// Allow interrupt signals to be caught again in worse-case scenario
 		// situations when the service hangs during a graceful shutdown.
-		signal.Reset(os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
-
-		err := fmt.Errorf("shutting down due to interrupt: %v", out)
-		return orerr.ShutdownError{Err: err}
+		signal.Reset(os.Interrupt)
+		return orerr.ShutdownError{Err: ShutdownFromSignalError{Signal: SignalInterrupt}}
+	case <-cTerm:
+		return orerr.ShutdownError{Err: ShutdownFromSignalError{Signal: SignalTerminated}}
+	case <-cHup:
+		return orerr.ShutdownError{Err: ShutdownFromSignalError{Signal: SignalHangUp}}
 	case <-ctx.Done():
 		return ctx.Err()
 	case <-s.done:
@@ -61,4 +69,24 @@ func (s *ServiceActivity) Run(ctx context.Context) error {
 func (s *ServiceActivity) Close(_ context.Context) error {
 	close(s.done)
 	return nil
+}
+
+// HandleShutdownConditions encapsulates the shutdown logging logic for services into a simple function, and returns
+// a new error code to set, if any
+func HandleShutdownConditions(ctx context.Context, err error) *int {
+	if err != nil {
+		var sfsErr ShutdownFromSignalError
+		if is := errors.As(err, &sfsErr); is && (sfsErr.Signal != SignalTerminated) {
+			log.Info(ctx, "service gracefully shutdown due to termination", events.NewErrorInfo(err))
+			return nil
+		}
+
+		// Anything other than a SIGTERM to the ShutdownActivity is "unexpected"
+		log.Error(ctx, "shutting down service unexpectedly", events.NewErrorInfo(err))
+		return nil
+	}
+
+	log.Info(ctx, "service gracefully shutdown without error")
+	exitCode := 0
+	return &exitCode
 }
