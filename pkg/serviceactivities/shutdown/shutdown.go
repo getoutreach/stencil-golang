@@ -19,14 +19,18 @@ import (
 	"github.com/getoutreach/gobox/pkg/orerr"
 )
 
-// FromSignalError is an error struct used by the Shutdown activity to indicate which signal caused the shutdown.
-type FromSignalError struct {
+// SignalError is an error struct used by the Shutdown activity to indicate which signal caused the shutdown.
+type SignalError struct {
 	Signal os.Signal
 }
 
+func NewSignalError(s os.Signal) SignalError {
+	return SignalError{Signal: s}
+}
+
 // Error satisfies the error interface
-func (s FromSignalError) Error() string {
-	return fmt.Sprintf("shutting down due to interrupt: %v", s.Signal)
+func (s SignalError) Error() string {
+	return fmt.Sprintf("signal: %v", s.Signal)
 }
 
 // _ ensures that ServiceActivity implements the async.Runner interface.
@@ -60,7 +64,7 @@ func (s *ServiceActivity) Run(ctx context.Context) error {
 		// Allow interrupt signals to be caught again in worse-case scenario
 		// situations when the service hangs during a graceful shutdown.
 		signal.Reset(os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
-		return orerr.ShutdownError{Err: FromSignalError{Signal: sig}}
+		return orerr.ShutdownError{Err: NewSignalError(sig)}
 	case <-ctx.Done():
 		return ctx.Err()
 	case <-s.done:
@@ -75,10 +79,10 @@ func (s *ServiceActivity) Close(_ context.Context) error {
 }
 
 // HandleShutdownConditions encapsulates the shutdown logging logic for services into a simple function, and returns
-// a boolean indicating if it was a graceful shutdown or not
+// a boolean indicating if it is a graceful shutdown or not
 func HandleShutdownConditions(ctx context.Context, err error) bool {
 	if err != nil {
-		var fsErr FromSignalError
+		var fsErr SignalError
 		if is := errors.As(err, &fsErr); is && (fsErr.Signal == syscall.SIGTERM) {
 			log.Info(ctx, "service gracefully shutdown due to termination", events.NewErrorInfo(err))
 			return true
