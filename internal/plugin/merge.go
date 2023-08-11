@@ -22,12 +22,16 @@ import (
 // go.mod file from templates/go.mod.tpl.
 //
 // The behavior of the merge is as follows:
-//   - Versions from the right go.mod file will be used if they are greater
-//     than the left or if the right go.mod does not have the module.
+//   - Versions from the right go.mod file will be used if the version
+//     is greater than the version in the left go.mod file or the module
+//     is not present in the left go.mod file. If a module in the left
+//     go.mod is newer than the module in the right go.mod, the left
+//     version will be used.
 //   - Replacements from the right go.mod file will be used if they are
 //     not in the left go.mod file. If a replacement in the right go.mod
-//     has the same path as a replacement in the left go.mod, the original
-//     replacement will be kept.
+//     has the same path as a replacement in the left go.mod, the left
+//     replacement will be kept. Replacements existing in the left go.mod
+//     but not in the right go.mod will be kept.
 //   - The go statement from the right go.mod file will always be used over
 //     the left go.mod file.
 func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen // Why: We're OK with this
