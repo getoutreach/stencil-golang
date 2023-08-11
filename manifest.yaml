@@ -292,12 +292,34 @@ arguments:
     description: Stabilization window for HPA for scaling down
     schema:
       type: number
+  hpa.scaleDown.policies:
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          policyType:
+            type: string
+            enum:
+              - Percent
+          value:
+            type: number
+          periodSeconds:
+            type: number
+    default:
+      - policyType: Percent
+        value: 50
+        periodSeconds: 60
   hpa.scaleUp.stabilizationWindowSeconds:
     description: Stabilization window for HPA for scaling up
     schema:
       type: number
   hpa.metrics.cpu.averageUtilization:
     description: Use CPU average utilization for HPA
+    schema:
+      type: number
+  hpa.metrics.memory.averageUtilization:
+    description: Use memory average utilization for HPA
     schema:
       type: number
   hpa.env.staging.maxReplicas:

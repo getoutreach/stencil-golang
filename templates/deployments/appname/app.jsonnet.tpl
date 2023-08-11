@@ -398,9 +398,22 @@ local horizontalPodScaler = {
         minReplicas: currentHpaReplicaConfig.minReplicas,
         maxReplicas: currentHpaReplicaConfig.maxReplicas,
         behavior: {
-          {{- if (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") }}
+          {{- if or (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") (stencil.Arg "hpa.scaleDown.policies") }}
           scaleDown: {
+            {{- if (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") }}
             stabilizationWindowSeconds: {{ stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds" }},
+            {{- end }}
+            {{- if (stencil.Arg "hpa.scaleDown.policies") }}
+            policies: [
+              {{- range $policy := stencil.Arg "hpa.scaleDown.policies" }}
+              {
+                type: {{ $policy.policyType }},
+                value: {{ $policy.value }},
+                periodSeconds: {{ $policy.periodSeconds }},
+              },
+              {{- end }}
+            ]
+            {{- end }}
           },
           {{- end }}
           {{- if (stencil.Arg "hpa.scaleUp.stabilizationWindowSeconds") }}
@@ -409,8 +422,10 @@ local horizontalPodScaler = {
           },
           {{- end }}
         },
+        {{- if or (stencil.Arg "hpa.metrics.cpu.averageUtilization") (stencil.Arg "hpa.metrics.memory.averageUtilization") }}
+        metrics: [
         {{- if (stencil.Arg "hpa.metrics.cpu.averageUtilization") }}
-        metrics: [{
+        {
           type: 'Resource',
           resource: {
             name: 'cpu',
@@ -419,7 +434,21 @@ local horizontalPodScaler = {
               averageUtilization: {{ stencil.Arg "hpa.metrics.cpu.averageUtilization" }},
             },
           },
-        }],
+        },
+        {{- end }}
+        {{- if (stencil.Arg "hpa.metrics.memory.averageUtilization") }}
+        {
+          type: 'Resource',
+          resource: {
+            name: 'memory',
+            target: {
+              type: 'Utilization',
+              averageUtilization: {{ stencil.Arg "hpa.metrics.cpu.averageUtilization" }},
+            },
+          },
+        },
+        {{- end }}
+        ],
         {{- end }}
       },
     },
