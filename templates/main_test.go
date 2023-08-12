@@ -239,6 +239,23 @@ func TestDatadogTf_Override(t *testing.T) {
 	st.Run(true)
 }
 
+func TestCoralogixTf(t *testing.T) {
+	st := stenciltest.New(t, "monitoring/coralogix.tf.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"reportingTeam": "test:team",
+		"deployment": map[string]interface{}{
+			"environments": []interface{}{
+				"staging",
+				"production",
+			},
+			"serviceDomains": []interface{}{
+				"bento",
+			},
+		},
+	})
+	st.Run(true)
+}
+
 func TestGRPCTf(t *testing.T) {
 	st := stenciltest.New(t, "monitoring/grpc.tf.tpl", libaryTmpls...)
 	st.Args(map[string]interface{}{
