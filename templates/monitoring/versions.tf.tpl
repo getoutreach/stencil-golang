@@ -11,6 +11,10 @@ terraform {
       source = "hashicorp/vault"
       version = ">= 2.15.0"
     }
+    coralogix = {
+      version = ">= 1.6.6"
+      source  = "coralogix/coralogix"
+    }
   }
   required_version = ">= 0.13"
 }
