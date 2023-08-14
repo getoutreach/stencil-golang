@@ -2,6 +2,7 @@ name: github.com/getoutreach/stencil-golang
 ## <<Stencil::Block(keys)>>
 type: templates,extension
 arguments:
+  # The following terraform.datadog fields are used for Canary deployments in app.jsonnet.tpl
   terraform.datadog.grpc.latency.thresholds.lowTraffic:
     schema:
       type: number
