@@ -16,8 +16,6 @@
 # Not used for gRPC clients
 - name: nodejs
   version: {{ stencil.Arg "versions.nodejs" }}
-- name: terraform
-  version: {{ stencil.Arg "versions.terraform" }}
 # Used in CI
 - name: protoc
   version: 21.5

@@ -2,22 +2,26 @@ name: github.com/getoutreach/stencil-golang
 ## <<Stencil::Block(keys)>>
 type: templates,extension
 arguments:
-  terraform.datadog.monitoring.argocd.appHealth.notify:
-    type: boolean
-    description: Alert when ArgoCD health is not healthy
-  terraform.datadog.monitoring.argocd.syncStatus.notify:
-    type: boolean
-    description: Alert when ArgoCD syncStatus is not synced
-  terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow:
-    type: string
-    description: The amount of time to query the ArgoCD Sync Status alert over (i.e. last_15m)
-  terraform.datadog.monitoring.argocd.appHealth.evaluationWindow:
-    type: string
-    description: The amount of time to query the ArgoCD App Health alert over (i.e. last_15m)
-  terraform.datadog.monitoring.generateSLOs:
-    type: boolean
-    default: true
-    description: Have stencil generate Datadog service level objectives based on HTTP/GRPC queries/monitors.
+  terraform.datadog.grpc.latency.thresholds.lowTraffic:
+    schema:
+      type: number
+    description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.grpc.qos.thresholds.lowTraffic:
+    schema:
+      type: number
+    description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.latency.thresholds.lowTraffic:
+    schema:
+      type: number
+    description: Overrides the low traffic threshold in the "http_latency_high" terraform module in monitoring/datadog.tf.
+  terraform.datadog.http.percentiles.lowTraffic:
+    schema:
+      type: number
+    description: Overrides the low traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
+  terraform.datadog.podRestart.thresholds.lowCount:
+    schema:
+      type: number
+    description: Overrides the pod restarts threshold in the "pod_restarts" terraform module in monitoring/datadog.tf.
   service:
     schema:
       type: boolean
@@ -135,88 +139,6 @@ arguments:
       items:
         type: string
     description: Dependencies your repository requires to run successfully no matter what.
-  terraform.datadog.grpc.tags:
-    schema:
-      type: array
-      items:
-        type: string
-    description: Filter metrics used to create monitors and alerts in Datadog for gRPC related events.
-  terraform.datadog.grpc.evaluationWindow:
-    schema:
-      type: string
-    description: The window of time to evaluate metrics related to gRPC events for each monitor and alert.
-  terraform.datadog.grpc.lowTrafficCountThreshold:
-    schema:
-      type: number
-    description: Overrides the low count threshold in the "grpc_latency_high" & "grpc_success_rate_low" terraform modules in monitoring/datadog.tf.
-  terraform.datadog.grpc.latency.percentiles.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic percentile in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.grpc.latency.percentiles.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic percentile in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.grpc.latency.thresholds.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.grpc.latency.thresholds.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.grpc.qos.thresholds.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.grpc.qos.thresholds.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic threshold in the "grpc_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.evaluationWindow:
-    schema:
-      type: string
-    description: The window of time to evaluate metrics related to HTTP events for each monitor and alert.
-  terraform.datadog.http.percentiles.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.percentiles.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic percentile in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.thresholds.lowCount:
-    schema:
-      type: number
-    description: Overrides the low count threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.thresholds.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.thresholds.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic threshold in the "http_success_rate_low" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.latency.count.highCount:
-    schema:
-      type: number
-    description: Overrides the high count threshold in the "http_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.latency.thresholds.lowTraffic:
-    schema:
-      type: number
-    description: Overrides the low traffic threshold in the "http_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.http.latency.thresholds.highTraffic:
-    schema:
-      type: number
-    description: Overrides the high traffic threshold in the "http_latency_high" terraform module in monitoring/datadog.tf.
-  terraform.datadog.podRestart.thresholds.lowCount:
-    schema:
-      type: number
-    description: Overrides the pod restarts threshold in the "pod_restarts" terraform module in monitoring/datadog.tf.
-  terraform.datadog.podRestart.thresholds.highCount:
-    schema:
-      type: number
-    description: Overrides the high pod restarts threshold in the "pod_restarts_high" terraform module in monitoring/datadog.tf.
   deployment.serviceDomains:
     description: The service domains that the service is deployed to.
     schema:
@@ -268,11 +190,6 @@ arguments:
       type:
         - string
         - number
-  versions.terraform:
-    schema:
-      type: string
-    default: "1.4.4"
-    description: The version of terraform that is used.
   disableGrpcGeneration:
     description: Disable gRPC generation
     schema:
