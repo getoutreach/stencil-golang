@@ -9,6 +9,7 @@ updates:
     # stencil-golang managed dependencies
     ignore:
       - dependency-name: github.com/getoutreach/gobox
+      - dependency-name: github.com/getoutreach/stencil-golang/pkg
       - dependency-name: google.golang.org/grpc
       - dependency-name: github.com/getoutreach/orgservice
       - dependency-name: github.com/getoutreach/services
