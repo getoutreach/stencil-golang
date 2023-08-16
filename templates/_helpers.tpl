@@ -16,8 +16,6 @@
 # Not used for gRPC clients
 - name: nodejs
   version: {{ stencil.Arg "versions.nodejs" }}
-- name: terraform
-  version: {{ stencil.Arg "versions.terraform" }}
 # Used in CI
 - name: protoc
   version: 21.5
@@ -101,7 +99,11 @@
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.71.0
+  version: v1.73.2
+- name: github.com/getoutreach/stencil-golang/pkg
+  # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
+  # in a go.mod and run `go mod tidy`.
+  version: v0.0.0-20230811193316-312178c3fbc3
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: google.golang.org/grpc

@@ -10,7 +10,9 @@ local dev_objects = {
   pkgcache: ok.PersistentVolumeClaim('devspace-cache', app.namespace) {
     storage: '10Gi',
   },
-  asdfcache: ok.PersistentVolumeClaim('devspace-asdfcache', app.namespace) {
+  // This volume contains an asdf installation, although only the `install` and
+  // `shims` directories.
+  asdfinstall: ok.PersistentVolumeClaim('devspace-asdfinstall', app.namespace) {
     storage: '10Gi',
   },
   appcache: ok.PersistentVolumeClaim('devspace-appcache', app.namespace) {

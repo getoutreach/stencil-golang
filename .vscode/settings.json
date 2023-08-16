@@ -2,7 +2,7 @@
   // Please consider contributing back all added
   // settings to stencil!
   // <<Stencil::Block(settings)>>
-
+  "githubPullRequests.ignoredPullRequestBranches": ["main"],
   // <</Stencil::Block>>
   "go.lintTool": "golangci-lint",
   "go.lintFlags": [],
@@ -14,6 +14,7 @@
   },
   "go.buildTags": "or_dev",
   "go.testTags": "or_test,or_int,or_e2e",
+  "files.trimTrailingWhitespace": true,
   // This prevents 99% of issues with linters :)
   "editor.formatOnSave": true,
   "shellcheck.customArgs": ["-P", "SCRIPTDIR", "-x"],
