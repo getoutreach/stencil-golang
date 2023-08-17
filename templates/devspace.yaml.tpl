@@ -57,7 +57,7 @@ vars:
   E2E:
     source: env
     default: "false"
-  
+
 
   # devenv passes in paths to binaries it uses (ensuring the supported versions are used)
   # devenv bin that triggered devspace
@@ -94,6 +94,13 @@ vars:
 deployments:
   app:
     namespace: ${DEVENV_DEPLOY_NAMESPACE}
+    resources:
+      requests:
+        cpu: 1
+        memory: 1Gi
+      limits:
+        cpu: 5
+        memory: 10Gi
     # This deployment uses `kubectl` but you can also define `helm` deployments
     kubectl:
       manifests:
@@ -102,7 +109,7 @@ deployments:
 # `dev` only applies when you run `devspace dev`
 dev:
   app:
-    labelSelector: 
+    labelSelector:
       app: ${DEVENV_DEPLOY_APPNAME}
     namespace: ${DEVENV_DEPLOY_NAMESPACE}
 
@@ -278,7 +285,7 @@ hooks:
   - name: auth-refresh
     command: "${DEVENV_BIN} --skip-update auth refresh"
     events: ["before:build"]
-  
+
 profiles:
   - name: devTerminal
     description: dev command opens a terminal into dev container. Automatically activated based on $DEVENV_DEV_TERMINAL == true var.
@@ -336,7 +343,7 @@ profiles:
             "${DEV_CONTAINER_WORKDIR}/scripts/shell-wrapper.sh" devspace_start.sh
           container:
             imageSelector: ${DEV_CONTAINER_IMAGE}
-            labelSelector: 
+            labelSelector:
               app: ${DEVENV_DEPLOY_APPNAME}
 
   - name: skipPortForwarding
@@ -347,7 +354,7 @@ profiles:
     patches:
       - op: replace
         path: dev.app.ports
-        value: 
+        value:
           - port: ${DLV_PORT}
 
   - name: e2eBase
@@ -449,7 +456,7 @@ profiles:
           events: ["devCommand:after:execute"]
           command: |-
             "${DEVENV_DEVSPACE_BIN}" reset pods -s
-    merge: 
+    merge:
       dev:
         app:
           # https://www.devspace.sh/docs/configuration/dev/#dev-terminal
@@ -459,7 +466,7 @@ profiles:
             workDir: ${DEV_CONTAINER_WORKDIR}
             command: |-
               entrypoint
-          
+
           # enable kubectl inside of dev pod (some e2e tests need it)
           proxyCommands:
             - command: kubectl
