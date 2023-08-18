@@ -51,6 +51,9 @@ vars:
   DEVENV_DEV_SKIP_PORTFORWARDING:
     source: env
     default: "false"
+  DEVENV_DEV_ONLY_FORWARD_DELVE:
+    source: env
+    default: "false"
   DEVENV_DEV_DEPLOYMENT_PROFILE:
     source: env
     default: deployment__{{ .Config.Name }}
@@ -345,6 +348,17 @@ profiles:
             imageSelector: ${DEV_CONTAINER_IMAGE}
             labelSelector:
               app: ${DEVENV_DEPLOY_APPNAME}
+
+  - name: onlyForwardDlv
+    description: Skip port-forwarding for all but the Delve port. This is the default behavior.
+    activation:
+      - vars:
+          DEVENV_DEV_ONLY_FORWARD_DELVE: "true"
+    patches:
+      - op: replace
+        path: dev.app.ports
+        value:
+          - port: ${DLV_PORT}
 
   - name: skipPortForwarding
     description: Skip port-forwarding for all but the DLV port.
