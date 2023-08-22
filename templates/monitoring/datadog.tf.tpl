@@ -41,7 +41,7 @@ variable "alert_on_panics" {
 }
 
 locals {
-  ddTags = concat(["{{ .Config.Name }}", "team:{{  stencil.Arg "reportingTeam" }}"], var.additional_dd_tags)
+  ddTags = concat(["{{ .Config.Name }}", "team:{{  stencil.Arg "reportingTeam" }}", "service:"{{ .Config.Name }}"], var.additional_dd_tags)
 }
 
 resource "datadog_monitor" "argocd_application_health_status" {
