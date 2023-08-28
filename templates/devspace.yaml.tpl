@@ -152,7 +152,7 @@ dev:
       # path is <localSubPath>:<containerPath>
       - path: {{ print .localSubPath ":" .containerPath }}
         {{- if .waitInitialSync }}
-        {{ toYaml .waitInitialSync | indent 8}}
+        waitInitialSync: {{ toYaml .waitInitialSync }}
         {{- end }}
         {{- if .excludePaths }}
         excludePaths:
@@ -457,7 +457,7 @@ profiles:
         path: vars.DEV_CONTAINER_IMAGE
         value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
       - op: replace
-        path: dev.app.sync
+        path: dev.app.sync[0]
         value:
           - path: ./bin:${DEV_CONTAINER_WORKDIR}
             printLogs: true
