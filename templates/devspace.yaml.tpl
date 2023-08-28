@@ -457,7 +457,7 @@ profiles:
         path: vars.DEV_CONTAINER_IMAGE
         value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
       - op: replace
-        path: dev.app.sync[0]
+        path: dev.app.sync
         value:
           - path: ./bin:${DEV_CONTAINER_WORKDIR}
             printLogs: true
