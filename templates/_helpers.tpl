@@ -19,6 +19,10 @@
 # Used in CI
 - name: protoc
   version: 21.5
+{{- if has "ruby" (stencil.Arg "grpcClients") }}
+- name: ruby
+  version: {{ stencil.Arg "versions.grpcClients.ruby" }}
+{{- end }}
 {{- end }}
 
 # Registers our versions w/ stencil-base
