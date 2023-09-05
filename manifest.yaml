@@ -165,7 +165,7 @@ arguments:
         - number
   versions.nodejs:
     description: Nodejs version to use for build tooling (e.g., semantic-release)
-    default: "18.14.1"
+    default: "18.17.1"
     schema:
       type:
         - string
