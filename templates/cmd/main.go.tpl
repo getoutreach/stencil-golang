@@ -73,7 +73,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
   exitCode := 1
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Fprintf(os.Stderr, "Recovered from panic: %+v\n%s\n", r, string(debug.Stack()))
+			panic(r)
 		}
 		os.Exit(exitCode)
 	}()
