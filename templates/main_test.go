@@ -210,3 +210,17 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	})
 	st.Run(true)
 }
+
+func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
+	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{
+		"grpcClients": []interface{}{"ruby"},
+	})
+	st.Run(true)
+}
+
+func TestDontIncludeRubyToolVersionsIfNotRubyGRPCCLient(t *testing.T) {
+	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libaryTmpls...)
+	st.Args(map[string]interface{}{})
+	st.Run(true)
+}
