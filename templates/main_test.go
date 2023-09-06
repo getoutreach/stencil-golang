@@ -11,7 +11,7 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-var libaryTmpls = []string{
+var libraryTmpls = []string{
 	"_helpers.tpl",
 }
 
@@ -19,17 +19,17 @@ func TestRenderAPIGoSuccess(t *testing.T) {
 	// NOTE: 2022-07-06 For the moment, we cannot change the `Name` field of
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
 	// why this test does not verify correct handling of odd service names.
-	st := stenciltest.New(t, "api/api.go.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "api/api.go.tpl", libraryTmpls...)
 	st.Run(true)
 }
 
 func TestRenderDeploymentConfig(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/app.config.jsonnet.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/app.config.jsonnet.tpl", libraryTmpls...)
 	st.Run(true)
 }
 
 func TestRenderDeploymentJsonnet(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"mixins": []interface{}{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
 	})
@@ -37,7 +37,7 @@ func TestRenderDeploymentJsonnet(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
@@ -54,7 +54,7 @@ func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
@@ -68,7 +68,7 @@ func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"hpa": map[string]interface{}{
 			"enabled":        true,
@@ -100,12 +100,12 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 }
 
 func TestRenderDeploymentOverride(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libraryTmpls...)
 	st.Run(true)
 }
 
 func TestRenderDeploymentDockerfile(t *testing.T) {
-	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"reportingTeam": "fnd-seal",
 		"versions": map[string]interface{}{
@@ -117,7 +117,7 @@ func TestRenderDeploymentDockerfile(t *testing.T) {
 }
 
 func TestRenderDependabot(t *testing.T) {
-	st := stenciltest.New(t, ".github/dependabot.yml.tpl", libaryTmpls...)
+	st := stenciltest.New(t, ".github/dependabot.yml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"service":           true,
 		"serviceActivities": []interface{}{"grpc"},
@@ -127,7 +127,7 @@ func TestRenderDependabot(t *testing.T) {
 }
 
 func TestBasicGoMod(t *testing.T) {
-	st := stenciltest.New(t, "go.mod.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "go.mod.tpl", libraryTmpls...)
 
 	p, err := plugin.NewStencilGolangPlugin(context.Background())
 	if err != nil {
@@ -139,7 +139,7 @@ func TestBasicGoMod(t *testing.T) {
 }
 
 func TestMergeGoMod(t *testing.T) {
-	st := stenciltest.New(t, "go.mod.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "go.mod.tpl", libraryTmpls...)
 
 	p, err := plugin.NewStencilGolangPlugin(context.Background())
 	if err != nil {
@@ -158,7 +158,7 @@ func TestMergeGoMod(t *testing.T) {
 }
 
 func TestGoModStanzaVersion(t *testing.T) {
-	st := stenciltest.New(t, "go.mod.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "go.mod.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"go": map[string]interface{}{
 			"stanza": "1.19",
@@ -175,7 +175,7 @@ func TestGoModStanzaVersion(t *testing.T) {
 }
 
 func TestDevenvYaml(t *testing.T) {
-	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"dependencies": map[string]interface{}{
 			"required": []interface{}{
@@ -191,12 +191,12 @@ func TestDevenvYaml(t *testing.T) {
 }
 
 func TestEmptyDevenvYaml(t *testing.T) {
-	st := stenciltest.New(t, "devenv.yaml.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
 	st.Run(true)
 }
 
 func TestDevspaceYaml(t *testing.T) {
-	st := stenciltest.New(t, "devspace.yaml.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "devspace.yaml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"service": true,
 	})
@@ -204,7 +204,7 @@ func TestDevspaceYaml(t *testing.T) {
 }
 
 func TestVSCodeLaunchConfig(t *testing.T) {
-	st := stenciltest.New(t, ".vscode/launch.json.tpl", libaryTmpls...)
+	st := stenciltest.New(t, ".vscode/launch.json.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"service": true,
 	})
@@ -212,7 +212,7 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 }
 
 func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
-	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"grpcClients": []interface{}{"ruby"},
 	})
@@ -220,7 +220,7 @@ func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
 }
 
 func TestDontIncludeRubyToolVersionsIfNotRubyGRPCCLient(t *testing.T) {
-	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libaryTmpls...)
+	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{})
 	st.Run(true)
 }
