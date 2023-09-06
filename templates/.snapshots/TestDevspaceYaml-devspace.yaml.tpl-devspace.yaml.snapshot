@@ -96,13 +96,6 @@ vars:
 deployments:
   app:
     namespace: ${DEVENV_DEPLOY_NAMESPACE}
-    resources:
-      requests:
-        cpu: 1
-        memory: 1Gi
-      limits:
-        cpu: 5
-        memory: 10Gi
     # This deployment uses `kubectl` but you can also define `helm` deployments
     kubectl:
       manifests:
@@ -114,6 +107,13 @@ dev:
     labelSelector:
       app: ${DEVENV_DEPLOY_APPNAME}
     namespace: ${DEVENV_DEPLOY_NAMESPACE}
+    resources:
+      requests:
+        cpu: 1
+        memory: 1Gi
+      limits:
+        cpu: 5
+        memory: 10Gi
 
     # Specifies the dev container to use. In this case gcr.io/outreach-docker/bootstrap/dev:stable
     devImage: ${DEV_CONTAINER_IMAGE}
