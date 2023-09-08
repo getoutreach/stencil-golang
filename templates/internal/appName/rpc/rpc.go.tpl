@@ -158,18 +158,18 @@ func (gs *GRPCService) StartServers(ctx context.Context, servers *Servers, opts.
 
 		{{- end }}
 	// end gRPC server option initialization injected by modules
-	{{- end }}
 
+	{{- end }}
+  {{- $grpcServerOptions := stencil.GetModuleHook "internal/rpc/grpcServerOptions" }}
+  {{- if $grpcServerOptions }}
 	opts = append([]grpcx.ServerOption{
-		{{- $grpcServerOptions := stencil.GetModuleHook "internal/rpc/grpcServerOptions" }}
-		{{- if $grpcServerOptions }}
 		// gRPC server options injected by modules
 			{{- range $grpcServerOptions }}
 		{{ . }},
 			{{- end }}
 		// end gRPC server options injected by modules
-		{{- end }}
 	}, opts...)
+  {{- end }}
 
 	// <<Stencil::Block(grpcServerOptions)>>
 {{ file.Block "grpcServerOptions" }}
