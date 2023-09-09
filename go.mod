@@ -7,7 +7,7 @@ go 1.19
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.73.2
-	github.com/getoutreach/stencil v1.36.0
+	github.com/getoutreach/stencil v1.36.1
 	github.com/google/go-cmp v0.5.9
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
@@ -61,7 +61,7 @@ require (
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/santhosh-tekuri/jsonschema/v5 v5.2.0 // indirect
+	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/skeema/knownhosts v1.2.0 // indirect
