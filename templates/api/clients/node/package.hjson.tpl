@@ -3,8 +3,8 @@
   // This file is not automatically turned into package.json
   // In order to do so, run: `make gogenerate` in the root
   // of this repository.
-
   "name": "@getoutreach/{{ .Config.Name }}-client",
+  "packageManager": "yarn@4.0.1",
   "version": "0.0.1",
   "description": "{{ .Config.Name }} client implementation",
   "main": "dist/index.js",
