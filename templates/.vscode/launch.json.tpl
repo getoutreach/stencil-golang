@@ -41,10 +41,10 @@
           "to": "/home/dev/app"
         },
         // Maps the go module cache on the host to the persistent volume used by devspaces.
-        // See the value of `go env GOMODCACHE` on the host and devspace.
+        // These should be the respective values of `go env GOMODCACHE`.
         {
           "from": "${env:HOME}/.asdf/installs/golang/{{ $goVersion }}/packages/pkg/mod",
-          "to": "/tmp/cache/go/mod/"
+          "to": "/home/dev/.asdf/installs/golang/{{ $goVersion }}/packages/pkg/mod"
         },
         {
           // Maps the standard library location on the host to the location in the devspace.
