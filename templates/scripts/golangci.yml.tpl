@@ -124,6 +124,12 @@ issues:
     - linters:
         - lll
       source: "^//go:generate "
+    # gqlgen-generated function header
+    - path: \.resolvers\.go
+      source: "^func \\(r \\*[a-zA-Z]+Resolvers\\) "
+      linters:
+        - lll
+        - gocritic
 
 output:
   format: colored-line-number
