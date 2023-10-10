@@ -124,12 +124,10 @@ issues:
     - linters:
         - lll
       source: "^//go:generate "
-    # gqlgen-generated function header
-    - path: \.resolvers\.go
-      source: "^func \\(r \\*[a-zA-Z]+Resolvers\\) "
-      linters:
-        - lll
-        - gocritic
+{{- $hook := (stencil.GetModuleHook "golangci-lint/exclude-rules") }}
+{{- if $hook }}
+{{ toYaml $hook | indent 4 }}
+{{- end }}
 
 output:
   format: colored-line-number
