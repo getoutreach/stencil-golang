@@ -124,6 +124,10 @@ issues:
     - linters:
         - lll
       source: "^//go:generate "
+{{- $hook := (stencil.GetModuleHook "golangci-lint/exclude-rules") }}
+{{- if $hook }}
+{{ toYaml $hook | indent 4 }}
+{{- end }}
 
 output:
   format: colored-line-number
