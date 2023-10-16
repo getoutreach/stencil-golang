@@ -152,7 +152,7 @@ dev:
       # path is <localSubPath>:<containerPath>
       - path: {{ print .localSubPath ":" .containerPath }}
         {{- if .waitInitialSync }}
-        {{ toYaml .waitInitialSync | indent 8}}
+        waitInitialSync: {{ toYaml .waitInitialSync }}
         {{- end }}
         {{- if .excludePaths }}
         excludePaths:
