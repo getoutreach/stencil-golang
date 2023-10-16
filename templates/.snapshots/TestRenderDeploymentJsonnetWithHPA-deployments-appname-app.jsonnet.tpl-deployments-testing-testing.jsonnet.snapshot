@@ -218,14 +218,14 @@ local nonDevelopmentObjects = {
       minReplicas: 1,
       maxReplicas: 32,
     },
-  };
+  },
 
   hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
       apiVersion: 'autoscaling/v2',
       target:: $.deployment,
       spec+: {
-        minReplicas: hpaReplicasConfig[environment].minReplicas,
-        maxReplicas: hpaReplicasConfig[environment].maxReplicas,
+        minReplicas: hpaReplicasConfig[app.environment].minReplicas,
+        maxReplicas: hpaReplicasConfig[app.environment].maxReplicas,
         behavior: {
           scaleDown: {
             stabilizationWindowSeconds: 1200,
