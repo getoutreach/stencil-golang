@@ -399,14 +399,14 @@ local nonDevelopmentObjects = {
       minReplicas: {{ (stencil.Arg "hpa.env.production.minReplicas") }},
       maxReplicas: {{ (stencil.Arg "hpa.env.production.maxReplicas") }},
     },
-  };
+  },
 
   hpa: ok.HorizontalPodAutoscaler(app.name, app.namespace) {
       apiVersion: 'autoscaling/v2',
       target:: $.deployment,
       spec+: {
-        minReplicas: hpaReplicasConfig[environment].minReplicas,
-        maxReplicas: hpaReplicasConfig[environment].maxReplicas,
+        minReplicas: hpaReplicasConfig[app.environment].minReplicas,
+        maxReplicas: hpaReplicasConfig[app.environment].maxReplicas,
         behavior: {
           {{- if (stencil.Arg "hpa.scaleDown.stabilizationWindowSeconds") }}
           scaleDown: {
