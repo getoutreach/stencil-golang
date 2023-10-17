@@ -148,10 +148,10 @@ nodejs:
     version: ^1.3.5
   - name: "@grpc/proto-loader"
     version: ^0.5.5
-  - name: "@outreach/grpc-client"
+  - name: "@getoutreach/grpc-client"
     version: ^2.1.0
-  - name: "@outreach/find"
-    version: ^1.0.1
+  - name: "@getoutreach/find"
+    version: ^1.1.0
   - name: "@types/google-protobuf"
     version: ^3.15.0
   - name: google-protobuf
@@ -165,7 +165,7 @@ nodejs:
     version: {{ .version }}
 {{- end }}
   devDependencies:
-  - name: "@outreach/eslint-config"
+  - name: "@getoutreach/eslint-config"
     version: ^1.0.4
   - name: "@types/jest"
     version: ^26.0.15
