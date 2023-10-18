@@ -4,7 +4,7 @@
   // In order to do so, run: `make gogenerate` in the root
   // of this repository.
 
-  "name": "@outreach/{{ .Config.Name }}-client",
+  "name": "@getoutreach/{{ .Config.Name }}-client",
   "version": "0.0.1",
   "description": "{{ .Config.Name }} client implementation",
   "main": "dist/index.js",
