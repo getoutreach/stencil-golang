@@ -28,7 +28,7 @@ builds:
    - '-X "main.TeleforkAPIKey={{ "{{" }} .Env.TELEFORK_APIKEY {{ "}}" }}"'
    {{- end }}
   env:
-  - CGO_ENABLED=0
+  - CGO_ENABLED={{ stencil.ApplyTemplate "cgoEnabled" | trim }}
 {{- end }}
 
 archives: []
