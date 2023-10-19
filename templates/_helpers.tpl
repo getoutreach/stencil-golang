@@ -25,6 +25,15 @@
 {{- end }}
 {{- end }}
 
+# Determines the CGO_ENABLED value
+{{- define "cgoEnabled" -}}
+{{- if stencil.Arg "enableCgo" -}}
+1
+{{- else -}}
+0
+{{- end -}}
+{{- end }}
+
 # Registers our versions w/ stencil-base
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "toolVersions" (stencil.ApplyTemplate "toolVersions" | fromYaml) }}
 

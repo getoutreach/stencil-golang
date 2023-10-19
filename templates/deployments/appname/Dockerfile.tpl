@@ -6,7 +6,7 @@ FROM gcr.io/outreach-docker/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}
 ARG VERSION
 ENV GOCACHE "/go-build-cache"
 ENV GOPRIVATE github.com/{{ .Runtime.Box.Org }}/*
-ENV CGO_ENABLED 0
+ENV CGO_ENABLED {{ stencil.ApplyTemplate "cgoEnabled" | trim }}
 WORKDIR /src
 
 # Copy our source code into the container for building

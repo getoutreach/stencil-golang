@@ -1,5 +1,8 @@
 name: github.com/getoutreach/stencil-golang
 ## <<Stencil::Block(keys)>>
+modules:
+  - name: github.com/getoutreach/devbase
+    version: ">=2.21.0-rc.1"
 type: templates,extension
 arguments:
   # The following terraform.datadog fields are used for Canary deployments in app.jsonnet.tpl
@@ -191,6 +194,8 @@ arguments:
       type:
         - string
         - number
+  enableCgo:
+    from: github.com/getoutreach/devbase
   disableGrpcGeneration:
     description: Disable gRPC generation
     schema:
