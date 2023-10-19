@@ -373,6 +373,7 @@ module "temporaldashboard_otel" {
   source      = "git@github.com:getoutreach/monitoring-terraform.git//modules/dd-dashboards"
   name        = "Terraform: {{ .Config.Name | title }} Temporal OTEL"
   description = "Managed by terraform in github.com/getoutreach/{{ .Config.Name }}"
+  tags        = ["team:{{ stencil.Arg "reportingTeam" }}"]
 
   parameters = local.dashboard_parameters
   sections = [
