@@ -125,11 +125,11 @@ go:
   version: v1.63.0
   # Used for grpcx
 - name: github.com/getoutreach/services
-  version: v1.152.1
+  version: v1.175.1
 {{- end }}
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 - name: github.com/getoutreach/httpx
-  version: v1.17.3
+  version: v1.17.7
 {{- end }}
 
 {{- if stencil.Arg "commands" }}
