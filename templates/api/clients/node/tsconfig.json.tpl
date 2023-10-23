@@ -16,7 +16,7 @@
     "emitDecoratorMetadata": true,
     "allowJs": true,
     "paths": {
-      "@outreach/{{ .Config.Name }}-client": ["src"]
+      "@getoutreach/{{ .Config.Name }}-client": ["src"]
     },
     "lib": ["es2018", "es2018.promise", "esnext.asynciterable", "dom"]
   },

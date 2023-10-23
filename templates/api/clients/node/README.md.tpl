@@ -1,5 +1,5 @@
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
-# `@outreach/{{ .Config.Name }}-client`
+# `@getoutreach/{{ .Config.Name }}-client`
 
 This is a Node.js gRPC client for the `{{ .Config.Name }}` service.
 

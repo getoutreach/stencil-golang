@@ -1,9 +1,9 @@
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 import * as grpc from '@grpc/grpc-js';
 import { {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
-import { createErrorLoggerInterceptor } from '@outreach/grpc-client';
+import { createErrorLoggerInterceptor } from '@getoutreach/grpc-client';
 import winston from 'winston';
-import * as find from '@outreach/find';
+import * as find from '@getoutreach/find';
 
 const level = 'error';
 const ConsoleTransport = () => {
