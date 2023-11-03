@@ -168,14 +168,14 @@ arguments:
         - number
   versions.nodejs:
     description: Nodejs version to use for build tooling (e.g., semantic-release)
-    default: "18.17.1"
+    default: "20.9.0"
     schema:
       type:
         - string
         - number
   versions.grpcClients.nodejs:
     description: Nodejs version to use for gRPC clients
-    default: "20.8.0"
+    default: "20.9.0"
     schema:
       type:
         - string
