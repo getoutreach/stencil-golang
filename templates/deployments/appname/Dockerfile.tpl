@@ -9,15 +9,18 @@ ENV GOPRIVATE github.com/{{ .Runtime.Box.Org }}/*
 ENV CGO_ENABLED {{ stencil.ApplyTemplate "cgoEnabled" | trim }}
 WORKDIR /src
 
-# Copy our source code into the container for building
-COPY . .
-
 ## <<Stencil::Block(beforeBuild)>>
 {{ file.Block "beforeBuild" }}
 ## <</Stencil::Block>>
 
 # Cache dependencies across builds
-RUN --mount=type=ssh --mount=type=cache,target=/go/pkg go mod download
+RUN --mount=type=ssh --mount=type=cache,target=/go/pkg \
+    --mount=type=bind,source=go.sum,target=go.sum \
+    --mount=type=bind,source=go.mod,target=go.mod \
+    go mod download
+
+# Copy our source code into the container for building
+COPY . .
 
 # Build our application, caching the go build cache, but also using
 # the dependency cache from earlier.
