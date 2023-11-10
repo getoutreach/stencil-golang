@@ -203,7 +203,7 @@ nodejs:
   - name: npm-run-all
     version: ^4.1.5
   - name: prettier
-    version: ^2.1.2
+    version: ^3.0.0
   - name: rimraf
     version: ^3.0.2
   - name: ts-jest
