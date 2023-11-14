@@ -195,7 +195,7 @@ nodejs:
   - name: eslint-plugin-node
     version: ^11.1.0
   - name: grpc-tools
-    version: ^1.9.1
+    version: ^1.12.4
   - name: grpc_tools_node_protoc_ts
     version: ^5.0.1
   - name: jest
