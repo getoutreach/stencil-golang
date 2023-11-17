@@ -2,7 +2,7 @@ name: github.com/getoutreach/stencil-golang
 ## <<Stencil::Block(keys)>>
 modules:
   - name: github.com/getoutreach/devbase
-    version: ">=2.21.0-rc.1"
+    version: ">=2.21.0"
 type: templates,extension
 arguments:
   # The following terraform.datadog fields are used for Canary deployments in app.jsonnet.tpl
