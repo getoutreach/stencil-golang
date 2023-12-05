@@ -433,12 +433,12 @@ profiles:
         path: vars.DEV_CONTAINER_IMAGE
         value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
       - op: replace
-        path: dev.app.sync
+        path: dev.app.sync[0]
         value:
-          - path: ./bin:${DEV_CONTAINER_WORKDIR}
-            printLogs: true
-            disableDownload: true
-            waitInitialSync: true
+          path: ./bin:${DEV_CONTAINER_WORKDIR}
+          printLogs: true
+          disableDownload: true
+          waitInitialSync: true
       - op: add
         path: hooks
         value:
