@@ -481,10 +481,6 @@ profiles:
             command: |-
               entrypoint
 
-          # enable kubectl inside of dev pod (some e2e tests need it)
-          proxyCommands:
-            - command: kubectl
-
   - name: Loft
     description: >
       Enables deploying to Loft.
