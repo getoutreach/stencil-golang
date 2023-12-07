@@ -36,7 +36,7 @@
     // <<Stencil::Block(nodeScripts)>>
 {{ file.Block "nodeScripts" }}
     // <</Stencil::Block>>
-    "build": "npm-run-all clean pretty lint tsc",
+    "build": "npm-run-all clean tsc",
     "ci": "npm-run-all pretty lint test-ci",
     "clean": "rimraf dist",
     "lint": "eslint src --ext .ts",
