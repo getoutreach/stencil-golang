@@ -161,7 +161,7 @@ arguments:
     default: ""
   versions.go:
     description: Go version to use
-    default: "1.21.3"
+    default: "1.21.5"
     schema:
       type:
         - string
