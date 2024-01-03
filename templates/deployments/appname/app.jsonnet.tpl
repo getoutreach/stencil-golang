@@ -71,6 +71,11 @@ local all = {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
 			labels+: sharedLabels,
+      {{- if (stencil.Arg "kubernetes.useTopologyAwareRouting") }}
+      annotations+: {
+        'service.kubernetes.io/topology-aware-hints': 'Auto',
+      }
+      {{- end }}
 		},
 		spec+: {
 			local this = self,
@@ -293,6 +298,30 @@ local all = {
 							resources: resources,
 						},
 					},
+          {{- if (stencil.Arg "kubernetes.useTopologyAwareRouting") }}
+          topologySpreadConstraints: [
+            {
+              maxSkew: 2,
+              topologyKey: 'topology.kubernetes.io/zone',
+              whenUnsatisfiable: 'ScheduleAnyway',
+              labelSelector: {
+                matchLabels: {
+                  app: app.name,
+                },
+              },
+            },
+            {
+              maxSkew: 1,
+              topologyKey: 'kubernetes.io/hostname',
+              whenUnsatisfiable: 'ScheduleAnyway',
+              labelSelector: {
+                matchLabels: {
+                  app: app.name,
+                },
+              },
+            },
+          ],
+          {{- end }}
 					volumes_+:: {
 						// default configs
 						['config-%s' % app.name]: ok.ConfigMapVolume(ok.ConfigMap('config', app.namespace)),
