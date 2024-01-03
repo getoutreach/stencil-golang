@@ -88,6 +88,10 @@ arguments:
       type: boolean
     default: true
     description: Have stencil render code related to leader election for kubernetes operators/webhooks/controllers
+  kubernetes.useTopologyAwareRouting:
+    schema:
+      type: boolean
+    description: "Only applicable when `service` is true. This is a flag to enable topology aware routing in K8s for your service."
   lintroller:
     schema:
       type: string
