@@ -310,16 +310,6 @@ local all = {
                 },
               },
             },
-            {
-              maxSkew: 1,
-              topologyKey: 'kubernetes.io/hostname',
-              whenUnsatisfiable: 'ScheduleAnyway',
-              labelSelector: {
-                matchLabels: {
-                  app: app.name,
-                },
-              },
-            },
           ],
           {{- end }}
 					volumes_+:: {
