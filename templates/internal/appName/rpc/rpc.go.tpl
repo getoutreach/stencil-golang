@@ -194,8 +194,8 @@ func (gs *GRPCService) StartServers(ctx context.Context, servers *Servers, opts.
 	// Register default server, title function won't work well when use underscore, so we make it dash first
 	api.Register{{ stencil.ApplyTemplate "goTitleCaseName" }}Server(s, rpcserver{servers.DefaultServer})
 
-  // Register your additional RPC servers here
- 	// <<Stencil::Block(registrations)>>
+	// Register your additional RPC servers here
+	// <<Stencil::Block(registrations)>>
 {{ file.Block "registrations" }}
 	// <</Stencil::Block>>
 
