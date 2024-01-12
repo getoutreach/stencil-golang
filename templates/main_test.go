@@ -211,6 +211,17 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	st.Run(true)
 }
 
+func TestGRPCServerRPC(t *testing.T) {
+	st := stenciltest.New(t, "internal/appName/rpc/rpc.go.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"service": true,
+		"serviceActivities": []interface{}{
+			"grpc",
+		},
+	})
+	st.Run(true)
+}
+
 func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
 	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
