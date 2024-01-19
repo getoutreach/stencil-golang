@@ -29,9 +29,10 @@ builds:
    {{- end }}
   env:
   - CGO_ENABLED={{ stencil.ApplyTemplate "cgoEnabled" | trim }}
-  {{- if stencil.Arg "envSnowflake" }}
-  - '-X "github.com/getoutreach/orc/cmd/orc/tunnel.SnowflakePassword={{ "{{" }} .Env.SNOWFLAKE_PASSWORD {{ "}}" }}"'
-  {{- end }}
+  {{- $blockName := (printf "%vAdditionalEnv" $cmdName) }}
+  ## <<Stencil::Block($blockName)>>
+{{ file.Block $blockName }}
+  ## <</Stencil::Block>>
 {{- end }}
 
 archives: []
