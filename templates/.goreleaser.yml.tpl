@@ -1,6 +1,6 @@
 {{- if not (stencil.Arg "commands") }}
 {{ file.Skip "No commands defined" }}
-{{- end }}
+{{- end -}}
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 before:
   hooks:
