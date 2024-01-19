@@ -235,3 +235,14 @@ func TestDontIncludeRubyToolVersionsIfNotRubyGRPCCLient(t *testing.T) {
 	st.Args(map[string]interface{}{})
 	st.Run(true)
 }
+
+func TestGoreleaserYml(t *testing.T) {
+	st := stenciltest.New(t, ".goreleaser.yml.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"commands": []interface{}{
+			"cmd1",
+			"cmd2",
+		},
+	})
+	st.Run(true)
+}
