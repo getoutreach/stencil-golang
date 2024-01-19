@@ -210,10 +210,6 @@ arguments:
     schema:
       type:
         - string
-  envSnowflake:
-    description: environment variables to pass in to goreleaser
-    schema:
-      type: boolean
   # HPA fields
   hpa.enabled:
     description: Enable HPA for the primary deployment
