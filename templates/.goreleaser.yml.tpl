@@ -31,8 +31,7 @@ builds:
   - CGO_ENABLED={{ stencil.ApplyTemplate "cgoEnabled" | trim }}
   {{- $blockName := (printf "%vAdditionalEnv" $cmdName) }}
   ## <<Stencil::Block({{ $blockName }})>>
-  {{- $env := (file.Block $blockName ) | trim }}
-{{ $env | indent 2}}
+{{ (file.Block $blockName) | trim | indent 2 }}
   ## <</Stencil::Block>>
   {{- end }}
 
