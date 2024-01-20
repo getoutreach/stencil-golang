@@ -1,6 +1,6 @@
 {{- if not (stencil.Arg "commands") }}
 {{ file.Skip "No commands defined" }}
-{{- end }}
+{{- end -}}
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 before:
   hooks:
@@ -29,7 +29,11 @@ builds:
    {{- end }}
   env:
   - CGO_ENABLED={{ stencil.ApplyTemplate "cgoEnabled" | trim }}
-{{- end }}
+  {{- $blockName := (printf "%vAdditionalEnv" $cmdName) }}
+  ## <<Stencil::Block({{ $blockName }})>>
+{{ (file.Block $blockName) | trim | indent 2 }}
+  ## <</Stencil::Block>>
+  {{- end }}
 
 archives: []
 checksum:
