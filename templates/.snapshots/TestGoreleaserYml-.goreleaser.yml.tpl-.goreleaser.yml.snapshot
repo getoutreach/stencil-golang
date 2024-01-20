@@ -19,7 +19,7 @@ builds:
   env:
   - CGO_ENABLED=0
   ## <<Stencil::Block(cmd1AdditionalEnv)>>
-
+  
   ## <</Stencil::Block>>
 - main: ./cmd/cmd2
   id: &name cmd2
@@ -37,7 +37,7 @@ builds:
   env:
   - CGO_ENABLED=0
   ## <<Stencil::Block(cmd2AdditionalEnv)>>
-
+  
   ## <</Stencil::Block>>
 
 archives: []
