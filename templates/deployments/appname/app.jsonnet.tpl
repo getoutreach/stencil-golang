@@ -62,7 +62,11 @@ local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
 			annotations+: {
-				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+        {{- if not (stencil.Arg "aws.useKIAM") }}
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::'+ {{ stencil.Arg "aws.account" }} + ':role/' + app.bento + '-' + app.name
+        {{- else }}
+        'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+        {{- end }}
 			},
 			labels+: sharedLabels,
 		},
@@ -219,9 +223,13 @@ local all = {
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
-						'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            {{- if not (stencil.Arg "aws.useKIAM") }}
+            'eks.amazonaws.com/role-arn': 'arn:aws:iam::'+ {{ stencil.Arg "aws.account" }} + ':role/' + app.bento + '-' + app.name
+            {{- else }}
+            'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            {{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-             datadog_prom_instances_:: [
+            datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
