@@ -102,7 +102,9 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 func TestUseKIAMFalse(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
-		"aws.useKIAM": false,
+		"aws": map[string]interface{}{
+				"useKIAM": false,
+		},
 	})
 	st.Run(true)
 }
