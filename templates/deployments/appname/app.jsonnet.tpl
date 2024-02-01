@@ -63,9 +63,9 @@ local all = {
 		metadata+: {
 			annotations+: {
         {{- if stencil.Arg "aws.useKIAM" }}
-          'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+        'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
         {{- else }}
-          'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
+        'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
         {{- end }}
 			},
 			labels+: sharedLabels,
