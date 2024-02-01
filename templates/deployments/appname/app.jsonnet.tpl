@@ -62,11 +62,11 @@ local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
 			annotations+: {
-        {{- if not (stencil.Arg "aws.useKIAM") }}
-				'eks.amazonaws.com/role-arn': 'arn:aws:iam::'+ {{ stencil.Arg "aws.account" }} + ':role/' + app.bento + '-' + app.name
-        {{- else }}
-        'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
-        {{- end }}
+        {{- if stencil.Arg "aws.useKIAM" }}
+            'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+            {{- else }}
+            'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [.Runtime.Box.AWS.DefaultAccountID, app.bento, app.name]
+            {{- end }}
 			},
 			labels+: sharedLabels,
 		},
@@ -223,10 +223,10 @@ local all = {
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
-            {{- if not (stencil.Arg "aws.useKIAM") }}
-            'eks.amazonaws.com/role-arn': 'arn:aws:iam::'+ {{ stencil.Arg "aws.account" }} + ':role/' + app.bento + '-' + app.name
+            {{- if stencil.Arg "aws.useKIAM" }}
+            'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
             {{- else }}
-            'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [.Runtime.Box.AWS.DefaultAccountID, app.bento, app.name]
             {{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
             datadog_prom_instances_:: [

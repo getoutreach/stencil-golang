@@ -42,10 +42,6 @@ arguments:
           - kafka
           - python
     description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, `python` and `kafka`.
-  aws.account:
-    schema:
-      type: string
-    description: AWS account ID to use for this repository
   aws.useKIAM:
     schema:
       type: boolean
