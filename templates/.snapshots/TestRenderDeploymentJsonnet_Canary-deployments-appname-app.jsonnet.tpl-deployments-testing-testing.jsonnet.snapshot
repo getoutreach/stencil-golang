@@ -49,7 +49,7 @@ local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
 			annotations+: {
-				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+            'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
 			},
 			labels+: sharedLabels,
 		},
@@ -175,8 +175,8 @@ local all = {
 						configmap_hash: $.configmap.md5,
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
-						'iam.amazonaws.com/role': '%s_service_role' % app.name,
-             datadog_prom_instances_:: [
+            'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+            datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
