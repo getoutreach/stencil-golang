@@ -103,7 +103,7 @@ func TestUseKIAMFalse(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"aws": map[string]interface{}{
-				"useKIAM": false,
+			"useKIAM": false,
 		},
 	})
 	st.Run(true)

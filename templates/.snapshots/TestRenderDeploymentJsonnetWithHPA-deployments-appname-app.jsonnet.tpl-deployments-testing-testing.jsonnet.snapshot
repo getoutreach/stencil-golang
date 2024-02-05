@@ -27,6 +27,14 @@ local all = {
 			labels+: sharedLabels,
 		},
 	},
+  svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
+    metadata+: {
+      labels+: sharedLabels,
+      annotations+: {
+        'eks.amazonaws.com/role-arn': 'arn:aws:iam::182192988802:role/%s-%s' % [app.bento, app.name]
+      },
+    },
+  },
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -136,7 +144,7 @@ local all = {
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
-            'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+            'iam.amazonaws.com/role': '%s_service_role' % app.name,
             datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
