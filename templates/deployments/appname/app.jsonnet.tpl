@@ -69,7 +69,7 @@ local all = {
 			labels+: sharedLabels,
 		},
 	},
-	{{- if eq false (stencil.Arg "aws.useKIAM") }}
+	{{- if !(stencil.Arg "aws.useKIAM") }}
 	svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
