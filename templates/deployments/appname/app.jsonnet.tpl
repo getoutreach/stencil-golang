@@ -69,7 +69,7 @@ local all = {
 			labels+: sharedLabels,
 		},
 	},
-	{{- if !(stencil.Arg "aws.useKIAM") }}
+	{{- if not (stencil.Arg "aws.useKIAM") }}
 	svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
@@ -78,7 +78,7 @@ local all = {
 			},
 		},
 	},
-  {{- end }}
+	{{- end }}
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
