@@ -62,22 +62,22 @@ local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
 			annotations+: {
-        {{- if stencil.Arg "aws.useKIAM" }}
-        'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
-        {{- end }}
+				{{- if stencil.Arg "aws.useKIAM" }}
+				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+				{{- end }}
 			},
 			labels+: sharedLabels,
 		},
 	},
-  {{- if eq false (stencil.Arg "aws.useKIAM") }}
-  svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
-    metadata+: {
-      labels+: sharedLabels,
-      annotations+: {
-        'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
-      },
-    },
-  },
+	{{- if eq false (stencil.Arg "aws.useKIAM") }}
+	svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
+		metadata+: {
+			labels+: sharedLabels,
+			annotations+: {
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
+			},
+		},
+	},
   {{- end }}
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,

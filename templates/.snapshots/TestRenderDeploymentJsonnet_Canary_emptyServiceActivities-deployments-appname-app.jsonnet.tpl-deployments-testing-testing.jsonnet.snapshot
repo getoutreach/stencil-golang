@@ -29,7 +29,7 @@ local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
 			annotations+: {
-        'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
 			},
 			labels+: sharedLabels,
 		},
