@@ -46,7 +46,7 @@ arguments:
     schema:
       type: boolean
     default: true
-    description: Whether or not this application uses KIAM for IAM roles or IRSA roles for service accounts.
+    description: Whether the application uses KIAM for IAM roles or IRSA roles for service accounts.
   oss:
     schema:
       type: boolean
