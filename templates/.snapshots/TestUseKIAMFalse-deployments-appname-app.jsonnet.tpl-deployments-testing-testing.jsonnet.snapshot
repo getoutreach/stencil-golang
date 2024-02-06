@@ -30,6 +30,7 @@ local all = {
     metadata+: {
       labels+: sharedLabels,
       annotations+: {
+        'eks.amazonaws.com/role-arn': 'arn:aws:iam::182192988802:role/%s-%s' % [app.bento, app.name]
       },
     },
   },
