@@ -62,11 +62,23 @@ local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
 			annotations+: {
+				{{- if stencil.Arg "aws.useKIAM" }}
 				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
+				{{- end }}
 			},
 			labels+: sharedLabels,
 		},
 	},
+	{{- if not (stencil.Arg "aws.useKIAM") }}
+	svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
+		metadata+: {
+			labels+: sharedLabels,
+			annotations+: {
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
+			},
+		},
+	},
+	{{- end }}
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -74,7 +86,7 @@ local all = {
       {{- if (stencil.Arg "kubernetes.useTopologyAwareRouting") }}
       annotations+: {
         'service.kubernetes.io/topology-aware-hints': 'Auto',
-      }
+      },
       {{- end }}
 		},
 		spec+: {
@@ -219,9 +231,11 @@ local all = {
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
-						'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            {{- if stencil.Arg "aws.useKIAM" }}
+            'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            {{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-             datadog_prom_instances_:: [
+            datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +

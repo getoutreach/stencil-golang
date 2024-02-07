@@ -42,6 +42,11 @@ arguments:
           - kafka
           - python
     description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, `python` and `kafka`.
+  aws.useKIAM:
+    schema:
+      type: boolean
+    default: true
+    description: Whether the application uses KIAM for IAM roles or IRSA roles for service accounts.
   oss:
     schema:
       type: boolean

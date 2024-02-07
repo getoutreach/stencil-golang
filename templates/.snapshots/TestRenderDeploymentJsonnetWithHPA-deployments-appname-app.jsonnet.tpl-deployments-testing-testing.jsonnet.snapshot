@@ -136,8 +136,8 @@ local all = {
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
-						'iam.amazonaws.com/role': '%s_service_role' % app.name,
-             datadog_prom_instances_:: [
+            'iam.amazonaws.com/role': '%s_service_role' % app.name,
+            datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
