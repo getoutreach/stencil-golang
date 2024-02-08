@@ -162,6 +162,7 @@ local all = {
 					},
 				},
 				spec+: {
+					serviceAccountName: $.svc_acct.metadata.name,
 					priorityClassName: 'high-priority',
 					containers_:: {
 						default: ok.Container(app.name) {
