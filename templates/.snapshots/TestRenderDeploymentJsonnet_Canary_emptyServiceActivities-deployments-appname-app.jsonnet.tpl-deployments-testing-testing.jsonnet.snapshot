@@ -34,6 +34,11 @@ local all = {
 			labels+: sharedLabels,
 		},
 	},
+	svc_acct+: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
+		metadata+: {
+			labels+: sharedLabels,
+		},
+	},
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
