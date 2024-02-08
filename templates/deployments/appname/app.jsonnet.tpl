@@ -70,7 +70,7 @@ local all = {
 		},
 	},
 	{{- if not (stencil.Arg "aws.useKIAM") }}
-	svc_acct: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
+	svc_acct+: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
 			annotations+: {
@@ -269,6 +269,7 @@ local all = {
 					},
 				},
 				spec+: {
+					serviceAccountName: $.svc_acct.metadata.name,
 					priorityClassName: 'high-priority',
 					containers_:: {
 						default: ok.Container(app.name) {
