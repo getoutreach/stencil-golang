@@ -69,16 +69,16 @@ local all = {
 			labels+: sharedLabels,
 		},
 	},
-	{{- if not (stencil.Arg "aws.useKIAM") }}
 	svc_acct+: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
+			{{- if not (stencil.Arg "aws.useKIAM") }}
 			annotations+: {
 				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
 			},
+			{{- end }}
 		},
 	},
-	{{- end }}
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
