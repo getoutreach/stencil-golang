@@ -9,8 +9,6 @@
 local ok = import 'kubernetes/outreach.libsonnet';
 local app = (import 'kubernetes/app.libsonnet').info('{{ .Config.Name }}');
 
-local accounts = import './mixins/accounts.env.jsonnet';
-
 // Resource override for various enviornments go here.
 //
 // If a deployment matches on more than one of the overrides then
