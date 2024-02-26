@@ -18,9 +18,9 @@ builds:
    - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
   env:
   - CGO_ENABLED=0
-  ## <<Stencil::Block(cmd1AdditionalEnv)>>
+  ### <<Stencil::Block(cmd1AdditionalEnv)>>
   
-  ## <</Stencil::Block>>
+  ### <</Stencil::Block>>
 - main: ./cmd/cmd2
   id: &name cmd2
   binary: *name
@@ -36,9 +36,9 @@ builds:
    - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
   env:
   - CGO_ENABLED=0
-  ## <<Stencil::Block(cmd2AdditionalEnv)>>
+  ### <<Stencil::Block(cmd2AdditionalEnv)>>
   
-  ## <</Stencil::Block>>
+  ### <</Stencil::Block>>
 
 archives: []
 checksum:
