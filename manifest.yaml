@@ -198,7 +198,7 @@ arguments:
         - number
   versions.alpine:
     description: Alpine version to use
-    default: "3.16"
+    default: "3.18"
     schema:
       type:
         - string
