@@ -37,9 +37,10 @@ ENV ZONEINFO=/zoneinfo.zip
 
 # Install certificates for RDS connectivity.
 RUN apk add --no-cache curl \
-    &&  curl "https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem" --output /usr/local/share/ca-certificates/rds-combined-ca-bundle.pem \
-    &&  update-ca-certificates \
-    &&  apk del --no-cache curl
+    && curl "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem" \
+      --output /usr/local/share/ca-certificates/global-bundle.pem \
+    && update-ca-certificates \
+    && apk del --no-cache curl
 
 ## <<Stencil::Block(afterBuild)>>
 {{ file.Block "afterBuild" }}
