@@ -3,6 +3,6 @@
 go 1.19
 
 require (
-	github.com/getoutreach/gobox v1.86.0
+	github.com/getoutreach/gobox v1.89.0
 	github.com/getoutreach/stencil-golang/pkg v0.0.0-20230811193316-312178c3fbc3
 ))

@@ -6,7 +6,7 @@ go 1.19
 
 require (
 	github.com/blang/semver/v4 v4.0.0
-	github.com/getoutreach/gobox v1.86.0
+	github.com/getoutreach/gobox v1.89.0
 	github.com/getoutreach/stencil v1.37.3
 	github.com/google/go-cmp v0.6.0
 	github.com/magefile/mage v1.15.0
@@ -38,7 +38,7 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/go-github/v57 v57.0.0 // indirect
+	github.com/google/go-github/v58 v58.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -71,16 +71,16 @@ require (
 	github.com/whilp/git-urls v1.0.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/zalando/go-keyring v0.2.3 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
-	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/oauth2 v0.16.0 // indirect
-	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/term v0.17.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/oauth2 v0.17.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
-	google.golang.org/grpc v1.59.0 // indirect
+	golang.org/x/tools v0.19.0 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240102182953-50ed04b92917 // indirect
+	google.golang.org/grpc v1.61.0 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
