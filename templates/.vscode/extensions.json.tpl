@@ -14,6 +14,11 @@
     "laktak.hjson",
     {{- end }}
 
+    {{- $hook := (stencil.GetModuleHook ".vscode/extensions") }}
+    {{- if $hook }}
+    {{ toYaml $hook | indent 4 }}
+    {{- end }}
+
     // Please consider contributing back all recommended
     // extensions to stencil!
     // <<Stencil::Block(extensions)>>
