@@ -24,7 +24,6 @@ import (
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/gomaxprocs"
 	"github.com/pkg/errors"
 
-	"{{ stencil.ApplyTemplate "appImportPath" }}/internal/{{ .Config.Name }}"
 
 	{{- $additionalImports := stencil.GetModuleHook "main/additionalImports" }}
 	{{- if $additionalImports }}
