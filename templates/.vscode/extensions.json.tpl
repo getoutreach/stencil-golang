@@ -14,9 +14,9 @@
     "laktak.hjson",
     {{- end }}
 
-    {{- $hook := (stencil.GetModuleHook ".vscode/extensions") }}
+    {{- $hook := (stencil.GetModuleHook "wizcli") }}
     {{- if $hook }}
-    {{ toYaml $hook | indent 4 }}
+    "WizCloud.wizcli-vscode"
     {{- end }}
 
     // Please consider contributing back all recommended
