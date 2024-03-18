@@ -14,9 +14,8 @@
     "laktak.hjson",
     {{- end }}
 
-    {{- $hook := (stencil.GetModuleHook "wizcli") }}
-    {{- if $hook }}
-    "WizCloud.wizcli-vscode"
+    {{- range (stencil.GetModuleHook "wizcli") }}
+    {{ . }}
     {{- end }}
 
     // Please consider contributing back all recommended
