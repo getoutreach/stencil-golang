@@ -15,19 +15,17 @@ var libraryTmpls = []string{
 	"_helpers.tpl",
 }
 
-const regenerateSnapshots = true
-
 func TestRenderAPIGoSuccess(t *testing.T) {
 	// NOTE: 2022-07-06 For the moment, we cannot change the `Name` field of
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
 	// why this test does not verify correct handling of odd service names.
 	st := stenciltest.New(t, "api/api.go.tpl", libraryTmpls...)
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDeploymentConfig(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.config.jsonnet.tpl", libraryTmpls...)
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDeploymentJsonnet(t *testing.T) {
@@ -35,7 +33,7 @@ func TestRenderDeploymentJsonnet(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"mixins": []interface{}{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
@@ -52,7 +50,7 @@ func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 		},
 		"slack": "hello",
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
@@ -66,7 +64,7 @@ func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
 		"serviceActivities": []interface{}{},
 		"slack":             "hello",
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
@@ -99,7 +97,7 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 		},
 		"enableReloader": true,
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestUseKIAMFalse(t *testing.T) {
@@ -114,7 +112,7 @@ func TestUseKIAMFalse(t *testing.T) {
 
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libraryTmpls...)
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDeploymentDockerfile(t *testing.T) {
@@ -126,7 +124,7 @@ func TestRenderDeploymentDockerfile(t *testing.T) {
 			"alpine": "3.1",
 		},
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderDependabot(t *testing.T) {
@@ -136,7 +134,7 @@ func TestRenderDependabot(t *testing.T) {
 		"serviceActivities": []interface{}{"grpc"},
 		"grpcClients":       []interface{}{"node"},
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestBasicGoMod(t *testing.T) {
@@ -148,7 +146,7 @@ func TestBasicGoMod(t *testing.T) {
 	}
 
 	st.Ext("github.com/getoutreach/stencil-golang", p)
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestMergeGoMod(t *testing.T) {
@@ -167,7 +165,7 @@ func TestMergeGoMod(t *testing.T) {
 	}
 	defer os.Remove("go.mod")
 
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestGoModStanzaVersion(t *testing.T) {
@@ -184,7 +182,7 @@ func TestGoModStanzaVersion(t *testing.T) {
 	}
 
 	st.Ext("github.com/getoutreach/stencil-golang", p)
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestDevenvYaml(t *testing.T) {
@@ -200,12 +198,12 @@ func TestDevenvYaml(t *testing.T) {
 			},
 		},
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestEmptyDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestDevspaceYaml(t *testing.T) {
@@ -213,7 +211,7 @@ func TestDevspaceYaml(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"service": true,
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestVSCodeLaunchConfig(t *testing.T) {
@@ -221,7 +219,7 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"service": true,
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestGRPCServerRPC(t *testing.T) {
@@ -240,13 +238,13 @@ func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"grpcClients": []interface{}{"ruby"},
 	})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestDontIncludeRubyToolVersionsIfNotRubyGRPCCLient(t *testing.T) {
 	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{})
-	st.Run(regenerateSnapshots)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestGoreleaserYml(t *testing.T) {
