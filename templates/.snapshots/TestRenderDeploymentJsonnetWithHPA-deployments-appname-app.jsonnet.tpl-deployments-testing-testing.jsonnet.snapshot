@@ -133,6 +133,9 @@ local all = {
 		},
 		metadata+: {
 			labels+: sharedLabels,
+			annotations+: {
+				'reloader.stakater.com/auto': 'true',
+			},
 		},
 		spec+: {
 			template+: {
