@@ -14,7 +14,7 @@
     "laktak.hjson",
     {{- end }}
 
-    {{- range (stencil.GetModuleHook "wizcli") }}
+    {{- range (stencil.GetModuleHook ".vscode/extensions") }}
     {{ . }}
     {{- end }}
 
