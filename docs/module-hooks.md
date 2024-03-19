@@ -337,3 +337,23 @@ resource "datadog_service_level_objective" "grpc_p99_latency" {
   (list (stencil.ApplyTemplate "grpc-slo"))
 }}
 ```
+
+### `.vscode/extensions`
+
+**Type**: `string`
+
+**File**: `.vscode/extensions.json`
+
+This hook allows you to add more recommended extensions for the workspace in VSCode. These extensions are suggested when a developer opens the workspace in VS Code.
+
+```tpl
+{{- define "extensions" -}}
+"WizCloud.wizcli-vscode"
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" ".vscode/extensions"
+  (list
+    (stencil.ApplyTemplate "extensions")
+  )
+}}
+```
