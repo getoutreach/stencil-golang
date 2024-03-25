@@ -204,6 +204,11 @@ local all = {
 		},
 		metadata+: {
 			labels+: sharedLabels,
+			{{- if (stencil.Arg "enableReloader") }}
+			annotations+: {
+				'reloader.stakater.com/auto': 'true',
+			},
+			{{- end }}
 		},
 		spec+: {
 		{{- if not (stencil.Arg "hpa.enabled") }}

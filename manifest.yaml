@@ -248,4 +248,8 @@ arguments:
     description: Min replicas for production envs
     schema:
       type: number
+  enableReloader:
+    description: Enable Reloader to cycle pods when secrets or configmaps are modified
+    schema:
+      type: boolean
 ## <</Stencil::Block>>
