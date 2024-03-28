@@ -169,7 +169,7 @@ local all = {
 				Path: '/run/secrets/outreach.io/launchdarkly/sdk-key',
 			},
 			flagsToAdd: {
-        appName: app.name,
+				appName: app.name,
 				bento: app.bento,
 				channel: if isDev then 'dev' else app.channel,
 			} + if isDev then {
