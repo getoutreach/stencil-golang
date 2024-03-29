@@ -2,7 +2,7 @@
 # syntax, such as anchors, will be fixed automatically.
 version: 2.1
 orbs:
-  shared: getoutreach/shared@dev:2.26.0-rc.1
+  shared: getoutreach/shared@dev:test_release
   queue: eddiewebb/queue@2.2.1
 
 parameters:
@@ -37,9 +37,7 @@ test: &test
 # Branches used for releasing code, pre-release or not
 release_branches: &release_branches # Release branch
   - release
-  # Pre-releases branch
-  - "rc"
-  # Unstable branch, e.g. HEAD development
+  # Pre-release and Unstable branch, e.g. HEAD development
   - "main"
 
 jobs:
@@ -86,7 +84,7 @@ workflows:
       ## <</Stencil::Block>>
       ### Start jobs inserted by other modules
       ### End jobs inserted by other modules
-      - shared/release: &release
+      - shared/pre-release: &pre-release
           dryrun: false
           context: *contexts
           release_failure_slack_channel: "#dt-notifications"
@@ -100,12 +98,20 @@ workflows:
             - shared/test
           filters:
             branches:
-              only: *release_branches
-
-      # Dryrun release for PRs.
-      - shared/release:
-          <<: *release
+              only:
+                - main
+      # Dryrun for PRs
+      - shared/pre-release: &pre-release
           dryrun: true
+          context: *contexts
+          ## <<Stencil::Block(circleReleaseExtra)>>
+
+          ## <</Stencil::Block>>
+          requires:
+            ## <<Stencil::Block(circleReleaseRequires)>>
+
+            ## <</Stencil::Block>>
+            - shared/test
           filters:
             branches:
               ignore: *release_branches
