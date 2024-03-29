@@ -154,7 +154,7 @@ go:
 nodejs:
   dependencies:
   - name: "@grpc/grpc-js"
-    version: ^1.7.3
+    version: "1.7.3"
   - name: "@grpc/proto-loader"
     version: ^0.5.5
   - name: "@getoutreach/grpc-client"
