@@ -154,11 +154,11 @@ go:
 nodejs:
   dependencies:
   - name: "@grpc/grpc-js"
-    version: ^1.3.5
+    version: "1.7.3"
   - name: "@grpc/proto-loader"
     version: ^0.5.5
   - name: "@getoutreach/grpc-client"
-    version: ^2.1.0
+    version: ^2.3.0
   - name: "@getoutreach/find"
     version: ^1.1.0
   - name: "@types/google-protobuf"
@@ -168,7 +168,7 @@ nodejs:
   - name: ts-enum-util
     version: ^4.0.2
   - name: winston
-    version: ^3.3.3
+    version: ^3.13.0
 {{- range stencil.GetModuleHook "js_modules" }}
   - name: {{ .name }}
     version: {{ .version }}
@@ -215,7 +215,7 @@ nodejs:
   - name: typescript
     version: ^4.0.5
   - name: wait-on
-    version: ^5.2.0
+    version: ^6.0.1
 {{- range stencil.GetModuleHook "js_modules_dev" }}
   - name: {{ .name }}
     version: {{ .version }}
