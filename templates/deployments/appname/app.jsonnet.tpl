@@ -118,7 +118,7 @@ local all = {
 		metadata+: {
 			labels: sharedLabels,
 		},
-		spec+: { maxUnavailable: 1 },
+		spec+: { maxUnavailable: '10%' },
 	},
 	// Default configuration for the service, managed by stencil.
 	// all other configuration should be done in the
@@ -169,6 +169,7 @@ local all = {
 				Path: '/run/secrets/outreach.io/launchdarkly/sdk-key',
 			},
 			flagsToAdd: {
+				appName: app.name,
 				bento: app.bento,
 				channel: if isDev then 'dev' else app.channel,
 			} + if isDev then {
@@ -204,6 +205,11 @@ local all = {
 		},
 		metadata+: {
 			labels+: sharedLabels,
+			{{- if (stencil.Arg "enableReloader") }}
+			annotations+: {
+				'reloader.stakater.com/auto': 'true',
+			},
+			{{- end }}
 		},
 		spec+: {
 		{{- if not (stencil.Arg "hpa.enabled") }}
