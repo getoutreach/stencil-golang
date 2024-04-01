@@ -241,6 +241,17 @@ func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestIncludeRubyToolVersionsIfRubyGRPCClientLibrary(t *testing.T) {
+	// Need to use testdata because stenciltest cannot test file.Skip
+	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"grpcClients":       []interface{}{"ruby"},
+		"service":           false,
+		"serviceActivities": []interface{}{},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestDontIncludeRubyToolVersionsIfNotRubyGRPCCLient(t *testing.T) {
 	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{})
