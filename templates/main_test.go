@@ -233,7 +233,7 @@ func TestGRPCServerRPC(t *testing.T) {
 	st.Run(true)
 }
 
-func TestIncludeRubyToolVersionsIfRubyGRPCCLient(t *testing.T) {
+func TestIncludeRubyToolVersionsIfRubyGRPCClient(t *testing.T) {
 	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"grpcClients": []interface{}{"ruby"},
@@ -252,7 +252,7 @@ func TestIncludeRubyToolVersionsIfRubyGRPCClientLibrary(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
-func TestDontIncludeRubyToolVersionsIfNotRubyGRPCCLient(t *testing.T) {
+func TestDontIncludeRubyToolVersionsIfNotRubyGRPCClient(t *testing.T) {
 	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{})
 	st.Run(stenciltest.RegenerateSnapshots())
