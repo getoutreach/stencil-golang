@@ -1,6 +1,6 @@
 preset: conventionalcommits
 branches:
-  - name: main
+  - name: yjyan/trigger-rc-release-in-ci
     prerelease: rc
   - name: release
 plugins:
