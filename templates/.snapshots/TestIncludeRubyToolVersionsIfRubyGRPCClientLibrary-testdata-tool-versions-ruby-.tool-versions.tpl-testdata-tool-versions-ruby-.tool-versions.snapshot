@@ -8,4 +8,6 @@
 # Used in CI
 - name: protoc
   version: 21.5
+- name: ruby
+  version: 3.1.3
 )

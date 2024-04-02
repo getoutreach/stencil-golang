@@ -54,14 +54,14 @@
 {{- .Config.Name | replace "_" "-" | title | replace "-" "" -}}
 {{- end }}
 
-# Skips the current file if a node client shouldn't be generated
+# Skips the current file if a Node.js gRPC client shouldn't be generated
 # {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {{- define "skipGrpcClient" }}
 {{- $grpcClient := . }}
 {{- $serviceActivities := (stencil.Arg "serviceActivities") }}
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
-{{- if not (and (has "grpc" $serviceActivities) (has $grpcClient $grpcClients)) }}
-  {{ file.Skip (printf "Not a gRPC service, or %s client not specified in grpcClients" $grpcClient) }}
+{{- if not (and (or (not (stencil.Arg "service")) (has "grpc" $serviceActivities)) (has $grpcClient $grpcClients)) }}
+  {{ $_ := file.Skip (printf "Not a gRPC service/library, or %s client not specified in grpcClients" $grpcClient) }}
 {{- end }}
 {{- end }}
 
