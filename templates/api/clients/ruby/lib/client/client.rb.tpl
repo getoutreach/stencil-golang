@@ -1,14 +1,17 @@
-# {{ stencil.ApplyTemplate "copyright" }} 
+# {{ stencil.ApplyTemplate "copyright" }}
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "ruby" -}}
 {{- $_ := file.SetPath (printf "api/clients/ruby/lib/%s_client/%s" .Config.Name (base file.Path)) }}
 
+{{- if stencil.Arg "service" }}
 require "{{ .Config.Name }}_client/{{ .Config.Name }}_pb"
 require "{{ .Config.Name }}_client/{{ .Config.Name }}_services_pb"
+{{- end }}
 
 ## <<Stencil::Block(rubyModuleGlobalSpaceInclusions)>>
 {{ file.Block "rubyModuleGlobalSpaceInclusions" }}
 ## <</Stencil::Block>>
 
+{{- if stencil.Arg "service" }}
 module {{ title .Config.Name }}Client
   class Client < {{ title .Config.Name }}::Stub
     class Interceptor < GRPC::ClientInterceptor
@@ -69,3 +72,4 @@ module {{ title .Config.Name }}Client
 {{ file.Block "rubyModuleExtensions" }}
   ## <</Stencil::Block>>
 end
+{{- end }}
