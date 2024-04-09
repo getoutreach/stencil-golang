@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["github_repo"] = "ssh://github.com/getoutreach/{{ .Config.Name }}"
 
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.7.5")
+  spec.required_ruby_version = Gem::Requirement.new(">= {{ stencil.Arg "versions.grpcClients.ruby" }}")
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
