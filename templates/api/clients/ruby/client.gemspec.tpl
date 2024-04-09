@@ -4,7 +4,11 @@ require_relative 'lib/{{ .Config.Name }}_client/version'
 Gem::Specification.new do |spec|
   spec.name          = "{{ .Config.Name }}_client"
   spec.version       = {{ title .Config.Name }}Client::VERSION
-  spec.summary       = "ruby client for {{ .Config.Name }} service"
+  {{- if stencil.Arg "service" }}
+  spec.summary       = "gRPC client for {{ .Config.Name }} service"
+  {{- else }}
+  spec.summary       = "gRPC types for {{ .Config.Name }}"
+  {{- end }}
   spec.authors       = ["{{ stencil.Arg "reportingTeam" }}"]
   spec.homepage      = "https://github.com/getoutreach/{{ .Config.Name }}"
   spec.metadata["homepage_uri"] = spec.homepage
