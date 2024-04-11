@@ -9,6 +9,9 @@ parameters:
   rebuild_cache:
     type: boolean
     default: false
+  release_rc:
+    type: boolean
+    default: false
 
 # Extra contexts to expose to all jobs below
 contexts: &contexts
@@ -75,9 +78,30 @@ workflows:
     jobs:
       - shared/save_cache: *test
 
+  auto-release-rc:
+    triggers:
+      - schedule:
+          # automatically release rc on every Tuesday 12pm(PST).
+          cron: "0 7 * * 2"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - shared/trigger_rc_release:
+          context: *contexts
+
+  maunail-release-rc:
+    when: << pipeline.parameters.release_rc>>
+    jobs:
+      - shared/trigger_rc_release:
+          context: *contexts
+
   release:
     when:
-      not: << pipeline.parameters.rebuild_cache >>
+      and:
+        - not: << pipeline.parameters.rebuild_cache >>
+        - not: << pipeline.parameters.release_rc >>
     jobs:
       ## <<Stencil::Block(circleWorkflowJobs)>>
 
