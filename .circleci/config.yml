@@ -91,7 +91,7 @@ workflows:
       - shared/trigger_rc_release:
           context: *contexts
 
-  maunail-release-rc:
+  manual-release-rc:
     when: << pipeline.parameters.release_rc>>
     jobs:
       - shared/trigger_rc_release:
