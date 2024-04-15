@@ -233,31 +233,6 @@ func TestGRPCServerRPC(t *testing.T) {
 	st.Run(true)
 }
 
-func TestIncludeRubyToolVersionsIfRubyGRPCClient(t *testing.T) {
-	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
-		"grpcClients": []interface{}{"ruby"},
-	})
-	st.Run(stenciltest.RegenerateSnapshots())
-}
-
-func TestIncludeRubyToolVersionsIfRubyGRPCClientLibrary(t *testing.T) {
-	// Need to use testdata because stenciltest cannot test file.Skip
-	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
-		"grpcClients":       []interface{}{"ruby"},
-		"service":           false,
-		"serviceActivities": []interface{}{},
-	})
-	st.Run(stenciltest.RegenerateSnapshots())
-}
-
-func TestDontIncludeRubyToolVersionsIfNotRubyGRPCClient(t *testing.T) {
-	st := stenciltest.New(t, "testdata/tool-versions-ruby/.tool-versions.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{})
-	st.Run(stenciltest.RegenerateSnapshots())
-}
-
 func TestGoreleaserYml(t *testing.T) {
 	st := stenciltest.New(t, ".goreleaser.yml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{

@@ -2,5 +2,8 @@
 * @getoutreach/fnd-dt
 
 ## <<Stencil::Block(customCodeowners)>>
-
+templates/.snapshots/Test*Ruby*.snapshot @getoutreach/fnd-pc
+templates/api/clients/ruby @getoutreach/fnd-pc
+templates/ruby_test.go @getoutreach/fnd-pc
+templates/testdata/tool-versions-ruby @getoutreach/fnd-pc
 ## <</Stencil::Block>>
