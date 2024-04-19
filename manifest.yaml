@@ -211,7 +211,7 @@ arguments:
       type: boolean
   go.stanza:
     description: Go stanza version
-    default: "1.19"
+    default: "1.21"
     schema:
       type:
         - string
