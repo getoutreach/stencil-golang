@@ -6,7 +6,7 @@ before:
   hooks:
     - make dep
 builds:
-{{- range $idx, $cmdName := stencil.Arg "commands" }}
+{{- range $cmdName := stencil.Arg "commands" }}
 {{- $opts := (dict) }}
 {{- if kindIs "map" $cmdName }}
 {{- $cmdName = (index (keys $cmdName) 0) }}
@@ -29,7 +29,8 @@ builds:
       {{- end }}
     env:
       - CGO_ENABLED={{ stencil.ApplyTemplate "cgoEnabled" | trim }}
-      {{- $blockName := (printf "%vAdditionalEnv" $idx ) }}
+      {{- $cmd :=  $cmdName | split "-" }}
+      {{- $blockName := (printf "%vAdditionalEnv" $cmd._0) }}
       ## <<Stencil::Block({{ $blockName }})>>
       {{ (file.Block $blockName) | trim }}
       ## <</Stencil::Block>>

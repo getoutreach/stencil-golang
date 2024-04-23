@@ -18,7 +18,7 @@ builds:
       - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
     env:
       - CGO_ENABLED=0
-      ## <<Stencil::Block(0AdditionalEnv)>>
+      ## <<Stencil::Block(cmd1AdditionalEnv)>>
       
       ## <</Stencil::Block>>
   - main: ./cmd/cmd2
@@ -36,7 +36,25 @@ builds:
       - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
     env:
       - CGO_ENABLED=0
-      ## <<Stencil::Block(1AdditionalEnv)>>
+      ## <<Stencil::Block(cmd2AdditionalEnv)>>
+      
+      ## <</Stencil::Block>>
+  - main: ./cmd/cmd3-affix
+    id: &name cmd3-affix
+    binary: *name
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
+      - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
+      - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
+    env:
+      - CGO_ENABLED=0
+      ## <<Stencil::Block(cmd3AdditionalEnv)>>
       
       ## <</Stencil::Block>>
 
