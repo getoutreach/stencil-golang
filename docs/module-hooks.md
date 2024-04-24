@@ -338,7 +338,7 @@ resource "datadog_service_level_objective" "grpc_p99_latency" {
 }}
 ```
 
-### `.vscode/extensions`
+### `vscode/additional-extensions`
 
 **Type**: `string`
 
@@ -351,7 +351,7 @@ This hook allows you to add more recommended extensions for the workspace in VSC
 "WizCloud.wizcli-vscode"
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" ".vscode/extensions"
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "vscode/additional-extensions"
   (list
     (stencil.ApplyTemplate "extensions")
   )
