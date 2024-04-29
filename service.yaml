@@ -23,6 +23,5 @@ modules:
   - name: github.com/getoutreach/stencil-circleci
   - name: github.com/getoutreach/stencil-base
   - name: github.com/getoutreach/devbase
-    url: https://github.com/getoutreach/devbase
-    version: yjyan/change-prerelease
+    version: main
   - name: github.com/getoutreach/stencil-golang
