@@ -214,8 +214,6 @@ nodejs:
     version: ^3.9.0
   - name: typescript
     version: ^4.0.5
-  - name: wait-on
-    version: ^6.0.1
 {{- range stencil.GetModuleHook "js_modules_dev" }}
   - name: {{ .name }}
     version: {{ .version }}
