@@ -4,8 +4,10 @@
   version: '1.22.0'
 # Not used for gRPC clients
 - name: nodejs
-  version: 18.17.1
+  version: 20.12.2
 # Used in CI
 - name: protoc
   version: 21.5
+- name: ruby
+  version: 3.1.3
 )

@@ -177,7 +177,7 @@ arguments:
         - number
   versions.nodejs:
     description: Nodejs version to use for build tooling (e.g., semantic-release)
-    default: "18.17.1"
+    default: "20.12.2"
     schema:
       type:
         - string
@@ -211,7 +211,7 @@ arguments:
       type: boolean
   go.stanza:
     description: Go stanza version
-    default: "1.19"
+    default: "1.21"
     schema:
       type:
         - string
@@ -248,4 +248,8 @@ arguments:
     description: Min replicas for production envs
     schema:
       type: number
+  enableReloader:
+    description: Enable Reloader to cycle pods when secrets or configmaps are modified
+    schema:
+      type: boolean
 ## <</Stencil::Block>>

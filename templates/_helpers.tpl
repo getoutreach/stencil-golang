@@ -54,14 +54,14 @@
 {{- .Config.Name | replace "_" "-" | title | replace "-" "" -}}
 {{- end }}
 
-# Skips the current file if a node client shouldn't be generated
+# Skips the current file if a Node.js gRPC client shouldn't be generated
 # {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
 {{- define "skipGrpcClient" }}
 {{- $grpcClient := . }}
 {{- $serviceActivities := (stencil.Arg "serviceActivities") }}
 {{- $grpcClients := (stencil.Arg "grpcClients") }}
-{{- if not (and (has "grpc" $serviceActivities) (has $grpcClient $grpcClients)) }}
-  {{ file.Skip (printf "Not a gRPC service, or %s client not specified in grpcClients" $grpcClient) }}
+{{- if not (and (or (not (stencil.Arg "service")) (has "grpc" $serviceActivities)) (has $grpcClient $grpcClients)) }}
+  {{ $_ := file.Skip (printf "Not a gRPC service/library, or %s client not specified in grpcClients" $grpcClient) }}
 {{- end }}
 {{- end }}
 
@@ -154,11 +154,11 @@ go:
 nodejs:
   dependencies:
   - name: "@grpc/grpc-js"
-    version: ^1.3.5
+    version: "1.7.3"
   - name: "@grpc/proto-loader"
     version: ^0.5.5
   - name: "@getoutreach/grpc-client"
-    version: ^2.1.0
+    version: ^2.3.0
   - name: "@getoutreach/find"
     version: ^1.1.0
   - name: "@types/google-protobuf"
@@ -168,7 +168,7 @@ nodejs:
   - name: ts-enum-util
     version: ^4.0.2
   - name: winston
-    version: ^3.3.3
+    version: ^3.13.0
 {{- range stencil.GetModuleHook "js_modules" }}
   - name: {{ .name }}
     version: {{ .version }}
@@ -215,7 +215,7 @@ nodejs:
   - name: typescript
     version: ^4.0.5
   - name: wait-on
-    version: ^5.2.0
+    version: ^6.0.1
 {{- range stencil.GetModuleHook "js_modules_dev" }}
   - name: {{ .name }}
     version: {{ .version }}

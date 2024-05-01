@@ -2,17 +2,17 @@
 
 module github.com/getoutreach/stencil-golang
 
-go 1.19
+go 1.21
 
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.89.0
-	github.com/getoutreach/stencil v1.37.3
+	github.com/getoutreach/stencil v1.38.0
 	github.com/google/go-cmp v0.6.0
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
-	golang.org/x/mod v0.16.0
+	golang.org/x/mod v0.17.0
 )
 
 require github.com/cyphar/filepath-securejoin v0.2.4 // indirect

@@ -1,4 +1,7 @@
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
+{{- if not (stencil.Arg "service") }}
+{{- $_ := file.Skip "No client generated for libraries" }}
+{{- end }}
 import * as grpc from '@grpc/grpc-js';
 import { {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }}Client } from './grpc/{{ .Config.Name }}_grpc_pb';
 import { createErrorLoggerInterceptor } from '@getoutreach/grpc-client';

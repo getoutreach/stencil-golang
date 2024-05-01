@@ -341,11 +341,6 @@ profiles:
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
-    patches:
-      - op: replace
-        path: dev.app.ports
-        value:
-          - port: ${DLV_PORT}
 
   - name: e2eBase
     description: Basic configuration override for all e2e test profiles

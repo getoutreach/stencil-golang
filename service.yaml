@@ -9,11 +9,10 @@ arguments:
   releaseOptions:
     force: true
     enablePrereleases: true
-    prereleasesBranch: rc
-  opslevel:
-    confluenceSpaceKey: DT
-    tier: 2
-    lifecycle: public_ga
+    prereleasesBranch: main
+  confluenceSpaceKey: DT
+  tier: 2
+  lifecycle: public_ga
   lintroller: platinum
   notifications:
     slackChannel: "#dt-notifications"
@@ -24,5 +23,5 @@ modules:
   - name: github.com/getoutreach/stencil-circleci
   - name: github.com/getoutreach/stencil-base
   - name: github.com/getoutreach/devbase
-    channel: rc
+    version: main
   - name: github.com/getoutreach/stencil-golang
