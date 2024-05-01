@@ -10,6 +10,7 @@ arguments:
     force: true
     enablePrereleases: true
     prereleasesBranch: main
+    autoPrereleases: true
   confluenceSpaceKey: DT
   tier: 2
   lifecycle: public_ga
@@ -21,7 +22,8 @@ replacements:
 modules:
   - name: github.com/getoutreach/stencil-template-base
   - name: github.com/getoutreach/stencil-circleci
+    channel: rc
   - name: github.com/getoutreach/stencil-base
   - name: github.com/getoutreach/devbase
-    version: main
+    channel: rc
   - name: github.com/getoutreach/stencil-golang
