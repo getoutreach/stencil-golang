@@ -2,7 +2,7 @@
 # syntax, such as anchors, will be fixed automatically.
 version: 2.1
 orbs:
-  shared: getoutreach/shared@dev:test_release
+  shared: getoutreach/shared@dev:2.27.0-rc.2
   queue: eddiewebb/queue@2.2.1
 
 parameters:
@@ -23,6 +23,7 @@ contexts: &contexts
   - confluence
   - circleci-credentials
   - tray-webhooks
+  - wizcli
   ## <<Stencil::Block(extraContexts)>>
 
   ## <</Stencil::Block>>
@@ -40,7 +41,7 @@ test: &test
 # Branches used for releasing code, pre-release or not
 release_branches: &release_branches # Release branch
   - release
-  # Pre-release and Unstable branch, e.g. HEAD development
+  # Pre-releases branch
   - "main"
 
 jobs:
@@ -81,8 +82,7 @@ workflows:
   auto-release-rc:
     triggers:
       - schedule:
-          # automatically release rc on every Tuesday 12pm(PST).
-          cron: "0 19 * * 2"
+          cron: 0 19 * * 2
           filters:
             branches:
               only:
@@ -108,10 +108,25 @@ workflows:
       ## <</Stencil::Block>>
       ### Start jobs inserted by other modules
       ### End jobs inserted by other modules
-      - shared/pre-release: &pre-release
+      - shared/release: &release
           dryrun: false
           context: *contexts
           release_failure_slack_channel: "#dt-notifications"
+          ## <<Stencil::Block(circleReleaseExtra)>>
+
+          ## <</Stencil::Block>>
+          requires:
+            ## <<Stencil::Block(circleReleaseRequires)>>
+
+            ## <</Stencil::Block>>
+            - shared/test
+          filters:
+            branches:
+              only: release
+      - shared/pre-release: &pre-release
+          dryrun: false
+          context: *contexts
+          release_failure_slack_channel: #dt-notifications
           ## <<Stencil::Block(circleReleaseExtra)>>
 
           ## <</Stencil::Block>>
