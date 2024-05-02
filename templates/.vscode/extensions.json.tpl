@@ -14,6 +14,10 @@
     "laktak.hjson",
     {{- end }}
 
+    {{- range (stencil.GetModuleHook "vscode/additional-extensions") }}
+    {{ . }}
+    {{- end }}
+
     // Please consider contributing back all recommended
     // extensions to stencil!
     // <<Stencil::Block(extensions)>>
