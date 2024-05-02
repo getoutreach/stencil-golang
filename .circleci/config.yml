@@ -154,13 +154,6 @@ workflows:
           filters:
             branches:
               ignore: *release_branches
-      # stable release for release branch
-      - shared/release:
-          context: *contexts
-          dryrun: false
-          filters:
-            branches:
-              only: release
       - shared/test:
           <<: *test
           ## <<Stencil::Block(circleSharedTestExtra)>>
