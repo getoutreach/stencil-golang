@@ -56,7 +56,6 @@ updates:
       - dependency-name: "ts-node"
       - dependency-name: "tsconfig-paths"
       - dependency-name: "typescript"
-      - dependency-name: "wait-on"
 
   ## <<Stencil::Block(dependabotPackageManagers)>>
 
