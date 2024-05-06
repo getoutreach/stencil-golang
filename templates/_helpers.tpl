@@ -175,23 +175,19 @@ nodejs:
 {{- end }}
   devDependencies:
   - name: "@getoutreach/eslint-config"
-    version: ^1.0.4
+    version: ^2.0.0
   - name: "@types/jest"
     version: ^26.0.15
   - name: "@typescript-eslint/eslint-plugin"
-    version: ^2.33.0
+    version: ^7.8.0
   - name: "@typescript-eslint/parser"
-    version: ^2.33.0
+    version: ^7.8.0
   - name: eslint
-    version: ^7.13.0
-  - name: eslint-config-prettier
-    version: ^6.15.0
+    version: ^8.57.0
   - name: eslint-plugin-jest
-    version: ^24.1.3
+    version: ^28.3.0
   - name: eslint-plugin-jsdoc
-    version: ^30.7.7
-  - name: eslint-plugin-lodash
-    version: ^7.1.0
+    version: ^48.2.3
   - name: eslint-plugin-node
     version: ^11.1.0
   - name: grpc-tools
@@ -213,7 +209,7 @@ nodejs:
   - name: tsconfig-paths
     version: ^3.9.0
   - name: typescript
-    version: ^4.0.5
+    version: ^4.9.5
 {{- range stencil.GetModuleHook "js_modules_dev" }}
   - name: {{ .name }}
     version: {{ .version }}
