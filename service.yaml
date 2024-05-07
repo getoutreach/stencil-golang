@@ -7,6 +7,7 @@ arguments:
   description: Stencil Module for Golang Applications
   plugin: true
   releaseOptions:
+    allowMajorVersions: true
     force: true
     enablePrereleases: true
     prereleasesBranch: main
