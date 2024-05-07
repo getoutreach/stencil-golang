@@ -8,6 +8,7 @@ arguments:
   plugin: true
   releaseOptions:
     allowMajorVersions: true
+    force: true
     enablePrereleases: true
     prereleasesBranch: main
     autoPrereleases: true
