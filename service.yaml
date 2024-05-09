@@ -3,28 +3,31 @@ arguments:
   ciOptions:
     skipDocker: true
     skipE2e: true
-  reportingTeam: fnd-dt
-  description: Stencil Module for Golang Applications
-  plugin: true
-  releaseOptions:
-    allowMajorVersions: true
-    force: true
-    enablePrereleases: true
-    prereleasesBranch: main
-    autoPrereleases: true
   confluenceSpaceKey: DT
-  tier: 2
+  description: Stencil Module for Golang Applications
   lifecycle: public_ga
   lintroller: platinum
   notifications:
     slackChannel: "#dt-notifications"
-replacements:
-  github.com/getoutreach/stencil-golang: ./
+  plugin: true
+  releaseOptions:
+    allowMajorVersions: true
+    autoPrereleases: true
+    enablePrereleases: true
+    force: true
+    prereleasesBranch: main
+  reportingTeam: fnd-dt
+  tier: 2
 modules:
   - name: github.com/getoutreach/stencil-template-base
+    channel: rc
   - name: github.com/getoutreach/stencil-circleci
     channel: rc
   - name: github.com/getoutreach/stencil-base
+    channel: rc
   - name: github.com/getoutreach/devbase
     channel: rc
   - name: github.com/getoutreach/stencil-golang
+    channel: rc
+replacements:
+  github.com/getoutreach/stencil-golang: ./
