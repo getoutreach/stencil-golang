@@ -16,11 +16,6 @@ require (
 )
 
 require (
-	github.com/chainguard-dev/git-urls v1.0.2 // indirect
-	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
-)
-
-require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/AlecAivazis/survey/v2 v2.3.7 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
@@ -30,7 +25,9 @@ require (
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
 	github.com/alessio/shellescape v1.4.1 // indirect
 	github.com/bradleyjkemp/cupaloy v2.3.0+incompatible // indirect
+	github.com/chainguard-dev/git-urls v1.0.2 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/danieljoos/wincred v1.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
