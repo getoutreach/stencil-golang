@@ -14,7 +14,7 @@
 {{- .}}
 {{- end }}
 
-package {{ $pkgName }} //nolint:revive // Why: We allow [-_].
+package {{ $pkgName }} //nolint:revive,doculint // Why: We allow [-_].
 
 import (
 	"context"

@@ -6,7 +6,7 @@
 // to various parts of the service.
 // Managed: true
 
-package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive,doculint // Why: We allow [-_].
 
 import (
 	"context"
