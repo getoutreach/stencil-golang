@@ -6,7 +6,7 @@
 // exists in the server.go file in this same directory.
 // Managed: true
 
-package testing //nolint:revive // Why: We allow [-_].
+package testing //nolint:revive,doculint // Why: We allow [-_].
 
 import (
 	"context"
