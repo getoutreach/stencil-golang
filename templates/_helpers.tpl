@@ -156,7 +156,7 @@ nodejs:
   - name: "@grpc/grpc-js"
     version: "1.7.3"
   - name: "@grpc/proto-loader"
-    version: ^0.5.5
+    version: ^0.7.13
   - name: "@getoutreach/grpc-client"
     version: ^2.3.0
   - name: "@getoutreach/find"
