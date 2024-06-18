@@ -29,7 +29,6 @@ updates:
     # stencil-golang managed dependencies
     ignore:
       - dependency-name: "@grpc/grpc-js"
-      - dependency-name: "@grpc/proto-loader"
       - dependency-name: "@getoutreach/grpc-client"
       - dependency-name: "@getoutreach/find"
       - dependency-name: "@types/google-protobuf"
