@@ -154,7 +154,8 @@ go:
 nodejs:
   dependencies:
   - name: "@grpc/grpc-js"
-    version: "1.7.3"
+    # This version should be synced with the same dependency in @getoutreach/grpc-client
+    version: "1.8.22"
   - name: "@getoutreach/grpc-client"
     version: ^2.3.0
   - name: "@getoutreach/find"
