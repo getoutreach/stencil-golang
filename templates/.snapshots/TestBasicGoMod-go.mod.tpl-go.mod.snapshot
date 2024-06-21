@@ -2,6 +2,8 @@
 
 go 1.21
 
+toolchain go1.22.0
+
 require (
 	github.com/getoutreach/gobox v1.90.2
 	github.com/getoutreach/stencil-golang/pkg v0.0.0-20230811193316-312178c3fbc3
