@@ -11,6 +11,8 @@ go 1.17
 go {{ stencil.Arg "go.stanza" }}
 {{- end }}
 
+toolchain go{{ stencil.ApplyTemplate "goVersion" | trim }}
+
 require (
 	{{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).go }}
 	{{ $d.name }} {{ $d.version }}
