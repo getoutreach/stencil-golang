@@ -157,7 +157,7 @@ nodejs:
     # This version should be synced with the same dependency in @getoutreach/grpc-client
     version: "1.8.22"
   - name: "@getoutreach/grpc-client"
-    version: ^2.3.0
+    version: ^2.4.0
   - name: "@getoutreach/find"
     version: ^1.1.0
   - name: "@types/google-protobuf"
