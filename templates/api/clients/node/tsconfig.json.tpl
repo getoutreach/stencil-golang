@@ -4,7 +4,7 @@
     "module": "commonjs",
     "declaration": true,
     "esModuleInterop": true,
-    "target": "es2018",
+    "target": "ES2022",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
@@ -24,7 +24,7 @@
     only those found in the api/clients/nodes/node_modules/@types/ folder and nowhere else.
     */ -}}
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "es2018.promise", "esnext.asynciterable", "dom"]
+    "lib": ["es2022"]
   },
   "include": ["src/**/*.ts", "src/**/*.js"],
   "exclude": ["node_modules", "codegen-templates"]
