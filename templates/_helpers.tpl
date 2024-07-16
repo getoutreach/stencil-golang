@@ -108,6 +108,17 @@
 	{{- end }}
 {{- end }}
 
+{{- define "vaultSecrets" }}
+secrets:
+{{- range $secret := stencil.Arg "vaultSecrets"}}
+- "{{ $secret }}"
+{{- end }}
+{{- $injectedVaultSecrets := stencil.GetModuleHook "injectedVaultSecrets" }}
+{{- range $injectedVaultSecrets }}
+- "{{ . }}"
+{{- end }}
+{{- end }}
+
 # Dependencies for the service
 {{- define "dependencies" }}
 go:
