@@ -43,7 +43,7 @@
     "lint-fix": "eslint src --ext .ts --fix",
     "pre-commit": "npm-run-all pretty lint",
     "prepublishOnly": "yarn install; yarn build",
-    "pretty": "prettier -l \"src/**/*.ts\"",
+    "pretty": "prettier --check \"src/**/*.ts\"",
     "pretty-fix": "prettier --write \"src/**/*.ts\"",
     "test": "NODE_ENV=test jest --watch \"./src/\"",
     "test-ci": "NODE_ENV=test jest \"./src/\"",
