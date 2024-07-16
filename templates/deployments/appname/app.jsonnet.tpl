@@ -353,7 +353,7 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
-  {{- if gt (len (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets) 0 }}
+  {{- if (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
   // VaultSecrets to be deployed
 	{{- range $secretPath := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
 	{{- $secretName := ($secretPath | base) }}
