@@ -2,7 +2,7 @@
 
 go 1.19
 
-toolchain go1.22.0
+toolchain go1.22.5
 
 require (
 	github.com/getoutreach/gobox v1.90.2

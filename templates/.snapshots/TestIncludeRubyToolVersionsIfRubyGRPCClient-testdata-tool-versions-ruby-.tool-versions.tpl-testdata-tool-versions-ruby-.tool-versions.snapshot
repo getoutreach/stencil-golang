@@ -1,7 +1,7 @@
 (*codegen.File)(
 
 - name: golang
-  version: '1.22.0'
+  version: '1.22.5'
 # Not used for gRPC clients
 - name: nodejs
   version: 20.12.2
