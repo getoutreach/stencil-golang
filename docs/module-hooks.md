@@ -36,6 +36,18 @@ Equivalent `go_modules` but for JavaScript (node).
 
 Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 
+### `vaultSecrets`
+
+**Type**: `string`
+
+**File**: `_helpers.tpl`
+
+Adds a vault secret to be pulled within the deployment manifests and created in kubernetes.
+
+```tpl
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "vaultSecrets" (list "path/to/secret") }}
+```
+
 ### `private.env.envVars`
 
 **Type**: `map[string]interface{}`
@@ -117,8 +129,8 @@ Additional dependencies to add to the `main.go` file.
 Insert to different parts for extension of `handler.go`
 
 - `http/extraComments` add extra comment in top of the file
-- `http/extraStandardImports` add extra standard imports 
-- `http/additionalImports` add extra other imports 
+- `http/extraStandardImports` add extra standard imports
+- `http/additionalImports` add extra other imports
 - `http/extraRoutes` add extra handlers for routing
 - `http/extraFuncs` add extra functions for routing's usages
 
@@ -291,7 +303,7 @@ Extra commands to add to the root Makefile
 
 ```tpl
 {{- define "run.rover" }}
-## run-rover:           merges shared and specific schemas and runs rover-cli 
+## run-rover:           merges shared and specific schemas and runs rover-cli
 .PHONY: run-rover
 run-rover:
 	cat internal/graphql/schema/shared.graphql > internal/graphql/generated/schema.graphql
