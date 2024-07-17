@@ -113,9 +113,8 @@ secrets:
 {{- range $secret := stencil.Arg "vaultSecrets"}}
 - "{{ $secret }}"
 {{- end }}
-{{- $injectedVaultSecrets := stencil.GetModuleHook "injectedVaultSecrets" }}
-{{- range $injectedVaultSecrets }}
-- "{{ . }}"
+{{- range $secret := stencil.GetModuleHook "injectedVaultSecrets" }}
+- "{{ $secret }}"
 {{- end }}
 {{- end }}
 
