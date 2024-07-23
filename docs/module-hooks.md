@@ -40,7 +40,7 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 
 **Type**: `string`
 
-**File**: `_helpers.tpl`
+**File**: `deployments/appname/app.jsonnet.tpl`
 
 Adds a vault secret to be pulled within the deployment manifests and created in kubernetes.
 
