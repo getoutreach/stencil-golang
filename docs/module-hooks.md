@@ -38,7 +38,7 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 
 ### `vaultSecrets`
 
-**Type**: `string`
+**Type**: `[]string`
 
 **File**: `deployments/appname/app.jsonnet.tpl`
 
