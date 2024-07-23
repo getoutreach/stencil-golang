@@ -42,7 +42,7 @@ Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 
 **File**: `deployments/appname/app.jsonnet.tpl`
 
-Adds a vault secret to be pulled within the deployment manifests and created in kubernetes.
+Adds Vault secret paths to be pulled within the deployment manifests and created in Kubernetes.
 
 ```tpl
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "vaultSecrets" (list "path/to/secret") }}
