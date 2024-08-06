@@ -118,7 +118,7 @@ local all = {
 		metadata+: {
 			labels: sharedLabels,
 		},
-		spec+: { maxUnavailable: '10%' },
+		spec+: { maxUnavailable: '15%' },
 	},
 	// Default configuration for the service, managed by stencil.
 	// all other configuration should be done in the
