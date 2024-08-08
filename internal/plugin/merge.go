@@ -134,6 +134,11 @@ func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen
 		return "", errors.Wrap(err, "failed to set go version")
 	}
 
+	// Always use the toolchain from the right hand go.mod
+	if err := leftMod.AddToolchainStmt(rightMod.Toolchain.Name); err != nil {
+		return "", errors.Wrap(err, "failed to set toolchain")
+	}
+
 	newBytes, err := leftMod.Format()
 	if err != nil {
 		return "", errors.Wrap(err, "failed to save generated go.mod")

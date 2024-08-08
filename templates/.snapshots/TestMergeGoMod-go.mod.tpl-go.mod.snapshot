@@ -4,6 +4,8 @@ module github.com/getoutreach/stencil-golang
 
 go 1.22
 
+toolchain go1.22.6
+
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.90.2
