@@ -17,6 +17,9 @@ type goMod struct {
 	// goVersion is the version of the go statement
 	goVersion string
 
+	// toolchain is the value of the toolchain directive, e.g. "go1.22.0"
+	toolchain string
+
 	// modules is a map of module path to version
 	// (e.g. "github.com/foo/bar" -> "v1.2.3")
 	modules map[string]string
@@ -32,6 +35,7 @@ type goMod struct {
 // 1. modules
 // 2. replacements
 // 3. goVersion
+// 4. toolchain
 func newGoMod(args ...any) goMod {
 	var g goMod
 
@@ -60,12 +64,23 @@ func newGoMod(args ...any) goMod {
 				panic("expected goVersion to be of type string")
 			}
 			g.goVersion = goVersion
+		case 3:
+			toolchain, ok := args[i].(string)
+			if !ok {
+				panic("expected goVersion to be of type string")
+			}
+			g.toolchain = toolchain
 		}
 	}
 
 	// Default to a static go version.
 	if g.goVersion == "" {
 		g.goVersion = "1.19"
+	}
+
+	// Default to a static toolchain.
+	if g.toolchain == "" {
+		g.toolchain = "go1.19.0"
 	}
 
 	return g
@@ -78,7 +93,7 @@ func unmarshalGoMod(b []byte) goMod {
 		panic(err)
 	}
 
-	g := goMod{goVersion: mf.Go.Version}
+	g := goMod{goVersion: mf.Go.Version, toolchain: mf.Toolchain.Name}
 	for _, req := range mf.Require {
 		// Don't initialize unless we need to. Prevents tests from being
 		// invalid because of a difference here.
@@ -111,6 +126,10 @@ func (g *goMod) Marshal() string {
 
 	if err := mf.AddGoStmt(g.goVersion); err != nil {
 		panic(fmt.Sprintf("failed to add go statement: %v", err))
+	}
+
+	if err := mf.AddToolchainStmt(g.toolchain); err != nil {
+		panic(fmt.Sprintf("failed to add toolchain statement: %v", err))
 	}
 
 	for module, version := range g.modules {
@@ -239,6 +258,14 @@ func TestMergeGoMod(t *testing.T) {
 				right: newGoMod(nil, nil, "1.13"),
 			},
 			want: newGoMod(nil, nil, "1.13"),
+		},
+		{
+			name: "should use go toolchain from right over left",
+			args: args{
+				left:  newGoMod(nil, nil, "1.20", "go1.20.5"),
+				right: newGoMod(nil, nil, "1.20", "go1.22.5"),
+			},
+			want: newGoMod(nil, nil, "1.20", "go1.22.5"),
 		},
 	}
 	for _, tt := range tests {
