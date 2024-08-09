@@ -2,12 +2,14 @@
 
 module github.com/getoutreach/stencil-golang
 
-go 1.21
+go 1.22
+
+toolchain go1.22.6
 
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.92.1
-	github.com/getoutreach/stencil v1.39.0-rc.1
+	github.com/getoutreach/stencil v1.39.1
 	github.com/google/go-cmp v0.6.0
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
@@ -74,8 +76,8 @@ require (
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/oauth2 v0.20.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/term v0.21.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240624140628-dc46fd24d27d // indirect
