@@ -65,6 +65,17 @@ func WithHTTPAppHandler(appHandler http.Handler) Option {
 	})
 }
 
+// DefaultHTTPAddr is the default address where the http server will run.
+const DefaultHTTPAddr = "127.0.0.1:5000"
+
+// OptHTTPAddr defines where to serve the http server
+func OptHTTPAddr(addr string) Option {
+	return optionFunc(func(o *runOpts) error {
+		o.httpAddr = addr
+		return nil
+	})
+}
+
 // WithRunner adds a runnable the service needs to run. If the runnable
 // exits, so does the service
 func WithRunner(name string, r async.Runner) Option {
@@ -82,17 +93,6 @@ func WithRunner(name string, r async.Runner) Option {
 		return nil
 	})
 }
-
-// OptConfigLoader defines an alternative config loader
-func OptHTTPAddr(addr string) Option {
-	return optionFunc(func(o *runOpts) error {
-		o.httpAddr = addr
-		return nil
-	})
-}
-
-// DefaultHTTPAddr is the default address where the http server will run.
-const DefaultHTTPAddr = "127.0.0.1:5000"
 
 // Run runs your service.
 //
