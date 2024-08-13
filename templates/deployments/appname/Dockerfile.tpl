@@ -25,7 +25,7 @@ RUN --mount=type=ssh --mount=type=cache,target=/go/pkg --mount=type=cache,target
   mkdir -p bin; \
   go build -o /src/bin/ -ldflags "-X github.com/getoutreach/gobox/pkg/app.Version=$VERSION" -v ./cmd/...
 
-FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}:{{ stencil.Arg "versions.alpine" }}
+FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/alpine:{{ stencil.Arg "versions.alpine" }}
 ENTRYPOINT ["/usr/local/bin/{{ .Config.Name }}"]
 
 LABEL "io.outreach.reporting_team"="{{ stencil.Arg "reportingTeam" }}"
