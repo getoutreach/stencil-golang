@@ -6,7 +6,9 @@
 // all the service-standard components we expect every service to run.
 //
 // clients should provide any runners they require as part of the app to the
-// Run function with OptAddRunner, and then call `Run` in their main function.
+// Run function with WithRunner, and then call `Run` in their main function.
+//
+// See ./run_example_test.go for an example
 package run
 
 import (
