@@ -20,7 +20,6 @@ import (
 
 	"github.com/getoutreach/gobox/pkg/app"
 	"github.com/getoutreach/gobox/pkg/async"
-	"github.com/getoutreach/gobox/pkg/env"
 	"github.com/getoutreach/gobox/pkg/olog"
 	"github.com/getoutreach/gobox/pkg/trace"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/automemlimit"
@@ -125,9 +124,6 @@ func Run(
 	}
 
 	log := opts.log
-
-	env.ApplyOverrides()
-	app.SetName(name)
 
 	if err := trace.InitTracer(ctx, name); err != nil {
 		return fmt.Errorf("%w starting tracing", err)
