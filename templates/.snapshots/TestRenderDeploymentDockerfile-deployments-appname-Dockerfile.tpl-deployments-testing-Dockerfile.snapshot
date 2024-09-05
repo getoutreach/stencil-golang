@@ -19,8 +19,8 @@ RUN --mount=type=ssh --mount=type=cache,target=/go/pkg go mod download
 # Build our application, caching the go build cache, but also using
 # the dependency cache from earlier.
 RUN --mount=type=ssh --mount=type=cache,target=/go/pkg --mount=type=cache,target=/go-build-cache \
-    mkdir -p bin; \
-    go build -o /src/bin/ -ldflags "-X github.com/getoutreach/gobox/pkg/app.Version=$VERSION" -v ./cmd/...
+  mkdir -p bin; \
+  go build -o /src/bin/ -ldflags "-X github.com/getoutreach/gobox/pkg/app.Version=$VERSION" -v ./cmd/...
 
 FROM gcr.io/outreach-docker/alpine:3.1
 ENTRYPOINT ["/usr/local/bin/testing"]
