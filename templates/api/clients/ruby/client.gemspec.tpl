@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'grpc', '~> 1.38'
   spec.add_development_dependency 'rake'
   ## <<Stencil::Block(extraGemSpec)>>
-  {{ file.Block "extraGemSpec" }}
+{{ file.Block "extraGemSpec" }}
   ## <</Stencil::Block>>
 end
