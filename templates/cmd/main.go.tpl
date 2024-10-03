@@ -22,6 +22,7 @@ import (
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/automemlimit"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/shutdown"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/gomaxprocs"
+	"github.com/getoutreach/stencil-golang/pkg/run"
 	"github.com/pkg/errors"
 
 
@@ -89,12 +90,6 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		return
 	}
 
-	if err := trace.InitTracer(ctx, "{{ .Config.Name }}"); err != nil {
-		log.Error(ctx, "tracing failed to start", events.NewErrorInfo(err))
-		return
-	}
-	defer trace.CloseTracer(ctx)
-
   // Initialize variable for service activity dependency injection.
   var deps dependencies
 
@@ -123,27 +118,32 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	// End code inserted by modules
 	{{- end }}
 
-	acts := []async.Runner{
-		shutdown.New(),
-		gomaxprocs.New(),
-    automemlimit.New(),
+	// Place any code for your service to run during startup in this block
+	//
+	// <<Stencil::Block(startup)>>
+{{ file.Block "startup" }}
+	// <</Stencil::Block>>
+  
+  err = run.Run(ctx, "{{ .Config.Name }}", 
 		{{ $pkgName }}.NewHTTPService(cfg, &deps.privateHTTP),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP),
+		run.WithRunner("public-http-svc", {{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP)),
 		{{- end }}
 		{{- if has "grpc" (stencil.Arg "serviceActivities") }}
-		{{ $pkgName }}.NewGRPCService(cfg, &deps.gRPC),
+		run.WithRunner("grpc-svc", {{ $pkgName }}.NewGRPCService(cfg, &deps.gRPC)),
 		{{- end }}
 		{{- if stencil.Arg "kubernetes.groups" }}
-		{{ $pkgName }}.NewKubernetesService(cfg),
+		run.WithRunner("kubernetes-svc", {{ $pkgName }}.NewKubernetesService(cfg)),
 		{{- end }}
 		{{- $svcActs := stencil.GetModuleHook "serviceActivities" }}
 		{{- if $svcActs }}
-
 		// Service activities inserted by modules here
 			{{- range $svcActs  }}
-			{{ . }},
-			{{- end }}
+			run.WithRunner(
+        `{{ . }}`, 
+        {{ . }}
+      ),
+	{{- end }}
 		// End service activities inserted by modules
 		{{- end }}
 
@@ -152,16 +152,11 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		// <<Stencil::Block(services)>>
 {{ file.Block "services" }}
 		// <</Stencil::Block>>
-	}
+	)
 
-	// Place any code for your service to run during startup in this block
-	//
-	// <<Stencil::Block(startup)>>
-{{ file.Block "startup" }}
-	// <</Stencil::Block>>
+  if err == nil {
+    exitCode = 0
+  }
 
-	err = async.RunGroup(acts).Run(ctx)
-	if shutdown.HandleShutdownConditions(ctx, err) {
-		exitCode = 0
-	}
+  log.Error(ctx, err.Error())
 }
