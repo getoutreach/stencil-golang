@@ -39,7 +39,7 @@ vars:
     default: devenv.local
   DEVENV_DEPLOY_BOX_IMAGE_REGISTRY:
     source: env
-    default: gcr.io/outreach-docker
+    default: {{ .Runtime.Box.Docker.ImagePullRegistry }}
   DEVENV_DEPLOY_IMAGE_REGISTRY:
     source: env
     default: ${DEVENV_DEPLOY_BOX_IMAGE_REGISTRY}
@@ -89,7 +89,7 @@ vars:
     source: env
     default: 42097
   DEV_CONTAINER_WORKDIR: /home/dev/app
-  DEV_CONTAINER_IMAGE: gcr.io/outreach-docker/bootstrap/dev:stable
+  DEV_CONTAINER_IMAGE: {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev:stable
   DEV_CONTAINER_LOGFILE: /tmp/app.log
   DEV_CONTAINER_CACHE: /home/dev/.cache
 
@@ -116,7 +116,7 @@ dev:
         cpu: 5
         memory: 10Gi
 
-    # Specifies the dev container to use. In this case gcr.io/outreach-docker/bootstrap/dev:stable
+    # Specifies the dev container to use. In this case {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev:stable
     devImage: ${DEV_CONTAINER_IMAGE}
 
     # `dev.app.ports` specifies all ports that should be forwarded while `devspace dev` is running
@@ -450,7 +450,7 @@ profiles:
     patches:
       - op: replace
         path: vars.DEV_CONTAINER_IMAGE
-        value: gcr.io/outreach-docker/bootstrap/dev-slim:stable
+        value: {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev-slim:stable
       - op: replace
         path: dev.app.sync[0]
         value:
