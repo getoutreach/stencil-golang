@@ -65,11 +65,11 @@ linters:
   disable-all: true
   enable:
     - bodyclose
+    - copyloopvar # Detects places where loop variables are copied.
     - dogsled
     - errcheck
     - errorlint
     - exhaustive # Checks exhaustiveness of enum switch statements.
-    - copyloopvar # Detects places where loop variables are copied.
     - funlen
     - gochecknoinits
     - goconst
