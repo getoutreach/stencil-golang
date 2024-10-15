@@ -1,6 +1,6 @@
 (*codegen.File)(module github.com/getoutreach/testing
 
-go 1.22
+go 1.22.0
 
 toolchain go1.23.2
 
