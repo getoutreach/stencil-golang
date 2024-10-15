@@ -118,7 +118,7 @@ local all = {
 		metadata+: {
 			labels: sharedLabels,
 		},
-		spec+: { maxUnavailable: '10%' },
+		spec+: { maxUnavailable: '15%' },
 	},
 	// Default configuration for the service, managed by stencil.
 	// all other configuration should be done in the
@@ -197,7 +197,7 @@ local all = {
 				subPath: 'fflags.yaml',
 			},
 			// user provided secrets
-			{{- range $secret := stencil.Arg "vaultSecrets"}}
+			{{- range $secret := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
 			'secret-{{ $secret | base }}-volume' : {
 				mountPath: '/run/secrets/outreach.io/{{ $secret | base }}',
 			},
@@ -340,7 +340,7 @@ local all = {
 						'fflags-yaml-volume': ok.ConfigMapVolume(ok.ConfigMap('fflags-yaml', app.namespace)),
 
 						// user provided secrets
-						{{- range $secret := stencil.Arg "vaultSecrets" }}
+						{{- range $secret := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
 						'secret-{{ $secret | base }}-volume': ok.SecretVolume(ok.Secret('{{ $secret | base }}', app.namespace)),
 						{{- end }}
 					},
@@ -353,9 +353,9 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
-  {{- if stencil.Arg "vaultSecrets" }}
+  {{- if (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
   // VaultSecrets to be deployed
-	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
+	{{- range $secretPath := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
 	{{- $secretName := ($secretPath | base) }}
 	'vs-{{ $secretName }}': ok.VaultSecret('{{ $secretName }}', app.namespace) {
 		vaultPath_:: '{{ $secretPath }}' % app,
@@ -478,7 +478,7 @@ local nonDevelopmentObjects = {
 
 // These secrets will be included in dev by default, they are fetched from vault.
 local developmentObjects = {
-	{{- range $secretPath := stencil.Arg "vaultSecrets" }}
+	{{- range $secretPath := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
 	{{- $secretName := ($secretPath | base) }}
 	'vs-{{ $secretName }}': {
 		apiVersion: 'ricoberger.de/v1alpha1',

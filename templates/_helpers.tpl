@@ -108,11 +108,21 @@
 	{{- end }}
 {{- end }}
 
+{{- define "vaultSecrets" }}
+secrets:
+{{- range $secret := stencil.Arg "vaultSecrets"}}
+- "{{ $secret }}"
+{{- end }}
+{{- range $secret := stencil.GetModuleHook "injectedVaultSecrets" }}
+- "{{ $secret }}"
+{{- end }}
+{{- end }}
+
 # Dependencies for the service
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.89.0
+  version: v1.90.2
 - name: github.com/getoutreach/stencil-golang/pkg
   # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
   # in a go.mod and run `go mod tidy`.
@@ -154,11 +164,10 @@ go:
 nodejs:
   dependencies:
   - name: "@grpc/grpc-js"
-    version: "1.7.3"
-  - name: "@grpc/proto-loader"
-    version: ^0.5.5
+    # This version should be synced with the same dependency in @getoutreach/grpc-client
+    version: "1.8.22"
   - name: "@getoutreach/grpc-client"
-    version: ^2.3.0
+    version: ^2.4.0
   - name: "@getoutreach/find"
     version: ^1.1.0
   - name: "@types/google-protobuf"
@@ -175,23 +184,19 @@ nodejs:
 {{- end }}
   devDependencies:
   - name: "@getoutreach/eslint-config"
-    version: ^1.0.4
+    version: ^2.0.0
   - name: "@types/jest"
     version: ^26.0.15
   - name: "@typescript-eslint/eslint-plugin"
-    version: ^2.33.0
+    version: ^7.8.0
   - name: "@typescript-eslint/parser"
-    version: ^2.33.0
+    version: ^7.8.0
   - name: eslint
-    version: ^7.13.0
-  - name: eslint-config-prettier
-    version: ^6.15.0
+    version: ^8.57.0
   - name: eslint-plugin-jest
-    version: ^24.1.3
+    version: ^28.3.0
   - name: eslint-plugin-jsdoc
-    version: ^30.7.7
-  - name: eslint-plugin-lodash
-    version: ^7.1.0
+    version: ^48.2.3
   - name: eslint-plugin-node
     version: ^11.1.0
   - name: grpc-tools
@@ -213,9 +218,7 @@ nodejs:
   - name: tsconfig-paths
     version: ^3.9.0
   - name: typescript
-    version: ^4.0.5
-  - name: wait-on
-    version: ^6.0.1
+    version: ^4.9.5
 {{- range stencil.GetModuleHook "js_modules_dev" }}
   - name: {{ .name }}
     version: {{ .version }}

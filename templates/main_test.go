@@ -239,6 +239,9 @@ func TestGoreleaserYml(t *testing.T) {
 		"commands": []interface{}{
 			"cmd1",
 			"cmd2",
+			"cmd3-sub1",
+			"cmd3-sub2",
+			"cmd4_sub1",
 		},
 	})
 	st.Run(true)

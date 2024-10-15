@@ -1,6 +1,6 @@
 APP := {{ .Config.Name }}
 OSS := {{ stencil.Arg "oss" }}
-_ := $(shell ./scripts/devbase.sh) 
+_ := $(shell ./scripts/devbase.sh)
 
 include .bootstrap/root/Makefile
 

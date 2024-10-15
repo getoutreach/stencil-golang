@@ -19,8 +19,8 @@ local configurationOverride = {
 	// Note: `development` and `local_development` refer to different
 	// environments. `development` is _inside_ your local k8s cluster
 	// while local_development is read by `devconfig.sh`
-	environment: {
-		local_development: self.development {
+	environment+: {
+		local_development+: self.development {
 			configmap+: {
 				data_+:: {
 					ListenHost: '127.0.0.1',
@@ -30,7 +30,7 @@ local configurationOverride = {
 				},
 			},
 		},
-		development: {
+		development+: {
 			configmap+: {
 				data_+:: {
 					// <<Stencil::Block(developmentConfig)>>
@@ -45,14 +45,14 @@ local configurationOverride = {
 	},
 
 	// Bento level configuration override goes here.
-	bento: {
+	bento+: {
 		// <<Stencil::Block(bentoConfig)>>
 {{ file.Block "bentoConfig" }}
 		// <</Stencil::Block>>
 	},
 
 	// Default configuration for all environments and bentos.
-	default: {
+	default+: {
 		// <<Stencil::Block(defaultConfig)>>
 		{{- if file.Block "defaultConfig" }}
 {{ file.Block "defaultConfig" }}
@@ -75,7 +75,7 @@ local configurationOverride = {
 };
 
 // configMixins contains a list of files to include as mixins into
-// for the configuration. Should be at the path ./config/<name>.jsonnet
+// for the configuration. Should be at the path ./configs/<name>.jsonnet
 local configMixins = [
 	// <<Stencil::Block(configMixins)>>
 {{ file.Block "configMixins" }}

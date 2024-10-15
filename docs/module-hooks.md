@@ -36,6 +36,18 @@ Equivalent `go_modules` but for JavaScript (node).
 
 Equivalent `go_modules` but for JavaScript (node), dev dependencies.
 
+### `vaultSecrets`
+
+**Type**: `[]string`
+
+**File**: `deployments/appname/app.jsonnet.tpl`
+
+Adds Vault secret paths to be pulled within the deployment manifests and created in Kubernetes.
+
+```tpl
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "vaultSecrets" (list "path/to/secret") }}
+```
+
 ### `private.env.envVars`
 
 **Type**: `map[string]interface{}`
@@ -117,8 +129,8 @@ Additional dependencies to add to the `main.go` file.
 Insert to different parts for extension of `handler.go`
 
 - `http/extraComments` add extra comment in top of the file
-- `http/extraStandardImports` add extra standard imports 
-- `http/additionalImports` add extra other imports 
+- `http/extraStandardImports` add extra standard imports
+- `http/additionalImports` add extra other imports
 - `http/extraRoutes` add extra handlers for routing
 - `http/extraFuncs` add extra functions for routing's usages
 
@@ -291,7 +303,7 @@ Extra commands to add to the root Makefile
 
 ```tpl
 {{- define "run.rover" }}
-## run-rover:           merges shared and specific schemas and runs rover-cli 
+## run-rover:           merges shared and specific schemas and runs rover-cli
 .PHONY: run-rover
 run-rover:
 	cat internal/graphql/schema/shared.graphql > internal/graphql/generated/schema.graphql
@@ -335,5 +347,25 @@ resource "datadog_service_level_objective" "grpc_p99_latency" {
 
 {{- stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "monitoring.slos"
   (list (stencil.ApplyTemplate "grpc-slo"))
+}}
+```
+
+### `vscode/additional-extensions`
+
+**Type**: `string`
+
+**File**: `.vscode/extensions.json`
+
+This hook allows you to add more recommended extensions for the workspace in VSCode. These extensions are suggested when a developer opens the workspace in VSCode.
+
+```tpl
+{{- define "extensions" -}}
+"somekittens.hot-dog-stand",
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "vscode/additional-extensions"
+  (list
+    (stencil.ApplyTemplate "extensions")
+  )
 }}
 ```

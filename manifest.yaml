@@ -170,21 +170,21 @@ arguments:
     default: ""
   versions.go:
     description: Go version to use
-    default: "1.22.0"
+    default: "1.23.2"
     schema:
       type:
         - string
         - number
   versions.nodejs:
     description: Nodejs version to use for build tooling (e.g., semantic-release)
-    default: "20.12.2"
+    default: "20.16.0"
     schema:
       type:
         - string
         - number
   versions.grpcClients.nodejs:
     description: Nodejs version to use for gRPC clients
-    default: "20.8.0"
+    default: "20.16.0"
     schema:
       type:
         - string
@@ -211,7 +211,7 @@ arguments:
       type: boolean
   go.stanza:
     description: Go stanza version
-    default: "1.21"
+    default: "1.22.0"
     schema:
       type:
         - string

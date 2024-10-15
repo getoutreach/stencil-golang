@@ -1,14 +1,14 @@
-version: v1.38.0
+version: v1.40.0-rc.1
 modules:
     - name: github.com/getoutreach/devbase
       url: https://github.com/getoutreach/devbase
-      version: yjyan/change-prerelease
+      version: v2.28.2-rc.2
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
-      version: v0.15.1
+      version: v0.16.2-rc.1
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
-      version: v1.12.0
+      version: v1.14.0
     - name: github.com/getoutreach/stencil-golang
       url: file://./
       version: local

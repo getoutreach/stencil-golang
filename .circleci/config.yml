@@ -2,8 +2,11 @@
 # syntax, such as anchors, will be fixed automatically.
 version: 2.1
 orbs:
-  shared: getoutreach/shared@dev:test_release
+  shared: getoutreach/shared@dev:2.28.2-rc.2
   queue: eddiewebb/queue@2.2.1
+  ## <<Stencil::Block(CircleCIExtraOrbs)>>
+
+  ## <</Stencil::Block>>
 
 parameters:
   rebuild_cache:
@@ -12,6 +15,9 @@ parameters:
   release_rc:
     type: boolean
     default: false
+  ## <<Stencil::Block(CircleCIExtraParams)>>
+
+  ## <</Stencil::Block>>
 
 # Extra contexts to expose to all jobs below
 contexts: &contexts
@@ -23,6 +29,7 @@ contexts: &contexts
   - confluence
   - circleci-credentials
   - tray-webhooks
+  - wizcli
   ## <<Stencil::Block(extraContexts)>>
 
   ## <</Stencil::Block>>
@@ -39,8 +46,8 @@ test: &test
 
 # Branches used for releasing code, pre-release or not
 release_branches: &release_branches # Release branch
-  - release
-  # Pre-release and Unstable branch, e.g. HEAD development
+  - "release"
+  # Pre-releases branch
   - "main"
 
 jobs:
@@ -81,8 +88,7 @@ workflows:
   auto-release-rc:
     triggers:
       - schedule:
-          # automatically release rc on every Tuesday 12pm(PST).
-          cron: "0 7 * * 2"
+          cron: 0 19 * * 2
           filters:
             branches:
               only:
@@ -90,12 +96,20 @@ workflows:
     jobs:
       - shared/trigger_rc_release:
           context: *contexts
+          release_failure_slack_channel: "#dt-notifications"
+          ## <<Stencil::Block(circleAutoTriggerRCExtra)>>
+
+          ## <</Stencil::Block>>
 
   manual-release-rc:
     when: << pipeline.parameters.release_rc>>
     jobs:
       - shared/trigger_rc_release:
           context: *contexts
+          release_failure_slack_channel: "#dt-notifications"
+          ## <<Stencil::Block(circleManualTriggerRCExtra)>>
+
+          ## <</Stencil::Block>>
 
   release:
     when:
@@ -108,7 +122,7 @@ workflows:
       ## <</Stencil::Block>>
       ### Start jobs inserted by other modules
       ### End jobs inserted by other modules
-      - shared/pre-release: &pre-release
+      - shared/release: &release
           dryrun: false
           context: *contexts
           release_failure_slack_channel: "#dt-notifications"
@@ -122,30 +136,38 @@ workflows:
             - shared/test
           filters:
             branches:
+              only: release
+      - shared/pre-release: &pre-release
+          dryrun: false
+          context: *contexts
+          release_failure_slack_channel: "#dt-notifications"
+          ## <<Stencil::Block(circlePreReleaseExtra)>>
+
+          ## <</Stencil::Block>>
+          requires:
+            ## <<Stencil::Block(circlePreReleaseRequires)>>
+
+            ## <</Stencil::Block>>
+            - shared/test
+          filters:
+            branches:
               only:
                 - main
       # Dryrun for PRs
       - shared/pre-release: &pre-release
           dryrun: true
           context: *contexts
-          ## <<Stencil::Block(circleReleaseExtra)>>
+          ## <<Stencil::Block(circlePreReleaseDryRunExtra)>>
 
           ## <</Stencil::Block>>
           requires:
-            ## <<Stencil::Block(circleReleaseRequires)>>
+            ## <<Stencil::Block(circlePreReleaseDryRunRequires)>>
 
             ## <</Stencil::Block>>
             - shared/test
           filters:
             branches:
               ignore: *release_branches
-      # stable release for release branch
-      - shared/release:
-          context: *contexts
-          dryrun: false
-          filters:
-            branches:
-              only: release
       - shared/test:
           <<: *test
           ## <<Stencil::Block(circleSharedTestExtra)>>

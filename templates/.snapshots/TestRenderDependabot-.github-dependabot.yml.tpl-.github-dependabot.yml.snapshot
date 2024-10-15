@@ -29,7 +29,6 @@ updates:
     # stencil-golang managed dependencies
     ignore:
       - dependency-name: "@grpc/grpc-js"
-      - dependency-name: "@grpc/proto-loader"
       - dependency-name: "@getoutreach/grpc-client"
       - dependency-name: "@getoutreach/find"
       - dependency-name: "@types/google-protobuf"
@@ -41,10 +40,8 @@ updates:
       - dependency-name: "@typescript-eslint/eslint-plugin"
       - dependency-name: "@typescript-eslint/parser"
       - dependency-name: "eslint"
-      - dependency-name: "eslint-config-prettier"
       - dependency-name: "eslint-plugin-jest"
       - dependency-name: "eslint-plugin-jsdoc"
-      - dependency-name: "eslint-plugin-lodash"
       - dependency-name: "eslint-plugin-node"
       - dependency-name: "grpc-tools"
       - dependency-name: "grpc_tools_node_protoc_ts"
@@ -56,7 +53,6 @@ updates:
       - dependency-name: "ts-node"
       - dependency-name: "tsconfig-paths"
       - dependency-name: "typescript"
-      - dependency-name: "wait-on"
 
   ## <<Stencil::Block(dependabotPackageManagers)>>
 
