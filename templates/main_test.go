@@ -246,3 +246,11 @@ func TestGoreleaserYml(t *testing.T) {
 	})
 	st.Run(true)
 }
+
+func TestRenderGolangcilintYaml(t *testing.T) {
+	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"lintroller": "platinum",
+	})
+	st.Run(true)
+}
