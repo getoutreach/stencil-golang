@@ -65,11 +65,11 @@ linters:
   disable-all: true
   enable:
     - bodyclose
+    - copyloopvar # Detects places where loop variables are copied.
     - dogsled
     - errcheck
     - errorlint
     - exhaustive # Checks exhaustiveness of enum switch statements.
-    - exportloopref # Checks for pointers to enclosing loop variables.
     - funlen
     - gochecknoinits
     - goconst
@@ -122,6 +122,8 @@ issues:
       source: "^//go:generate "
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
+      path: stdout
   sort-results: true
   print-severity: true
