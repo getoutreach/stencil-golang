@@ -126,6 +126,8 @@ issues:
 {{- end }}
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
+      path: stdout
   sort-results: true
   print-severity: true
