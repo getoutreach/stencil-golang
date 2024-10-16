@@ -56,10 +56,6 @@ linters-settings:
       - style
     disabled-checks:
       - whyNoLint # Doesn't seem to work properly
-      # Suggests bad simplifications (After is not identical to !Before).
-      # TODO(jkinkead): Remove when we have a version of go-critic with
-      # https://github.com/go-critic/go-critic/pull/1281 merged.
-      - timeCmpSimplify
   funlen:
     lines: 500
     statements: 50
@@ -69,11 +65,11 @@ linters:
   disable-all: true
   enable:
     - bodyclose
+    - copyloopvar # Detects places where loop variables are copied.
     - dogsled
     - errcheck
     - errorlint
     - exhaustive # Checks exhaustiveness of enum switch statements.
-    - exportloopref # Checks for pointers to enclosing loop variables.
     - funlen
     - gochecknoinits
     - goconst
@@ -130,6 +126,8 @@ issues:
 {{- end }}
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
+      path: stdout
   sort-results: true
   print-severity: true

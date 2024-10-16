@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
+(*codegen.File)(# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
 lintroller:
   tier: "platinum"
 
@@ -127,3 +127,4 @@ output:
       path: stdout
   sort-results: true
   print-severity: true
+)
