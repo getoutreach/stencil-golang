@@ -7,7 +7,7 @@ root = "."
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "make"
+cmd = "make devspace"
 
 # Binary file yields from `cmd`.
 bin = ".bootstrap/shell/air-runner.sh"
@@ -17,6 +17,9 @@ include_ext = ["go", "tpl", "tmpl", "html"]
 
 # Ignore these filename extensions or directories.
 exclude_dir = ["api", "node_modules", "vendor"]
+
+# do not exclude anything (also tests, as by default)
+exclude_regex = []
 
 # Watch these directories if you specified.
 include_dir = []
