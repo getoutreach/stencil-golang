@@ -441,6 +441,12 @@ profiles:
           download:
             containerPath: ${DEV_CONTAINER_WORKDIR}/unit-tests.xml
             localPath: ./bin/unit-tests.xml
+      {{- $binarySyncPatches := stencil.GetModuleHook "binaryDevspaceSyncPatches" }}
+      {{- if $binarySyncPatches }}
+        {{- range $binarySyncPatches  }}
+      {{ . }}
+        {{- end }}
+      {{- end }}
 
   - name: binarySyncDev
     description: Synchronizes just content of bin folder and don't do any build related stuff in the devspace pod (devenv apps run -b)
@@ -459,20 +465,18 @@ profiles:
           disableDownload: true
           waitInitialSync: true
       - op: add
-        path: dev.app.sync
-        value:
-            path: ./internal/graphql/schema:${DEV_CONTAINER_WORKDIR}/internal/graphql/schema
-            waitInitialSync: true
-            initialSync: mirrorLocal
-            disableDownload: true
-            printLogs: true
-      - op: add
         path: hooks
         value:
           name: reset-dev
           events: ["devCommand:after:execute"]
           command: |-
             "${DEVENV_DEVSPACE_BIN}" reset pods -s
+      {{- $binarySyncPatches := stencil.GetModuleHook "binaryDevspaceSyncPatches" }}
+      {{- if $binarySyncPatches }}
+        {{- range $binarySyncPatches  }}
+      {{ . }}
+        {{- end }}
+      {{- end }}
     merge:
       dev:
         app:
