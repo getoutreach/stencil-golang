@@ -207,7 +207,7 @@ Extra configuration jsonnet files to merge into the application config.
 
 **Type**:
 
-```json
+```yaml
 [
   {
     op: string
