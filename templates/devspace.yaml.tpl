@@ -458,14 +458,9 @@ profiles:
           printLogs: true
           disableDownload: true
           waitInitialSync: true
-      - op: add
-        path: dev.app.sync
-        value:
-            path: ./internal/graphql/schema:${DEV_CONTAINER_WORKDIR}/internal/graphql/schema
-            waitInitialSync: true
-            initialSync: mirrorLocal
-            disableDownload: true
-            printLogs: true
+{{- range (stencil.GetModuleHook "devspace.binarySyncDevPatches") }}
+{{ toYaml . | indent 6 }}
+{{- end }}
       - op: add
         path: hooks
         value:

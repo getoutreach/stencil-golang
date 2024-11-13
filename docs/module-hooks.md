@@ -203,6 +203,42 @@ Extra configuration jsonnet files to merge into the application config.
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "app.config.jsonnet/config" (list $myConfig) }}
 ```
 
+### `devspace.binarySyncDevPatches`
+
+**Type**:
+
+```yaml
+[
+  {
+    op: string
+    path: string
+    value: [ key: value ]
+  }
+]
+```
+
+**File**: `devspace.yaml.tpl`
+
+Extra [devspace patches](https://www.devspace.sh/docs/configuration/profiles/patches)
+to use when using the binary sync feature of `devenv`.
+
+Example:
+
+```tpl
+{{- define "syncFooBarFolderForBinarySync" }}
+- op: add
+  path: dev.app.sync
+  value:
+    path: ./foo/bar:${DEV_CONTAINER_WORKDIR}/foo/bar
+    waitInitialSync: true
+    initialSync: mirrorLocal
+    disableDownload: true
+    printLogs: true
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.binarySyncDevPatches" (stencil.ApplyTemplate "syncFooBarFolderForBinarySync" | fromYaml | list) }}
+```
+
 ### `devspace.profiles`
 
 **Type**:
