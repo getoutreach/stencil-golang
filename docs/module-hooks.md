@@ -236,7 +236,7 @@ Example:
     printLogs: true
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.binarySyncDevPatches" (stencil.ApplyTemplate "syncFooBarFolderForBinarySync" | fromYaml) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "devspace.binarySyncDevPatches" (stencil.ApplyTemplate "syncFooBarFolderForBinarySync" | fromYaml | list) }}
 ```
 
 ### `devspace.profiles`
