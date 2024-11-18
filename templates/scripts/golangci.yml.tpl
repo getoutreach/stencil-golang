@@ -7,7 +7,8 @@ linters-settings:
   errcheck:
     check-blank: true
   govet:
-    check-shadowing: true
+    enable:
+      - shadow
   revive:
     rules:
       # Enable the default golint rules. We must include these because
