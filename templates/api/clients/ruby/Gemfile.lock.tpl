@@ -24,4 +24,4 @@ DEPENDENCIES
   rake
 
 BUNDLED WITH
-   2.2.29
+   2.3.26
