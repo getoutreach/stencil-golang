@@ -125,7 +125,6 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	// <</Stencil::Block>>
   
   err = run.Run(ctx, "{{ .Config.Name }}", 
-		{{ $pkgName }}.NewHTTPService(cfg, &deps.privateHTTP),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
 		run.WithRunner("public-http-svc", {{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP)),
 		{{- end }}
