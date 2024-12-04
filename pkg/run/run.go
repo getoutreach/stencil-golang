@@ -69,8 +69,8 @@ func WithHTTPAppHandler(appHandler http.Handler) Option {
 // DefaultHTTPAddr is the default address where the http server will run.
 const DefaultHTTPAddr = "127.0.0.1:8000"
 
-// OptHTTPAddr defines where to serve the http server
-func OptHTTPAddr(addr string) Option {
+// WithHTTPAddress defines where to serve the http server
+func WithHTTPAddress(addr string) Option {
 	return optionFunc(func(o *runOpts) error {
 		o.httpAddr = addr
 		return nil

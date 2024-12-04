@@ -48,7 +48,7 @@ func TestRun(t *testing.T) {
 		t.Log("starting service")
 		var once sync.Once
 
-		err := Run(ctx, "test-service", OptHTTPAddr(addr), WithRunner("ready-signal", async.Func(func(ctx context.Context) error {
+		err := Run(ctx, "test-service", WithHTTPAddress(addr), WithRunner("ready-signal", async.Func(func(ctx context.Context) error {
 			async.Sleep(ctx, time.Millisecond)
 			once.Do(func() {
 				close(ch)
