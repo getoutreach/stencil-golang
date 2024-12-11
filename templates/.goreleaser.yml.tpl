@@ -1,26 +1,37 @@
 {{- if not (stencil.Arg "commands") }}
-{{ file.Skip "No commands defined" }}
+{{- file.Delete }}
 {{- end -}}
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 before:
   hooks:
     - make dep
-builds:
-{{- range $cmdName := stencil.Arg "commands" }}
+{{- $hasCommands := false }}
+{{- range $index, $cmdName := stencil.Arg "commands" }}
 {{- $opts := (dict) }}
 {{- if kindIs "map" $cmdName }}
 {{- $cmdName = (index (keys $cmdName) 0) }}
 {{- $opts = (index . $cmdName | default (dict)) }}
 {{- end }}
+{{- if $opts.buildAsset }}
+{{- if eq $index 0 }}
+{{- $hasCommands = true }}
+builds:
+{{- end }}
   - main: ./cmd/{{ $cmdName }}
     id: &name {{ $cmdName }}
     binary: *name
     goos:
-      - linux
-      - darwin
+      {{- $defaultOs := (list "linux" "darwin") }}
+      {{- $osList := ($opts.os | default $defaultOs) }}
+      {{- range $os := $osList }}
+      - {{ $os }}
+      {{- end }}
     goarch:
-      - amd64
-      - arm64
+      {{- $defaultArch := (list "arm64" "amd64") }}
+      {{- $archList := ($opts.arch | default $defaultArch) }}
+      {{- range $arch := $archList }}
+      - {{ $arch }}
+      {{- end }}
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ "{{" }} .Version {{ "}}" }}"'
       {{- if not $opts.delibird }}
@@ -34,6 +45,11 @@ builds:
       {{ (file.Block $blockName) | trim }}
       ## <</Stencil::Block>>
       {{- end }}
+{{- end }}
+{{- if not $hasCommands }}
+{{- file.Delete }}
+{{- end -}}
+
 
 archives: []
 checksum:
