@@ -230,10 +230,10 @@ func TestGRPCServerRPC(t *testing.T) {
 			"grpc",
 		},
 	})
-	st.Run(true)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
-func TestGoreleaserYml(t *testing.T) {
+func TestGoreleaserYmlOnlyCommands(t *testing.T) {
 	st := stenciltest.New(t, ".goreleaser.yml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"commands": []interface{}{
@@ -244,7 +244,61 @@ func TestGoreleaserYml(t *testing.T) {
 			"cmd4_sub1",
 		},
 	})
-	st.Run(true)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestGoreleaserYmlWithBuildAsset(t *testing.T) {
+	st := stenciltest.New(t, ".goreleaser.yml.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"commands": []any{
+			map[string]any{
+				"cmd1": map[string]any{
+					"buildAsset": true,
+				},
+			},
+			map[string]any{
+				"cmd2": map[string]any{
+					"buildAsset": true,
+				},
+			},
+			map[string]any{
+				"cmd3-sub1": map[string]any{
+					"buildAsset": true,
+				},
+			},
+			map[string]any{
+				"cmd3-sub2": map[string]any{
+					"buildAsset": true,
+				},
+			},
+			map[string]any{
+				"cmd4_sub1": map[string]any{
+					"buildAsset": true,
+				},
+			},
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestGoreleaserYmlWithSpecifiedOrAndArch(t *testing.T) {
+	st := stenciltest.New(t, ".goreleaser.yml.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"commands": []any{
+			map[string]any{
+				"cmd1": map[string]any{
+					"buildAsset": true,
+					"os": []any{
+						"linux",
+					},
+					"arch": []any{
+						"arm64",
+					},
+				},
+			},
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderGolangcilintYaml(t *testing.T) {

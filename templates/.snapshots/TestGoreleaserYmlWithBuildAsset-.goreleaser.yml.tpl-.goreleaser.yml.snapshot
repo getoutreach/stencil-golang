@@ -1,0 +1,101 @@
+(*codegen.File)(# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+before:
+  hooks:
+    - make dep
+builds:
+  - main: ./cmd/cmd1
+    id: &name cmd1
+    binary: *name
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - arm64
+      - amd64
+    ldflags:
+      - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
+      - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
+      - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
+    env:
+      - CGO_ENABLED=0
+      ## <<Stencil::Block(cmd1AdditionalEnv)>>
+      
+      ## <</Stencil::Block>>
+  - main: ./cmd/cmd2
+    id: &name cmd2
+    binary: *name
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - arm64
+      - amd64
+    ldflags:
+      - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
+      - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
+      - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
+    env:
+      - CGO_ENABLED=0
+      ## <<Stencil::Block(cmd2AdditionalEnv)>>
+      
+      ## <</Stencil::Block>>
+  - main: ./cmd/cmd3-sub1
+    id: &name cmd3-sub1
+    binary: *name
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - arm64
+      - amd64
+    ldflags:
+      - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
+      - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
+      - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
+    env:
+      - CGO_ENABLED=0
+      ## <<Stencil::Block(cmd3sub1AdditionalEnv)>>
+      
+      ## <</Stencil::Block>>
+  - main: ./cmd/cmd3-sub2
+    id: &name cmd3-sub2
+    binary: *name
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - arm64
+      - amd64
+    ldflags:
+      - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
+      - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
+      - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
+    env:
+      - CGO_ENABLED=0
+      ## <<Stencil::Block(cmd3sub2AdditionalEnv)>>
+      
+      ## <</Stencil::Block>>
+  - main: ./cmd/cmd4_sub1
+    id: &name cmd4_sub1
+    binary: *name
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - arm64
+      - amd64
+    ldflags:
+      - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
+      - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
+      - '-X "main.TeleforkAPIKey={{ .Env.TELEFORK_APIKEY }}"'
+    env:
+      - CGO_ENABLED=0
+      ## <<Stencil::Block(cmd4sub1AdditionalEnv)>>
+      
+      ## <</Stencil::Block>>archives: []
+checksum:
+  name_template: 'checksums.txt'
+release:
+  # We handle releasing via semantic-release
+  disable: true
+)
