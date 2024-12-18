@@ -149,11 +149,11 @@ go:
 
 {{- if stencil.Arg "kubernetes.groups" }}
 - name: k8s.io/apimachinery
-  version: v0.23.0
+  version: v0.30.8
 - name: k8s.io/client-go
-  version: v0.23.0
+  version: v0.30.8
 - name: sigs.k8s.io/controller-runtime
-  version: v0.9.6
+  version: v0.18.6
 {{- end }}
 
 {{- range stencil.GetModuleHook "go_modules" }}
