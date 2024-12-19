@@ -132,7 +132,7 @@ go:
 - name: google.golang.org/grpc
   version: v1.37.0
 - name: github.com/getoutreach/orgservice
-  version: v1.63.0
+  version: v1.148.6
   # Used for grpcx
 - name: github.com/getoutreach/services
   version: v1.175.1
