@@ -29,7 +29,9 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	logadapters "github.com/getoutreach/gobox/pkg/log/adapters"
 	ctrl "sigs.k8s.io/controller-runtime"
-    "sigs.k8s.io/controller-runtime/pkg/controller"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
+	metrics "sigs.k8s.io/controller-runtime/pkg/metrics/server"
+	"sigs.k8s.io/controller-runtime/pkg/webhook
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -67,15 +69,19 @@ func (s *KubernetesService) Run(ctx context.Context) error { //nolint: funlen,ll
 	ctrl.SetLogger(logadapters.NewLogrLogger(ctx))
 
 	s.registerSchemes()
-  
+
     // manager options
     managerOptions := ctrl.Options{
 		Scheme:         s.scheme,
-		Port:           9443,
+		WebhookServer: webhook.NewServer(webhook.Options{
+			Port: 9443,
+		}),
 
 		// Redirect controller metrics to a dedicated port for this purpose.
 		// Same port is also scraped by datadog.
-		MetricsBindAddress: ":2019",
+		Metrics: metrics.Options{
+			BindAddress: ":2019",
+		},
     {{- if not (stencil.Arg "kubernetes.leaderElection") }}
     LeaderElection: false,
     {{- else }}
