@@ -126,7 +126,7 @@ go:
 - name: github.com/getoutreach/stencil-golang/pkg
   # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
   # in a go.mod and run `go mod tidy`.
-  version: v0.0.0-20230811193316-312178c3fbc3
+  version: v0.0.0-20250109193043-fa44ea640e7e
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: google.golang.org/grpc
