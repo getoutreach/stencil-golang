@@ -81,7 +81,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.3.0 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
-	github.com/getoutreach/stencil-golang/pkg v0.0.0-20230811193316-312178c3fbc3
+	github.com/getoutreach/stencil-golang/pkg v0.0.0-20250109193043-fa44ea640e7e
 )
 
 replace github.com/getoutreach/stencil => ../stencil
