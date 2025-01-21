@@ -189,7 +189,7 @@ arguments:
     default: ""
   versions.go:
     description: Go version to use
-    default: "1.23.3"
+    default: "1.23.4"
     schema:
       type:
         - string

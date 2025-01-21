@@ -122,17 +122,17 @@ secrets:
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.90.2
+  version: v1.102.1
 - name: github.com/getoutreach/stencil-golang/pkg
   # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
   # in a go.mod and run `go mod tidy`.
-  version: v0.0.0-20230811193316-312178c3fbc3
+  version: v0.0.0-20250109193043-fa44ea640e7e
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: google.golang.org/grpc
   version: v1.37.0
 - name: github.com/getoutreach/orgservice
-  version: v1.63.0
+  version: v1.148.6
   # Used for grpcx
 - name: github.com/getoutreach/services
   version: v1.175.1
@@ -149,11 +149,11 @@ go:
 
 {{- if stencil.Arg "kubernetes.groups" }}
 - name: k8s.io/apimachinery
-  version: v0.23.0
+  version: v0.30.8
 - name: k8s.io/client-go
-  version: v0.23.0
+  version: v0.30.8
 - name: sigs.k8s.io/controller-runtime
-  version: v0.9.6
+  version: v0.18.6
 {{- end }}
 
 {{- range stencil.GetModuleHook "go_modules" }}
