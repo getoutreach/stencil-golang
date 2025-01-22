@@ -209,8 +209,6 @@ nodejs:
     version: ^4.1.5
   - name: prettier
     version: ^3.0.0
-  - name: rimraf
-    version: ^3.0.2
   - name: ts-jest
     version: ^26.4.4
   - name: ts-node
