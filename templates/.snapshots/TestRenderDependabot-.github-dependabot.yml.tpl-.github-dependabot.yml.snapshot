@@ -48,7 +48,6 @@ updates:
       - dependency-name: "jest"
       - dependency-name: "npm-run-all"
       - dependency-name: "prettier"
-      - dependency-name: "rimraf"
       - dependency-name: "ts-jest"
       - dependency-name: "ts-node"
       - dependency-name: "tsconfig-paths"
