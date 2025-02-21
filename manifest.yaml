@@ -68,6 +68,25 @@ arguments:
               unmanaged:
                 type: boolean
                 description: If true, stencil will not generate an entrypoint go file for this CLI (`cmd/<name>/<name>.go`), but still will build and distribute it.
+              buildAsset:
+                type: boolean
+                description: If true, the command is added to .goreleaser.yml file, otherwise no asset is build for this command
+              arch:
+                type: array
+                description: List of architectures required for building the asset (by default arm64 and amd64)
+                items:
+                  type: string
+                  enum:
+                    - arm64
+                    - amd64
+              os:
+                type: array
+                description: List of os types required for building the asset (by default linux and darwin)
+                items:
+                  type: string
+                  enum:
+                    - linux
+                    - darwin
     description: List of CLI commands to generate for this repository
   grpcClients:
     schema:
