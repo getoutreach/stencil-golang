@@ -16,7 +16,6 @@ import (
 	"context"
 
 	"github.com/getoutreach/gobox/pkg/log"
-	k8slogging "github.com/getoutreach/k8slib/pkg/k8s/logging"
 	"github.com/getoutreach/k8slib/pkg/k8s/controllers"
 	"github.com/getoutreach/k8slib/pkg/k8s/logging"
 	"github.com/getoutreach/k8slib/pkg/k8s/resources"
