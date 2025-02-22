@@ -61,22 +61,15 @@ local deploymentMetrics = [
 local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
-			annotations+: {
-				{{- if stencil.Arg "aws.useKIAM" }}
-				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
-				{{- end }}
-			},
 			labels+: sharedLabels,
 		},
 	},
 	svc_acct+: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
-			{{- if not (stencil.Arg "aws.useKIAM") }}
 			annotations+: {
 				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
 			},
-			{{- end }}
 		},
 	},
 	service: ok.Service(app.name, app.namespace) {
@@ -237,9 +230,6 @@ local all = {
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
-            {{- if stencil.Arg "aws.useKIAM" }}
-            'iam.amazonaws.com/role': '%s_service_role' % app.name,
-            {{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
             datadog_prom_instances_:: [
 							{

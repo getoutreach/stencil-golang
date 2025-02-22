@@ -45,7 +45,7 @@ arguments:
   aws.useKIAM:
     schema:
       type: boolean
-    default: true
+    default: false
     description: Whether the application uses KIAM for IAM roles or IRSA roles for service accounts.
   oss:
     schema:
