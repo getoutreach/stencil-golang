@@ -135,7 +135,7 @@ go:
   version: v1.148.6
   # Used for grpcx
 - name: github.com/getoutreach/services
-  version: v1.175.1
+  version: v1.218.0
 {{- end }}
 {{- if has "http" (stencil.Arg "serviceActivities") }}
 - name: github.com/getoutreach/httpx
@@ -148,12 +148,14 @@ go:
 {{- end }}
 
 {{- if stencil.Arg "kubernetes.groups" }}
+- name: github.com/getoutreach/k8slib
+  version: v1.0.0
 - name: k8s.io/apimachinery
-  version: v0.30.8
+  version: v0.31.3
 - name: k8s.io/client-go
-  version: v0.30.8
+  version: v0.31.0
 - name: sigs.k8s.io/controller-runtime
-  version: v0.18.6
+  version: v0.19.0
 {{- end }}
 
 {{- range stencil.GetModuleHook "go_modules" }}
