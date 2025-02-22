@@ -148,6 +148,8 @@ go:
 {{- end }}
 
 {{- if stencil.Arg "kubernetes.groups" }}
+- name: github.com/getoutreach/k8slib
+  version: v1.0.0
 - name: k8s.io/apimachinery
   version: v0.30.8
 - name: k8s.io/client-go
