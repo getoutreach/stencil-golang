@@ -231,7 +231,7 @@ local all = {
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-            datadog_prom_instances_:: [
+						datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
