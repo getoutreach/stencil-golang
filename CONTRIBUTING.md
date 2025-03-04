@@ -41,3 +41,8 @@ You can run the linters and unit tests with:
 ```bash
 make test
 ```
+
+This repository uses snapshots to make sure that the generated files are what we expect to be
+rendered by Stencil. When you run `make test` locally, it will update the snapshots. Please make
+sure to review those changes and commit them before making a pull request, as CI will fail if
+said snapshots have not been updated appropriately.
