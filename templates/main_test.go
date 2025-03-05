@@ -15,6 +15,17 @@ var libraryTmpls = []string{
 	"_helpers.tpl",
 }
 
+// fakeDockerPullRegistry sets the BOX_DOCKER_PULL_IMAGE_REGISTRY environment
+// variable to a fake value for the duration of the test.
+func fakeDockerPullRegistry(t *testing.T) {
+	t.Helper()
+	oldRegistryValue := os.Getenv("BOX_DOCKER_PULL_IMAGE_REGISTRY")
+	os.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", "registry.example.com/foo")
+	t.Cleanup(func() {
+		os.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", oldRegistryValue)
+	})
+}
+
 func TestRenderAPIGoSuccess(t *testing.T) {
 	// NOTE: 2022-07-06 For the moment, we cannot change the `Name` field of
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
@@ -106,6 +117,7 @@ func TestRenderDeploymentOverride(t *testing.T) {
 }
 
 func TestRenderDeploymentDockerfile(t *testing.T) {
+	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"reportingTeam": "fnd-seal",
@@ -197,6 +209,7 @@ func TestEmptyDevenvYaml(t *testing.T) {
 }
 
 func TestDevspaceYaml(t *testing.T) {
+	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "devspace.yaml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"service": true,
