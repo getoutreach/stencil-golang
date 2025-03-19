@@ -5,6 +5,6 @@ go 1.23.0
 toolchain go1.23.4
 
 require (
-	github.com/getoutreach/gobox v1.102.1
+	github.com/getoutreach/gobox v1.104.0
 	github.com/getoutreach/stencil-golang/pkg v0.0.0-20250109193043-fa44ea640e7e
 ))
