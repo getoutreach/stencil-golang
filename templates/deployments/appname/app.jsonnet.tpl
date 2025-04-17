@@ -13,6 +13,7 @@ local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
+local isLocalDev = app.environment == 'local_development';
 
 {{- if not (empty (stencil.Arg "kubernetes.groups")) }}
 local k8sMetricsPort = 2019;
@@ -136,7 +137,7 @@ local all = {
 			OpenTelemetry: {
 				Enabled: true,
 				{{- if eq "opentelemetry" (stencil.Arg "tracing") }}
-				CollectorEndpoint:  'otel-collector-singleton.monitoring.svc.cluster.local:4317',
+				CollectorEndpoint: if isLocalDev then '' else 'otel-collector-singleton.monitoring.svc.cluster.local:4317',
 				{{- end }}
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
