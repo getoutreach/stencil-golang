@@ -2,7 +2,7 @@
 # syntax, such as anchors, will be fixed automatically.
 version: 2.1
 orbs:
-  shared: getoutreach/shared@2.29.0
+  shared: getoutreach/shared@dev:2.31.0-rc.3
   queue: eddiewebb/queue@2.2.1
   ## <<Stencil::Block(CircleCIExtraOrbs)>>
 
@@ -39,6 +39,8 @@ contexts: &contexts
 test: &test
   context: *contexts
   app_name: stencil-golang
+  docker_image: 182192988802.dkr.ecr.us-east-2.amazonaws.com/outreach-docker/bootstrap/ci-slim
+  executor_name: testbed-docker-aws
   ### Start parameters inserted by other modules
   ### End parameters inserted by other modules
   ## <<Stencil::Block(circleTestExtra)>>
@@ -180,6 +182,8 @@ workflows:
           ## <</Stencil::Block>>
       - shared/publish_docs:
           context: *contexts
+          docker_image: 182192988802.dkr.ecr.us-east-2.amazonaws.com/outreach-docker/bootstrap/ci-slim
+          executor_name: testbed-docker-aws
           filters:
             branches:
               only:
