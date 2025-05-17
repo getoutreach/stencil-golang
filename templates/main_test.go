@@ -233,7 +233,7 @@ func TestGRPCServerRPC(t *testing.T) {
 			"grpc",
 		},
 	})
-	st.Run(true)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestGoreleaserYml(t *testing.T) {
@@ -247,7 +247,7 @@ func TestGoreleaserYml(t *testing.T) {
 			"cmd4_sub1",
 		},
 	})
-	st.Run(true)
+	st.Run(stenciltest.RegenerateSnapshots())
 }
 
 func TestRenderGolangcilintYaml(t *testing.T) {
@@ -255,5 +255,31 @@ func TestRenderGolangcilintYaml(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"lintroller": "platinum",
 	})
-	st.Run(true)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestUrfaveCLIV2(t *testing.T) {
+	st := stenciltest.New(t, "cmd/main_cli.go.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"commands": []any{
+			"cmd1",
+		},
+		"versions": map[string]any{
+			"urfave-cli": "v2",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestUrfaveCLIV3(t *testing.T) {
+	st := stenciltest.New(t, "cmd/main_cli.go.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"commands": []any{
+			"cmd1",
+		},
+		"versions": map[string]any{
+			"urfave-cli": "v3",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
 }

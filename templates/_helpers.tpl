@@ -143,8 +143,13 @@ go:
 {{- end }}
 
 {{- if stencil.Arg "commands" }}
+{{- if eq (stencil.Arg "versions.urfave-cli") "v3" }}
+- name: github.com/urfave/cli/v3
+  version: v3.3.3
+{{- else }}
 - name: github.com/urfave/cli/v2
   version: v2.16.3
+{{- end }}
 {{- end }}
 
 {{- if stencil.Arg "kubernetes.groups" }}

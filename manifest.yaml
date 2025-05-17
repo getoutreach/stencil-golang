@@ -203,6 +203,14 @@ arguments:
       type:
         - string
         - number
+  versions.urfave-cli:
+    description: major urfave/cli version to use
+    default: "v2"
+    schema:
+      type: string
+      enum:
+        - v2
+        - v3
   enableCgo:
     from: github.com/getoutreach/devbase
   disableGrpcGeneration:
