@@ -52,6 +52,7 @@ func main() {
 	app := cli.Command{
 		Version: oapp.Version,
 		Name: "cmd1",
+		EnableShellCompletion: true,
 		// <<Stencil::Block(app)>>
 
 		// <</Stencil::Block>>

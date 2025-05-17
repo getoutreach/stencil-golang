@@ -87,6 +87,9 @@ func main() {
 	app := cli.{{ $urfaveCommand }}{
 		Version: oapp.Version,
 		Name: "{{ .cmdName }}",
+{{- if eq (stencil.Arg "versions.urfave-cli") "v3" }}
+		EnableShellCompletion: true,
+{{- end }}
 		// <<Stencil::Block(app)>>
 {{ file.Block "app" }}
 		// <</Stencil::Block>>
