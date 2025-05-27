@@ -16,6 +16,6 @@ Please read the [CONTRIBUTING.md](CONTRIBUTING.md) document for guidelines on de
 
 <!-- <<Stencil::Block(overview)>> -->
 
-See [the docs](./docs/intro.md) for more information
+See [the docs](./docs/README.md) for more information
 
 <!-- <</Stencil::Block>> -->
