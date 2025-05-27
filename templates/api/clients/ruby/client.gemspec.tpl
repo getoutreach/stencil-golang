@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
   spec.require_paths = ["lib", "lib/{{ .Config.Name }}_client"]
-  spec.add_dependency 'grpc', '~> 1.38'
+  spec.add_dependency 'grpc', '~> 1.72'
   spec.add_development_dependency 'rake'
   ## <<Stencil::Block(extraGemSpec)>>
 {{ file.Block "extraGemSpec" }}
