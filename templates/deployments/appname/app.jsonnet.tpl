@@ -217,14 +217,14 @@ local all = {
 						{{- if or (eq "opentelemetry" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						'opentelemetry.io/scrape': 'true',
 						{{- end }}
-						version: app.version,
+						'version': app.version,
 					},
 					{{- else }}
 					labels+: sharedLabels {
 						{{- if or (eq "opentelemetry" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						'opentelemetry.io/scrape': 'true',
 						{{- end }}
-						version: app.version,
+						'version': app.version,
 					},
 					{{- end }}
 					annotations+: {
