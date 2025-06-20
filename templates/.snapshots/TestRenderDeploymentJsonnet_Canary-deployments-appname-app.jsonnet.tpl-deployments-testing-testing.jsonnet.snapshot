@@ -177,6 +177,7 @@ local all = {
 				metadata+: {
 					labels+: sharedLabels {
 						'tollgate.outreach.io/scrape': 'true',
+						'version': app.version,
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
