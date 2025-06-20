@@ -141,6 +141,7 @@ local all = {
 			template+: {
 				metadata+: {
 					labels+: sharedLabels {
+						'version': app.version,
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
