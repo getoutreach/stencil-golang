@@ -361,10 +361,13 @@ profiles:
           - port: ${DLV_PORT}
 
   - name: skipPortForwarding
-    description: Skip port-forwarding for all but the DLV port.
+    description: Skip port-forwarding for all ports.
     activation:
       - vars:
           DEVENV_DEV_SKIP_PORTFORWARDING: "true"
+    patches:
+      - op: remove
+        path: dev.app.ports
 
   - name: e2eBase
     description: Basic configuration override for all e2e test profiles
