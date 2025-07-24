@@ -1,14 +1,14 @@
-version: v1.43.0-rc.1
+version: v1.43.0-rc.5
 modules:
     - name: github.com/getoutreach/devbase
       url: https://github.com/getoutreach/devbase
-      version: v2.33.0-rc.2
+      version: v2.33.0-rc.9
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
-      version: v0.16.5
+      version: v0.17.0-rc.1
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
-      version: v1.16.1
+      version: v1.16.2-rc.2
     - name: github.com/getoutreach/stencil-golang
       url: file://./
       version: local
@@ -76,6 +76,9 @@ files:
     - name: manifest.yaml
       template: manifest.yaml.tpl
       module: github.com/getoutreach/stencil-template-base
+    - name: mise.toml
+      template: mise.toml.tpl
+      module: github.com/getoutreach/stencil-base
     - name: package.json
       template: package.json.tpl
       module: github.com/getoutreach/stencil-base
