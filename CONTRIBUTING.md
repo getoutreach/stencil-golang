@@ -18,7 +18,7 @@ This project uses devbase, which exposes the following build tooling: [devbase/d
 
 <!-- <</Stencil::Block>> -->
 
-### Replacing a Remote Version of the a Package with Local Version
+### Replacing a Remote Version of the Package with Local Version
 
 _This is only applicable if this repository exposes a public package_.
 
