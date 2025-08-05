@@ -18,7 +18,7 @@ This project uses devbase, which exposes the following build tooling: [devbase/d
 
 <!-- <</Stencil::Block>> -->
 
-### Replacing a Remote Version of the a Package with Local Version
+### Replacing a Remote Version of the Package with Local Version
 
 _This is only applicable if this repository exposes a public package_.
 
@@ -41,3 +41,8 @@ You can run the linters and unit tests with:
 ```bash
 make test
 ```
+
+This repository uses snapshots to make sure that the generated files are what we expect to be
+rendered by Stencil. When you run `make test` locally, it will update the snapshots. Please make
+sure to review those changes and commit them before making a pull request, as CI will fail if
+said snapshots have not been updated appropriately.

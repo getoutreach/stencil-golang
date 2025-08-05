@@ -45,7 +45,7 @@ arguments:
   aws.useKIAM:
     schema:
       type: boolean
-    default: true
+    default: false
     description: Whether the application uses KIAM for IAM roles or IRSA roles for service accounts.
   oss:
     schema:
@@ -210,7 +210,7 @@ arguments:
         - number
   versions.grpcClients.ruby:
     description: Ruby version to use for gRPC clients
-    default: "3.1.3"
+    default: "3.1.5"
     schema:
       type:
         - string
@@ -222,6 +222,14 @@ arguments:
       type:
         - string
         - number
+  versions.urfave-cli:
+    description: major urfave/cli version to use
+    default: "v2"
+    schema:
+      type: string
+      enum:
+        - v2
+        - v3
   enableCgo:
     from: github.com/getoutreach/devbase
   disableGrpcGeneration:

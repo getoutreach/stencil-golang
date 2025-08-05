@@ -11,6 +11,7 @@ local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
+local isLocalDev = app.environment == 'local_development';
 
 local sharedLabels = {
 	repo: app.name,
@@ -21,15 +22,15 @@ local sharedLabels = {
 local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
-			annotations+: {
-				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
-			},
 			labels+: sharedLabels,
 		},
 	},
 	svc_acct+: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
+			annotations+: {
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::182192988802:role/%s-%s' % [app.bento, app.name]
+			},
 		},
 	},
 	service: ok.Service(app.name, app.namespace) {
@@ -78,7 +79,7 @@ local all = {
 		data_:: {
 			OpenTelemetry: {
 				Enabled: true,
-				CollectorEndpoint:  'otel-collector-singleton.monitoring.svc.cluster.local:4317',
+				CollectorEndpoint: if isLocalDev then '' else 'otel-collector-singleton.monitoring.svc.cluster.local:4317',
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
 					Path: '/run/secrets/outreach.io/honeycomb/apiKey',
@@ -140,11 +141,11 @@ local all = {
 			template+: {
 				metadata+: {
 					labels+: sharedLabels {
+						'version': app.version,
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
-            'iam.amazonaws.com/role': '%s_service_role' % app.name,
-            datadog_prom_instances_:: [
+						datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +

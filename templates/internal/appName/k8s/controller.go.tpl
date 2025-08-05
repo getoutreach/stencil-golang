@@ -16,10 +16,9 @@ import (
 	"context"
 
 	"github.com/getoutreach/gobox/pkg/log"
-	k8slogging "github.com/getoutreach/services/pkg/k8s/logging"
-	"github.com/getoutreach/services/pkg/k8s/controllers"
-	"github.com/getoutreach/services/pkg/k8s/logging"
-	"github.com/getoutreach/services/pkg/k8s/resources"
+	"github.com/getoutreach/k8slib/pkg/k8s/controllers"
+	"github.com/getoutreach/k8slib/pkg/k8s/logging"
+	"github.com/getoutreach/k8slib/pkg/k8s/resources"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
     ctrl "sigs.k8s.io/controller-runtime"

@@ -13,7 +13,7 @@ package {{ $g.version }}
 import (
 	"github.com/getoutreach/gobox/pkg/log"
 	{{- if $isCustomResource }}
-	"github.com/getoutreach/services/pkg/k8s/resources"
+	"github.com/getoutreach/k8slib/pkg/k8s/resources"
 	{{- else }}
 	{{ $g.group | lower }}{{ $g.version }} "k8s.io/api/{{ $g.group | default "core" | lower }}/{{ $g.version }}"
 	{{- end }}

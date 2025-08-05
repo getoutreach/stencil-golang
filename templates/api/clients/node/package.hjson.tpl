@@ -38,7 +38,7 @@
     // <</Stencil::Block>>
     "build": "npm-run-all clean tsc",
     "ci": "npm-run-all pretty lint test-ci",
-    "clean": "rimraf dist",
+    "clean": "rm -rf dist",
     "lint": "eslint src --ext .ts",
     "lint-fix": "eslint src --ext .ts --fix",
     "pre-commit": "npm-run-all pretty lint",

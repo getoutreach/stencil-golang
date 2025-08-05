@@ -26,13 +26,22 @@ func main() {
 
 package main
 
+{{- $urfaveCommand := "App" }}
+{{- $urfaveImport := (cat "github.com/urfave/cli/" (stencil.Arg "versions.urfave-cli")) | nospace }}
+{{- $gcliRun := "Run" }}
+{{- if eq (stencil.Arg "versions.urfave-cli") "v3" }}
+{{- $urfaveCommand = "Command" }}
+{{- $urfaveImport = (cat "github.com/urfave/cli/v3") | nospace }}
+{{- $gcliRun = "RunV3" }}
+{{- end }}
+
 import (
 	"context"
 
 	oapp "github.com/getoutreach/gobox/pkg/app"
 	"github.com/sirupsen/logrus"
 	gcli "github.com/getoutreach/gobox/pkg/cli"
-	"github.com/urfave/cli/v2"
+	{{ $urfaveImport | quote }}
 	"github.com/getoutreach/gobox/pkg/cfg"
 
 	// Place any extra imports for your startup code here
@@ -75,9 +84,12 @@ func main() {
 {{ file.Block "init" }}
 	// <</Stencil::Block>>
 
-	app := cli.App{
+	app := cli.{{ $urfaveCommand }}{
 		Version: oapp.Version,
 		Name: "{{ .cmdName }}",
+{{- if eq (stencil.Arg "versions.urfave-cli") "v3" }}
+		EnableShellCompletion: true,
+{{- end }}
 		// <<Stencil::Block(app)>>
 {{ file.Block "app" }}
 		// <</Stencil::Block>>
@@ -98,7 +110,7 @@ func main() {
 	// <</Stencil::Block>>
 
 	// Insert global flags, tracing, updating and start the application.
-	gcli.Run(ctx, cancel, &app, &gcli.Config{
+	gcli.{{ $gcliRun }}(ctx, cancel, &app, &gcli.Config{
 		Logger:    log,
 		Telemetry: gcli.TelemetryConfig{
 			{{- if .opts.delibird }}

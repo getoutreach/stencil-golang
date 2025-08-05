@@ -21,8 +21,6 @@ local sharedLabels = {
 local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
-			annotations+: {
-			},
 			labels+: sharedLabels,
 		},
 	},
@@ -145,7 +143,7 @@ local all = {
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
-            datadog_prom_instances_:: [
+						datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +

@@ -13,6 +13,7 @@ local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
+local isLocalDev = app.environment == 'local_development';
 
 {{- if not (empty (stencil.Arg "kubernetes.groups")) }}
 local k8sMetricsPort = 2019;
@@ -61,22 +62,15 @@ local deploymentMetrics = [
 local all = {
 	namespace: ok.Namespace(app.namespace) {
 		metadata+: {
-			annotations+: {
-				{{- if stencil.Arg "aws.useKIAM" }}
-				'iam.amazonaws.com/permitted': '%s_service_role' % app.name,
-				{{- end }}
-			},
 			labels+: sharedLabels,
 		},
 	},
 	svc_acct+: ok.ServiceAccount('%s-svc' % app.name, app.namespace) {
 		metadata+: {
 			labels+: sharedLabels,
-			{{- if not (stencil.Arg "aws.useKIAM") }}
 			annotations+: {
 				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
 			},
-			{{- end }}
 		},
 	},
 	service: ok.Service(app.name, app.namespace) {
@@ -143,7 +137,7 @@ local all = {
 			OpenTelemetry: {
 				Enabled: true,
 				{{- if eq "opentelemetry" (stencil.Arg "tracing") }}
-				CollectorEndpoint:  'otel-collector-singleton.monitoring.svc.cluster.local:4317',
+				CollectorEndpoint: if isLocalDev then '' else 'otel-collector-singleton.monitoring.svc.cluster.local:4317',
 				{{- end }}
 				Endpoint: 'api.honeycomb.io',
 				APIKey: {
@@ -223,12 +217,14 @@ local all = {
 						{{- if or (eq "opentelemetry" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						'opentelemetry.io/scrape': 'true',
 						{{- end }}
+						'version': app.version,
 					},
 					{{- else }}
 					labels+: sharedLabels {
 						{{- if or (eq "opentelemetry" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
 						'opentelemetry.io/scrape': 'true',
 						{{- end }}
+						'version': app.version,
 					},
 					{{- end }}
 					annotations+: {
@@ -237,11 +233,8 @@ local all = {
 						'tollgate.outreach.io/group': app.name,
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
-            {{- if stencil.Arg "aws.useKIAM" }}
-            'iam.amazonaws.com/role': '%s_service_role' % app.name,
-            {{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-            datadog_prom_instances_:: [
+						datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
