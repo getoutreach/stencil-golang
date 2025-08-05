@@ -19,11 +19,7 @@ var libraryTmpls = []string{
 // variable to a fake value for the duration of the test.
 func fakeDockerPullRegistry(t *testing.T) {
 	t.Helper()
-	oldRegistryValue := os.Getenv("BOX_DOCKER_PULL_IMAGE_REGISTRY")
-	os.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", "registry.example.com/foo")
-	t.Cleanup(func() {
-		os.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", oldRegistryValue)
-	})
+	t.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", "registry.example.com/foo")
 }
 
 func TestRenderAPIGoSuccess(t *testing.T) {
