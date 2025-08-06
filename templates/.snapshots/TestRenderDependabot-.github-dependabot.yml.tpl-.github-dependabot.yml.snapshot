@@ -13,6 +13,8 @@ updates:
       - dependency-name: google.golang.org/grpc
       - dependency-name: github.com/getoutreach/orgservice
       - dependency-name: github.com/getoutreach/services
+      ## <<Stencil::Block(dependabotGoIgnore)>>
+      ## <</Stencil::Block>>
 
   # Ignore semantic-release, this code is only executed in CI.
   - package-ecosystem: "npm"
