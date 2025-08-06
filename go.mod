@@ -9,7 +9,7 @@ toolchain go1.23.4
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.110.3
-	github.com/getoutreach/stencil v1.43.0-rc.5
+	github.com/getoutreach/stencil v1.43.0-rc.6
 	github.com/google/go-cmp v0.7.0
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
@@ -91,5 +91,5 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.5.2 // indirect
-	sigs.k8s.io/yaml v1.5.0 // indirect
+	sigs.k8s.io/yaml v1.6.0 // indirect
 )
