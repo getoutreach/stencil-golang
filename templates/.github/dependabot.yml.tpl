@@ -15,6 +15,8 @@ updates:
       - dependency-name: {{ $d.name }}
 {{- end }}
 {{- end }}
+      ## <<Stencil::Block(dependabotGoIgnore)>>
+      ## <</Stencil::Block>>
 
   # Ignore semantic-release, this code is only executed in CI.
   - package-ecosystem: "npm"
