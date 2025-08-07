@@ -16,6 +16,7 @@ updates:
 {{- end }}
 {{- end }}
       ## <<Stencil::Block(dependabotGoIgnore)>>
+{{ file.Block "dependabotGoIgnore" }}
       ## <</Stencil::Block>>
 
   # Ignore semantic-release, this code is only executed in CI.
