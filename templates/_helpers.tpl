@@ -75,7 +75,11 @@
 
 # Returns the copyright string
 {{- define "copyright" }}
+{{- if stencil.Arg "oss" }}
+{{- printf "Copyright %s Outreach Corporation. Licensed under the Apache License 2.0." (stencil.ApplyTemplate "currentYear") }}
+{{- else }}
 {{- printf "Copyright %s Outreach Corporation. All Rights Reserved." (stencil.ApplyTemplate "currentYear") }}
+{{- end }}
 {{- end }}
 
 # Returns the import path for this application.
