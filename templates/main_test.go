@@ -30,6 +30,14 @@ func TestRenderAPIGoSuccess(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestOSSCopyright(t *testing.T) {
+	st := stenciltest.New(t, "cmd/main.go.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"oss": true,
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestRenderDeploymentConfig(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.config.jsonnet.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
