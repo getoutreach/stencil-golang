@@ -40,6 +40,7 @@ updates:
       - dependency-name: "winston"
       - dependency-name: "@getoutreach/eslint-config"
       - dependency-name: "@types/jest"
+      - dependency-name: "@types/node"
       - dependency-name: "@typescript-eslint/eslint-plugin"
       - dependency-name: "@typescript-eslint/parser"
       - dependency-name: "eslint"
