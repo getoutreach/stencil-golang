@@ -198,6 +198,8 @@ nodejs:
     version: ^2.0.0
   - name: "@types/jest"
     version: ^26.0.15
+  - name: "@types/node"
+    version: ^22.18.3
   - name: "@typescript-eslint/eslint-plugin"
     version: ^7.8.0
   - name: "@typescript-eslint/parser"
