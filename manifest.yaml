@@ -267,4 +267,9 @@ arguments:
     description: Enable Reloader to cycle pods when secrets or configmaps are modified
     schema:
       type: boolean
+  useK8sYamlParser:
+    description: Use the k8s YAML parser instead of the native Jsonnet k8s parser
+    schema:
+      type: boolean
+    default: false
 ## <</Stencil::Block>>
