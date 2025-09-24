@@ -21,6 +21,9 @@ import (
 	{{- end }}
 	// End code inserted by modules
   {{- end }}
+  {{- if eq (stencil.Arg "useK8sYamlParser") true }}
+	"sigs.k8s.io/yaml"
+  {{- end }}
 
 	// <<Stencil::Block(configImports)>>
 {{ file.Block "configImports" }}
