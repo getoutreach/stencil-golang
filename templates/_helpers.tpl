@@ -197,7 +197,7 @@ nodejs:
   - name: "@getoutreach/eslint-config"
     version: ^2.0.0
   - name: "@types/jest"
-    version: ^29.4.4
+    version: ^26.0.15
   - name: "@types/node"
     version: ^22.18.3
   - name: "@typescript-eslint/eslint-plugin"
@@ -217,13 +217,13 @@ nodejs:
   - name: grpc_tools_node_protoc_ts
     version: ^5.0.1
   - name: jest
-    version: ^29.7.0
+    version: ^26.6.3
   - name: npm-run-all
     version: ^4.1.5
   - name: prettier
     version: ^3.0.0
   - name: ts-jest
-    version: ^29.4.4
+    version: ^26.4.4
   - name: ts-node
     version: ^9.0.0
   - name: tsconfig-paths
