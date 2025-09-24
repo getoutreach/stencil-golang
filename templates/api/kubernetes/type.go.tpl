@@ -76,9 +76,7 @@ type {{ $r.kind }}List struct {
 {{- else }}
 // {{ $r.kind }} is an alias to {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}
 // +kubebuilder:object:root=true
-	{{- if eq $r.addConfig "false" }}
-type {{ $r.kind }} {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}
-	{{- else }}
+	{{- if $r.addConfig }}
 type {{ $r.kind }} struct {
 	{{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }} `json:",inline"`
 	cfg *config.Config
@@ -88,6 +86,8 @@ type {{ $r.kind }} struct {
 func New{{ $r.kind }}(cfg *config.Config) *{{ $r.kind }} {
 	return &{{ $r.kind }}{cfg: cfg}
 }
+	{{- else }}
+type {{ $r.kind }} {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}
 	{{- end }}
 
 // {{ $r.kind }}List is an alias to {{ $g.group | lower }}{{ $g.version }}.{{ $r.kind }}List
