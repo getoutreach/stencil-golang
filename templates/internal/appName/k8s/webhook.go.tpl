@@ -57,10 +57,10 @@ func (r *{{ $webhookStruct }}) Version() string {
 func (r *{{ $webhookStruct }}) Setup(mgr ctrl.Manager) error {
 	// all relevant validation or other webhook related methods must be defined on the {{ $r.kind }} itself
 	err := ctrl.NewWebhookManagedBy(mgr).
-		{{- if eq $r.addConfig "false" }}
-		For(&api{{ $g.version }}.{{ $r.kind }}{}).
+		{{- if $r.addConfig }}
+		For(api{{ $g.version }}.New{{ $r.kind }}(r.Config)).
 		{{- else }}
-		For(&api{{ $g.version }}.New{{ $r.kind }}(r.Config)).
+		For(&api{{ $g.version }}.{{ $r.kind }}{}).
 		{{- end }}
 		Complete()
 	if err != nil {
