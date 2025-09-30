@@ -142,7 +142,7 @@ func TestRenderDeploymentDockerfileForCLI(t *testing.T) {
 	st.Args(map[string]any{
 		"service": false,
 		"commands": []any{
-			"testcli",
+			"testing",
 		},
 		"deployments": map[string]any{
 			"buildContainerForCLI": true,
