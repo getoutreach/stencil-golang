@@ -28,15 +28,6 @@ ENTRYPOINT ["/usr/local/bin/testing"]
 LABEL "io.outreach.reporting_team"="fnd-seal"
 LABEL "io.outreach.repo"="testing"
 
-# Add timezone information.
-COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /zoneinfo.zip
-ENV ZONEINFO=/zoneinfo.zip
-
-# Install certificates for RDS connectivity.
-RUN wget --output-document /usr/local/share/ca-certificates/global-bundle.pem \
-  "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem" \
-  && update-ca-certificates
-
 ## <<Stencil::Block(afterBuild)>>
 
 ## <</Stencil::Block>>
