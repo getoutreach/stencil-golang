@@ -23,19 +23,10 @@ RUN --mount=type=ssh --mount=type=cache,target=/go/pkg --mount=type=cache,target
   go build -o /src/bin/ -ldflags "-X github.com/getoutreach/gobox/pkg/app.Version=$VERSION" -v ./cmd/...
 
 FROM registry.example.com/foo/alpine:3.1
-ENTRYPOINT ["/usr/local/bin/testing"]
+ENTRYPOINT ["/usr/local/bin/testing", "--skip-update"]
 
 LABEL "io.outreach.reporting_team"="fnd-seal"
 LABEL "io.outreach.repo"="testing"
-
-# Add timezone information.
-COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /zoneinfo.zip
-ENV ZONEINFO=/zoneinfo.zip
-
-# Install certificates for RDS connectivity.
-RUN wget --output-document /usr/local/share/ca-certificates/global-bundle.pem \
-  "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem" \
-  && update-ca-certificates
 
 ## <<Stencil::Block(afterBuild)>>
 

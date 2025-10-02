@@ -72,6 +72,13 @@
 {{- end }}
 {{- end }}
 
+{{- /* skipUnlessBuildContainer skips the current file if we're not building a container image, either for a service or the default CLI. */}}
+{{- define "skipUnlessBuildContainer" }}
+{{- if not (or (stencil.Arg "service") (and (stencil.Arg "commands") (stencil.Arg "deployment.buildContainerForCLI"))) }}
+  {{ file.Skip "Not building a container image" }}
+{{- end }}
+{{- end }}
+
 
 # Returns the copyright string
 {{- define "copyright" }}

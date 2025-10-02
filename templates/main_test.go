@@ -123,10 +123,35 @@ func TestRenderDeploymentOverride(t *testing.T) {
 func TestRenderDeploymentDockerfile(t *testing.T) {
 	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
+	st.Args(map[string]any{
+		"service":       true,
 		"reportingTeam": "fnd-seal",
-		"versions": map[string]interface{}{
-			"golang": "1.0",
+		// Setting versions to avoid needing to update snapshots every
+		// time default versions change.
+		"versions": map[string]any{
+			"go":     "1.0",
+			"alpine": "3.1",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestRenderDeploymentDockerfileForCLI(t *testing.T) {
+	fakeDockerPullRegistry(t)
+	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service": false,
+		"commands": []any{
+			"testing",
+		},
+		"deployments": map[string]any{
+			"buildContainerForCLI": true,
+		},
+		"reportingTeam": "fnd-seal",
+		// Setting versions to avoid needing to update snapshots every
+		// time default versions change.
+		"versions": map[string]any{
+			"go":     "1.0",
 			"alpine": "3.1",
 		},
 	})

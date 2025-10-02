@@ -168,6 +168,11 @@ arguments:
         - "" # current default deployment strategy is RollingUpdate
         - canary
     default: ""
+  deployment.buildContainerForCLI:
+    description: Whether to build a container image for the default CLI. Assumes that service is false and there is at least one entry in commands.
+    default: false
+    schema:
+      type: boolean
   versions.go:
     description: Go version to use
     default: "1.23.4"
