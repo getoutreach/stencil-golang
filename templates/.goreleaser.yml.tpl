@@ -16,11 +16,27 @@ builds:
     id: &name {{ $cmdName }}
     binary: *name
     goos:
+      {{- $goosBlockName := (printf "%vGoos" ($cmdName | replace "-" "" | replace "_" "")) }}
+      ## <<Stencil::Block({{ $goosBlockName }})>>
+      {{- if not (empty (file.Block $goosBlockName)) }}
+      {{ (file.Block $goosBlockName) | trim }}
+      {{- else }}
+      ## Ability to build assets for those OS: linux, darwin
       - linux
       - darwin
+      {{- end }}
+      ## <</Stencil::Block>>
     goarch:
+      {{- $goarchBlockName := (printf "%vGoarch" ($cmdName | replace "-" "" | replace "_" "")) }}
+      ## <<Stencil::Block({{ $goarchBlockName }})>>
+      {{- if not (empty (file.Block $goarchBlockName)) }}
+      {{ (file.Block $goarchBlockName) | trim }}
+      {{- else }}
+      ## Ability to build assets for those architectures: amd64, arm64
       - amd64
       - arm64
+      {{- end }}
+      ## <</Stencil::Block>>
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ "{{" }} .Version {{ "}}" }}"'
       {{- if not $opts.delibird }}
