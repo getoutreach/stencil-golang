@@ -9,7 +9,7 @@ toolchain go1.23.4
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.110.3
-	github.com/getoutreach/stencil v1.43.0-rc.6
+	github.com/getoutreach/stencil v1.43.0
 	github.com/google/go-cmp v0.7.0
 	github.com/magefile/mage v1.15.0
 	github.com/pkg/errors v0.9.1
@@ -82,8 +82,8 @@ require (
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
-	golang.org/x/sys v0.34.0 // indirect
-	golang.org/x/term v0.33.0 // indirect
+	golang.org/x/sys v0.35.0 // indirect
+	golang.org/x/term v0.34.0 // indirect
 	golang.org/x/text v0.27.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250603155806-513f23925822 // indirect
 	google.golang.org/grpc v1.73.0 // indirect
