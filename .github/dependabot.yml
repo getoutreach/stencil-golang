@@ -11,6 +11,7 @@ updates:
       - dependency-name: github.com/getoutreach/stencil-golang/pkg
       - dependency-name: github.com/getoutreach/stencil
       ## <<Stencil::Block(dependabotGoIgnore)>>
+
       ## <</Stencil::Block>>
 
   # Ignore semantic-release, this code is only executed in CI.
