@@ -105,6 +105,7 @@ workflows:
   generate-crucible-config:
     jobs:
       - crucible/generate-config:
+          context: *contexts
           additional_repos: << pipeline.parameters.additional_repos >>
           all_repos: << pipeline.parameters.all_repos >>
           excluded_repos: << pipeline.parameters.excluded_repos >>
@@ -233,18 +234,4 @@ workflows:
             tags:
               only: /v\d+(\.\d+)*(-.*)*/
 tests:
-  lint:
-    modules:
-      - name: stencil-golang # only need the basename of the module
-        branch: mnagy/dt-4821
-    commands:
-      - make lint
-  stencil-upgrade-go:
-    modules:
-      - name: stencil-golang
-        branch: main
-      - name: devbase
-        branch: main
-    commands:
-      - stencil
-      - make lint
+
