@@ -32,13 +32,13 @@
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[proto3]": {
     "editor.defaultFormatter": "zxh404.vscode-proto3"
   },
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "gopls": {
     "build.buildFlags": [
