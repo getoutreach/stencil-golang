@@ -47,7 +47,7 @@ parameters:
   test_name:
     type: string
     description: The name of the test specified in the YAML config to run on each repo via Crucible.
-    default: ""
+    default: "lint"
   repos:
     type: string
     description: Space-separated list of repos (sans owner) to run against.
@@ -234,4 +234,18 @@ workflows:
             tags:
               only: /v\d+(\.\d+)*(-.*)*/
 tests:
-
+  lint:
+    modules:
+      - name: devbase # only need the basename of the module
+        branch: feat/upgrade-golangci-lint
+    commands:
+      - make lint
+  stencil-upgrade-go:
+    modules:
+      - name: stencil-golang
+        branch: feat/upgrade-go-version
+      - name: devbase
+        branch: feat/upgrade-go-version
+    commands:
+      - stencil
+      - make lint
