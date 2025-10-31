@@ -5,7 +5,6 @@ orbs:
   shared: getoutreach/shared@dev:2.35.0-rc.10
   queue: eddiewebb/queue@2.2.1
   ## <<Stencil::Block(CircleCIExtraOrbs)>>
-
   ## <</Stencil::Block>>
 
 parameters:
@@ -16,7 +15,6 @@ parameters:
     type: boolean
     default: false
   ## <<Stencil::Block(CircleCIExtraParams)>>
-
   ## <</Stencil::Block>>
 
 # Extra contexts to expose to all jobs below
@@ -32,7 +30,6 @@ contexts: &contexts
   - tray-webhooks
   - wizcli
   ## <<Stencil::Block(extraContexts)>>
-
   ## <</Stencil::Block>>
 
 # Test configs to pass to test and cache jobs
