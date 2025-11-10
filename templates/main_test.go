@@ -312,3 +312,8 @@ func TestUrfaveCLIV3(t *testing.T) {
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }
+
+func TestBufLint(t *testing.T) {
+	st := stenciltest.New(t, "api/buf.yaml.tpl", libraryTmpls...)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
