@@ -69,10 +69,10 @@ type dependencies struct{
 
 // main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
-  ctx, cancel := context.WithCancel(context.Background())
-  defer cancel()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-  exitCode := 1
+	exitCode := 1
 	defer func() {
 		if r := recover(); r != nil {
 			log.Error(ctx, "unhandled panic", events.NewErrorInfoFromPanic(r))
