@@ -31,4 +31,4 @@
 {{- end }}
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "preGHReleaseConfig" (stencil.ApplyTemplate "grpcClients-pre-release-config" | fromYaml) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "preGHReleaseConfig" (list (stencil.ApplyTemplate "grpcClients-pre-release-config")) }}
