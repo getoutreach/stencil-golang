@@ -9,7 +9,7 @@
     - pkgRoot: api/clients/node
   {{- end -}}
   {{- if has "ruby" (stencil.Arg "grpcClients") }}
-  # Release ruby packages
+  # Release Ruby packages
   - - "@semantic-release/exec"
     # We use generateNotesCmd because prepareCmd is not ran on dry-run
     - generateNotesCmd: |-
@@ -18,7 +18,7 @@
         DRYRUN=${options.dryrun} ./scripts/shell-wrapper.sh ruby/publish.sh ${nextRelease.version}
   {{- end }}
   {{- if not (empty (stencil.Arg "grpcClients")) }}
-  # Store the package.json updates in Git
+  # Store the manifest version updates in git
   - - "@semantic-release/git"
     - assets:
         {{- if has "node" (stencil.Arg "grpcClients") }}
