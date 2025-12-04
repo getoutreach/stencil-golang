@@ -50,36 +50,36 @@ import (
 // dependencies is a conglomerate struct used for injecting dependencies into service
 // activities.
 type dependencies struct{
-  privateHTTP {{ $pkgName }}.PrivateHTTPDependencies
-  {{- if has "http" (stencil.Arg "serviceActivities") }}
-  publicHTTP {{ $pkgName }}.PublicHTTPDependencies
-  {{- end }}
-  {{- if has "grpc" (stencil.Arg "serviceActivities") }}
-  gRPC {{ $pkgName }}.GRPCDependencies
-  {{- end }}
-  {{- range stencil.GetModuleHook "main.dependencies" }}
-  {{- range $k, $v := . }}
-  {{ $k }} {{ $v }}
-  {{- end }}
-  {{- end }}
-  // <<Stencil::Block(customServiceActivityDependencyInjection)>>
+	privateHTTP {{ $pkgName }}.PrivateHTTPDependencies
+	{{- if has "http" (stencil.Arg "serviceActivities") }}
+	publicHTTP {{ $pkgName }}.PublicHTTPDependencies
+	{{- end }}
+	{{- if has "grpc" (stencil.Arg "serviceActivities") }}
+	gRPC {{ $pkgName }}.GRPCDependencies
+	{{- end }}
+	{{- range stencil.GetModuleHook "main.dependencies" }}
+	{{- range $k, $v := . }}
+	{{ $k }} {{ $v }}
+	{{- end }}
+	{{- end }}
+	// <<Stencil::Block(customServiceActivityDependencyInjection)>>
 {{ file.Block "customServiceActivityDependencyInjection" }}
 	// <</Stencil::Block>>
 }
 
 // main is the entrypoint for the {{ .Config.Name }} service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
-  exitCode := 1
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	exitCode := 1
 	defer func() {
 		if r := recover(); r != nil {
-			log.Error(context.Background(), "unhandled panic", events.NewErrorInfoFromPanic(r))
+			log.Error(ctx, "unhandled panic", events.NewErrorInfoFromPanic(r))
 			panic(r)
 		}
 		os.Exit(exitCode)
 	}()
-
-  ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	env.ApplyOverrides()
 	app.SetName("{{ .Config.Name }}")
@@ -96,8 +96,8 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	}
 	defer trace.CloseTracer(ctx)
 
-  // Initialize variable for service activity dependency injection.
-  var deps dependencies
+	// Initialize variable for service activity dependency injection.
+	var deps dependencies
 
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
 	{{- $preInitializationBlock := stencil.GetModuleHook "preInitializationBlock" }}
@@ -127,7 +127,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	acts := []async.Runner{
 		shutdown.New(),
 		gomaxprocs.New(),
-    automemlimit.New(),
+		automemlimit.New(),
 		{{ $pkgName }}.NewHTTPService(cfg, &deps.privateHTTP),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP),
