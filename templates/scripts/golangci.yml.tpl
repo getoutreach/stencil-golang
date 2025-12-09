@@ -30,8 +30,8 @@ linters:
     - revive
     - staticcheck
     - unconvert
-    - unparam
-    - unused
+#    - unparam # This rule had been suppressed by --fast flag in the past, so disabling it for now to avoid noise
+#    - unused # This rule had been suppressed by --fast flag in the past, so disabling it for now to avoid noise
     - whitespace
   settings:
     dupl:
@@ -47,7 +47,6 @@ linters:
     gocritic:
       disabled-checks:
         - whyNoLint # Doesn't seem to work properly
-        - hugeParam
         - ifElseChain
         - rangeValCopy
       enabled-tags:
@@ -77,12 +76,17 @@ linters:
         - name: exported
         - name: increment-decrement
         - name: var-naming
+          arguments:
+            - []
+            - []
+            - - skip-package-name-checks: true # Allow meaningless package names for historical reasons
         - name: var-declaration
         - name: package-comments
         - name: range
         - name: receiver-naming
         - name: time-naming
         - name: unexported-return
+          disabled: true # This rule had been suppressed by --fast flag in the past, so disabling it for now to avoid noise
         - name: indent-error-flow
         - name: errorf
         - name: empty-block
@@ -94,8 +98,23 @@ linters:
         - name: unused-parameter
           disabled: true
     staticcheck:
-      checks: ["all", "-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022",
-               "-ST1001", "-ST1005", "-QF1001", "-QF1002" , "-QF1008", "-QF1009"]
+      checks:
+        [
+          "all",
+          "-ST1000",
+          "-ST1003",
+          "-ST1016",
+          "-ST1020",
+          "-ST1021",
+          "-ST1022",
+          "-ST1001",
+          "-ST1005",
+          "-QF1001",
+          "-QF1002",
+          "-QF1007",
+          "-QF1008",
+          "-QF1009",
+        ]
   exclusions:
     generated: lax
     presets:
@@ -128,17 +147,10 @@ linters:
       # We allow error shadowing
       - path: (.+)\.go$
         text: declaration of "err" shadows declaration at
-      # We allow unused functions and unused parameters in functions
-      - linters:
-          - unparam
-          - unused
-        text: unused
 {{- $hook := (stencil.GetModuleHook "golangci-lint/exclude-rules") }}
 {{- if $hook }}
 {{ toYaml $hook | indent 6 }}
 {{- end }}
-## <<Stencil::Block(exclusionsRules)>>
-## <</Stencil::Block>>
     paths:
       - third_party$
       - builtin$
