@@ -12,6 +12,9 @@ stencil-golang exposes a few module hooks to allow for integration with other mo
 
 Add a dependency to this service. This dependency will be ignored by dependency management tools like `dependabot` in favor of the dependency specified in `go_modules`.
 
+> [!NOTE]
+> Optional dependencies can also be defined with this hook, as `go mod tidy` will prune any unused dependencies.
+
 ```yaml
 {{- define "deps" -}}
 - name: a-module
