@@ -6,11 +6,16 @@
   // <</Stencil::Block>>
   "go.lintTool": "golangci-lint-v2",
   "go.lintFlags": [],
+  {{- if neq "gofumpt" (stencil.Arg "go.formatter") }}
   "go.formatTool": "goimports",
+  {{- end }}
   "go.useLanguageServer": true,
   "go.testEnvFile": "${workspaceFolder}/.vscode/private.env",
   "go.alternateTools": {
     "dlv": "${workspaceFolder}/.bootstrap/shell/dlv.sh",
+    {{- if eq "gofumpt" (stencil.arg "go.formatter") }}
+    "gofumpt": "${workspaceFolder}/.bootstrap/shell/gofumpt.sh",
+    {{- end }}
     "golangci-lint-v2": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
   },
   // This is disabled because it causes version mismatches between the
@@ -41,6 +46,9 @@
     "build.buildFlags": [
       "-tags=or_test,or_dev,or_e2e,or_int"
     ],
+    {{- if eq "gofumpt" (stencil.arg "go.formatter") }}
+    "formatting.gofumpt": true,
+    {{- end }}
   },
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
