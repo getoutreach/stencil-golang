@@ -35,7 +35,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[proto3]": {
-    "editor.defaultFormatter": "zxh404.vscode-proto3"
+    "editor.defaultFormatter": "DrBlury.protobuf-vsc"
   },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -48,7 +48,7 @@
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
   },
-  "protoc": {
-    "options": ["--proto_path=${workspaceRoot}/api"]
-  }
+  "protobuf.includes": [
+    "${workspaceRoot}/api"
+  ]
 }
