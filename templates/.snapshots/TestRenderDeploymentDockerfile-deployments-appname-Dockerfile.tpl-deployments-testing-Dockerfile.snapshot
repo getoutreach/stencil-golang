@@ -1,5 +1,8 @@
 (*codegen.File)(# syntax=docker/dockerfile:1.0-experimental
-FROM registry.example.com/foo/golang:1.0.0 as builder
+## <<Stencil::Block(buildStages)>>
+
+## <</Stencil::Block>>
+FROM registry.example.com/foo/golang:1.0.0 AS builder
 ARG VERSION
 ENV GOCACHE "/go-build-cache"
 ENV GOPRIVATE github.com/getoutreach/*

@@ -37,24 +37,25 @@ import (
 // dependencies is a conglomerate struct used for injecting dependencies into service
 // activities.
 type dependencies struct{
-  privateHTTP testing.PrivateHTTPDependencies
-  // <<Stencil::Block(customServiceActivityDependencyInjection)>>
+	privateHTTP testing.PrivateHTTPDependencies
+	// <<Stencil::Block(customServiceActivityDependencyInjection)>>
 
 	// <</Stencil::Block>>
 }
 
 // main is the entrypoint for the testing service.
 func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
-  exitCode := 1
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	exitCode := 1
 	defer func() {
 		if r := recover(); r != nil {
+			log.Error(ctx, "unhandled panic", events.NewErrorInfoFromPanic(r))
 			panic(r)
 		}
 		os.Exit(exitCode)
 	}()
-
-  ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	env.ApplyOverrides()
 	app.SetName("testing")
@@ -71,8 +72,8 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	}
 	defer trace.CloseTracer(ctx)
 
-  // Initialize variable for service activity dependency injection.
-  var deps dependencies
+	// Initialize variable for service activity dependency injection.
+	var deps dependencies
 
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
 
@@ -84,7 +85,7 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	acts := []async.Runner{
 		shutdown.New(),
 		gomaxprocs.New(),
-    automemlimit.New(),
+		automemlimit.New(),
 		testing.NewHTTPService(cfg, &deps.privateHTTP),
 
 		// Place any additional ServiceActivities that your service has built here to have them handled automatically

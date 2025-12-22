@@ -2,7 +2,10 @@
 {{- $goVersion := semver (stencil.ApplyTemplate "goVersion" | trim) }}
 {{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "skipUnlessBuildContainer" }}
-FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}.{{ $goVersion.Patch }} as builder
+## <<Stencil::Block(buildStages)>>
+{{ file.Block "buildStages" }}
+## <</Stencil::Block>>
+FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}.{{ $goVersion.Patch }} AS builder
 ARG VERSION
 ENV GOCACHE "/go-build-cache"
 ENV GOPRIVATE github.com/{{ .Runtime.Box.Org }}/*

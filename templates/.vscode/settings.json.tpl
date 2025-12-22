@@ -4,7 +4,7 @@
   // <<Stencil::Block(settings)>>
 {{ file.Block "settings" }}
   // <</Stencil::Block>>
-  "go.lintTool": "golangci-lint",
+  "go.lintTool": "golangci-lint-v2",
   "go.lintFlags": [],
   "go.formatTool": "goimports",
   "go.useLanguageServer": true,
@@ -32,13 +32,13 @@
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[proto3]": {
-    "editor.defaultFormatter": "zxh404.vscode-proto3"
+    "editor.defaultFormatter": "DrBlury.protobuf-vsc"
   },
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "gopls": {
     "build.buildFlags": [
@@ -48,7 +48,7 @@
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
   },
-  "protoc": {
-    "options": ["--proto_path=${workspaceRoot}/api"]
-  }
+  "protobuf.includes": [
+    "${workspaceFolder}/api"
+  ]
 }

@@ -77,7 +77,8 @@ arguments:
         enum:
           - node
           - ruby
-    description: List of grpc clients to generate for this gRPC service. Type must include gRPC
+          - python
+    description: List of gRPC clients to generate for this gRPC service, by programming language.
   reportingTeam:
     schema:
       type: string
