@@ -4,7 +4,7 @@
   // <<Stencil::Block(settings)>>
 {{ file.Block "settings" }}
   // <</Stencil::Block>>
-  "go.lintTool": "golangci-lint",
+  "go.lintTool": "golangci-lint-v2",
   "go.lintFlags": [],
   "go.formatTool": "goimports",
   "go.useLanguageServer": true,
