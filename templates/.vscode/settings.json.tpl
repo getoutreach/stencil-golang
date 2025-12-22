@@ -49,6 +49,6 @@
     "editor.defaultFormatter": "hashicorp.terraform"
   },
   "protobuf.includes": [
-    "${workspaceRoot}/api"
+    "${workspaceFolder}/api"
   ]
 }
