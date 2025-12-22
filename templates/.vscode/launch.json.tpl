@@ -9,9 +9,9 @@
       "type": "go",
       "request": "launch",
       "mode": "debug",
-      "envFile": "${workspaceRoot}/.vscode/private.env",
-      "go.testEnvFile": "${workspaceRoot}/.vscode/private.env",
-      "program": "${workspaceRoot}/cmd/{{ .Config.Name }}/",
+      "envFile": "${workspaceFolder}/.vscode/private.env",
+      "go.testEnvFile": "${workspaceFolder}/.vscode/private.env",
+      "program": "${workspaceFolder}/cmd/{{ .Config.Name }}/",
       "buildFlags": "-tags=or_dev"
     },
     {
@@ -37,7 +37,7 @@
           // is compiled into the built binary. Note: This is not impacted by trimpath
           // because devbase currently uses dlv to compile the source code.
           // See: https://github.com/getoutreach/devbase/blob/main/shell/debug.sh#L72
-          "from": "${workspaceRoot}",
+          "from": "${workspaceFolder}",
           "to": "/home/dev/app"
         },
         // Maps the go module cache on the host to the persistent volume used by devspaces.
