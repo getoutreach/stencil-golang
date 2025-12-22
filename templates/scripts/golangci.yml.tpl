@@ -163,7 +163,11 @@ issues:
   max-same-issues: 10
 formatters:
   enable:
+{{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
+    - gofumpt
+{{- else }}
     - gofmt
+{{- end }}
     - goimports
   exclusions:
     generated: lax
