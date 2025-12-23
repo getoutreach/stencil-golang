@@ -2,9 +2,9 @@
 
 module github.com/getoutreach/stencil-golang
 
-go 1.23.0
+go 1.25.0
 
-toolchain go1.23.4
+toolchain go1.25.5
 
 require (
 	github.com/blang/semver/v4 v4.0.0
