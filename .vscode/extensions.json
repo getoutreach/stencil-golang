@@ -4,12 +4,11 @@
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "hashicorp.terraform",
+    "mads-hartmann.bash-ide-vscode",
     "golang.go",
     "Grafana.vscode-jsonnet",
-    "timonwong.shellcheck",
     "redhat.vscode-yaml",
     "ms-azuretools.vscode-docker",
-    "foxundermoon.shell-format",
 
     // Please consider contributing back all recommended
     // extensions to stencil!
