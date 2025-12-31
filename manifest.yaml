@@ -223,6 +223,12 @@ arguments:
     description: Disable gRPC generation
     schema:
       type: boolean
+  go.exclude_auto_metrics:
+    description: Exludes golang *.go_* metrics unless explicitly specified in stencil yaml
+    default: true
+    schema:
+      type:
+        - boolean
   go.stanza:
     description: Go stanza version
     default: "1.23.0"
