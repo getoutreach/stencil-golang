@@ -15,6 +15,7 @@ import (
 	"net/http"
 
 	"github.com/getoutreach/httpx/pkg/handlers"
+	"github.com/getoutreach/services/pkg/stateguard"
 
   {{- $additionalImports := stencil.GetModuleHook "internal/http/additionalImports" }}
 	{{- if $additionalImports }}
@@ -81,6 +82,12 @@ func (s *HTTPService) Run(ctx context.Context) error {
 // a database connection or perhaps a redis client that the service activity needs to
 // use.
 type PublicHTTPDependencies struct{
+		// StateGuardMiddleware denies HTTP requests for Orgs which are in the process of being moved
+		// between bentos. Stateguard is best effort only, and in case of misconfiguration/error, will
+		// not block requests.
+		// See: https://github.com/getoutreach/services/tree/main/pkg/stateguard#state-guard
+    StateGuardMiddleware *stateguard.HTTPMiddleware
+
     // <<Stencil::Block(publicHTTPDependencies)>>
 {{ file.Block "publicHTTPDependencies" }}
 	  // <</Stencil::Block>>
@@ -126,6 +133,11 @@ func (s *PublicHTTPService) Run(ctx context.Context) error {
     {{- end }}
     // end code inserted by modules
     {{- end }}
+
+	// Add stateguard middleware if available
+	if s.deps != nil && s.deps.StateGuardMiddleware != nil {
+		s.App = s.deps.StateGuardMiddleware.Middleware(s.App)
+	}
 
 	return s.PublicService.Run(ctx, fmt.Sprintf("%s:%d", s.cfg.ListenHost, s.cfg.PublicHTTPPort))
 }

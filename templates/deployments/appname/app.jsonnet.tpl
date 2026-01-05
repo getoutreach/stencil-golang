@@ -237,23 +237,33 @@ local all = {
 						datadog_prom_instances_:: [
 							{
 								prometheus_url: 'http://%%host%%:' +
-																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
-																'/metrics',
+								                $.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
+								                '/metrics',
 								namespace: app.name,
 								metrics: ['*'],
+								exclude_labels: ['stateguard_grpc_request_count', 'stateguard_http_request_count'],
+								send_distribution_buckets: true,
+							},
+							{
+								// Stateguard metrics without namespace prefix
+								prometheus_url: 'http://%%host%%:' +
+								                $.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
+								                '/metrics',
+								namespace: '',
+								metrics: ['stateguard_grpc_request_count', 'stateguard_http_request_count'],
 								send_distribution_buckets: true,
 							},
 						],
 						// https://docs.datadoghq.com/integrations/openmetrics/
-            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+						{{- if (empty (stencil.Arg "kubernetes.groups")) }}
+						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics","openmetrics"]',
+						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}, {}]',
 						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
-            {{- else }}
-            // This is duplicated as k8s metrics collection requires a different port as we collect them using the
-            // prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
-						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics"]',
-						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}]',
+						{{- else }}
+						// This is duplicated as k8s metrics collection requires a different port as we collect them using the
+						// prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
+						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics","openmetrics"]',
+						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}, {}]',
 						['ad.datadoghq.com/' +  app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
 						k8s_datadog_prom_instances_:: self.datadog_prom_instances_+[
 							{

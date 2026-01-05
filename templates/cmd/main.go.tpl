@@ -19,6 +19,7 @@ import (
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/trace"
+	"github.com/getoutreach/services/pkg/stateguard"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/automemlimit"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/shutdown"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/gomaxprocs"
@@ -122,6 +123,33 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	{{ . }}
 		{{- end }}
 	// End code inserted by modules
+	{{- end }}
+
+	{{- if or (has "grpc" (stencil.Arg "serviceActivities")) (has "http" (stencil.Arg "serviceActivities")) }}
+	// Initialize stateguard middlewares for HTTP and/or gRPC
+	sgOcache, err := stateguard.NewOrgCache(ctx)
+	if err != nil {
+		// Stateguard is design to fail open and not prevent service from running in this case
+		log.Warn(ctx,
+			"failed to create stateguard orgcache; stateguard middlewares will not block requests",
+			events.NewErrorInfo(err))
+	}
+	{{- end }}
+	{{- if (has "grpc" (stencil.Arg "serviceActivities")) }}
+	grpcStateGuard, err := stateguard.NewGRPCMiddleware(ctx, stateguard.WithGRPCOrgCache(sgOcache))
+	if err != nil {
+		// Stateguard is design to fail open and not prevent service from running in this case
+		log.Warn(ctx, "failed to create gRPC stateguard middleware", events.NewErrorInfo(err))
+	}
+	deps.gRPC.StateGuardMiddleware = grpcStateGuard
+	{{- end }}
+	{{- if (has "http" (stencil.Arg "serviceActivities")) }}
+	httpStateGuard, err := stateguard.NewHTTPMiddleware(ctx)
+	if err != nil {
+		// Stateguard is design to fail open and not prevent service from running in this case
+		log.Warn(ctx, "failed to create HTTP stateguard middleware", events.NewErrorInfo(err))
+	}
+	deps.publicHTTP.StateGuardMiddleware = httpStateGuard
 	{{- end }}
 
 	acts := []async.Runner{

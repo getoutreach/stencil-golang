@@ -30,6 +30,7 @@ import (
 	"github.com/getoutreach/gobox/pkg/trace"
 	"github.com/getoutreach/{{ .Config.Name }}/api"
 	"github.com/getoutreach/services/pkg/grpcx"
+	"github.com/getoutreach/services/pkg/stateguard"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -51,6 +52,12 @@ import (
 // activity. Great examples of integrations to be placed into here would be a database
 // connection or perhaps a redis client that the service activity needs to use.
 type GRPCDependencies struct{
+		// StateGuardMiddleware denies gRPC requests for Orgs which are in the process of being moved
+		// between bentos. Stateguard is best effort only, and in case of misconfiguration/error, will
+		// not block requests.
+		// See: https://github.com/getoutreach/services/tree/main/pkg/stateguard#state-guard
+    StateGuardMiddleware *stateguard.GRPCMiddleware
+
     // <<Stencil::Block(GRPCDependencies)>>
 {{ file.Block "GRPCDependencies" }}
 	  // <</Stencil::Block>>
@@ -173,6 +180,11 @@ func (gs *GRPCService) StartServers(ctx context.Context, servers *Servers, opts.
   {{- if or $grpcServerOptionInit $grpcServerOptions }}
 
   {{- end }}
+	// Add stateguard middleware if available
+	if gs.deps != nil && gs.deps.StateGuardMiddleware != nil {
+		opts = append(opts, gs.deps.StateGuardMiddleware.GRPCXOpt())
+	}
+
 	// <<Stencil::Block(grpcServerOptions)>>
 {{ file.Block "grpcServerOptions" }}
 	// <</Stencil::Block>>
