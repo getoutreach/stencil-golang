@@ -2,7 +2,7 @@ version: v1.43.0
 modules:
     - name: github.com/getoutreach/devbase
       url: https://github.com/getoutreach/devbase
-      version: v2.35.0-rc.1
+      version: v2.35.0-rc.4
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
       version: v0.18.0-rc.5
