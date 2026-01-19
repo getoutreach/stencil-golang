@@ -147,20 +147,21 @@ local all = {
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
-						datadog_prom_instances_:: [
-							{
-								prometheus_url: 'http://%%host%%:' +
-																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
-																'/metrics',
-								namespace: app.name,
-								metrics: ['*'],
-								send_distribution_buckets: true,
-							},
-						],
-						// https://docs.datadoghq.com/integrations/openmetrics/
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
-						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
+					datadog_prom_instances_:: [
+						{
+							prometheus_url: 'http://%%host%%:' +
+															$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
+															'/metrics',
+							namespace: app.name,
+							metrics: ['*'],
+							exclude_metrics: ['go_.*'],
+							send_distribution_buckets: true,
+						},
+					],
+					// https://docs.datadoghq.com/integrations/openmetrics/
+					['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
+					['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+					['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
 					},
 				},
 				spec+: {
