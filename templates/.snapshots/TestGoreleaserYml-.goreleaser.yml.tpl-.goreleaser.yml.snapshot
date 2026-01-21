@@ -7,11 +7,17 @@ builds:
     id: &name cmd1
     binary: *name
     goos:
+      ## <<Stencil::Block(cmd1Goos)>>
+      ## Ability to build assets for those OS: linux, darwin
       - linux
       - darwin
+      ## <</Stencil::Block>>
     goarch:
+      ## <<Stencil::Block(cmd1Goarch)>>
+      ## Ability to build assets for those architectures: amd64, arm64
       - amd64
       - arm64
+      ## <</Stencil::Block>>
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
       - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
@@ -25,11 +31,17 @@ builds:
     id: &name cmd2
     binary: *name
     goos:
+      ## <<Stencil::Block(cmd2Goos)>>
+      ## Ability to build assets for those OS: linux, darwin
       - linux
       - darwin
+      ## <</Stencil::Block>>
     goarch:
+      ## <<Stencil::Block(cmd2Goarch)>>
+      ## Ability to build assets for those architectures: amd64, arm64
       - amd64
       - arm64
+      ## <</Stencil::Block>>
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
       - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
@@ -43,11 +55,17 @@ builds:
     id: &name cmd3-sub1
     binary: *name
     goos:
+      ## <<Stencil::Block(cmd3sub1Goos)>>
+      ## Ability to build assets for those OS: linux, darwin
       - linux
       - darwin
+      ## <</Stencil::Block>>
     goarch:
+      ## <<Stencil::Block(cmd3sub1Goarch)>>
+      ## Ability to build assets for those architectures: amd64, arm64
       - amd64
       - arm64
+      ## <</Stencil::Block>>
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
       - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
@@ -61,11 +79,17 @@ builds:
     id: &name cmd3-sub2
     binary: *name
     goos:
+      ## <<Stencil::Block(cmd3sub2Goos)>>
+      ## Ability to build assets for those OS: linux, darwin
       - linux
       - darwin
+      ## <</Stencil::Block>>
     goarch:
+      ## <<Stencil::Block(cmd3sub2Goarch)>>
+      ## Ability to build assets for those architectures: amd64, arm64
       - amd64
       - arm64
+      ## <</Stencil::Block>>
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
       - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
@@ -79,11 +103,17 @@ builds:
     id: &name cmd4_sub1
     binary: *name
     goos:
+      ## <<Stencil::Block(cmd4sub1Goos)>>
+      ## Ability to build assets for those OS: linux, darwin
       - linux
       - darwin
+      ## <</Stencil::Block>>
     goarch:
+      ## <<Stencil::Block(cmd4sub1Goarch)>>
+      ## Ability to build assets for those architectures: amd64, arm64
       - amd64
       - arm64
+      ## <</Stencil::Block>>
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ .Version }}"'
       - '-X "main.HoneycombTracingKey={{ .Env.HONEYCOMB_APIKEY }}"'
