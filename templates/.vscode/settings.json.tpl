@@ -15,6 +15,8 @@
     "dlv": "${workspaceFolder}/.bootstrap/shell/dlv.sh",
     {{- if eq "gofumpt" (stencil.arg "go.formatter") }}
     "gofumpt": "${workspaceFolder}/.bootstrap/shell/gofumpt.sh",
+    {{- else }}
+    "goimports": "${workspaceFolder}/.bootstrap/shell/goimports.sh",
     {{- end }}
     "golangci-lint-v2": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
   },
