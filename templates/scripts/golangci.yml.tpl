@@ -167,8 +167,8 @@ formatters:
     - gofumpt
 {{- else }}
     - gofmt
-{{- end }}
     - goimports
+{{- end }}
   exclusions:
     generated: lax
     paths:
