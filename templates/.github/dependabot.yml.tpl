@@ -6,6 +6,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "github.com/{{ .Runtime.Box.Org }}/*"
     # stencil-golang managed dependencies
     ignore:
 {{- $goDeps := list -}}
@@ -24,6 +28,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "@{{ .Runtime.Box.Org }}/*"
     ignore:
       - dependency-name: "*"
 
@@ -33,6 +41,10 @@ updates:
     directory: "/api/clients/node"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+      exclude:
+        - "@{{ .Runtime.Box.Org }}/*"
     # stencil-golang managed dependencies
     ignore:
 {{- range $d := (concat $deps.nodejs.dependencies $deps.nodejs.devDependencies) }}
