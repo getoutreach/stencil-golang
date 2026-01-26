@@ -167,7 +167,7 @@ local all = {
 								{
 									prometheus_url: 'http://%%host%%:' + port + '/metrics',
 									namespace: app.name,
-									metrics : if alm == {} then ['*'] else [k for k in std.objectFields(alm)],
+									metrics: if alm == {} then ['*'] else [k for k in std.objectFields(alm)],
 									send_distribution_buckets: true,
 								 } + if blm != {} || non_namespaced_metrics != {} then {
 									 // have to exclude non_namespaced_metrics because they'll be allowlisted in the second
