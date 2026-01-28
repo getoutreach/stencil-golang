@@ -11,7 +11,7 @@
   "go.testEnvFile": "${workspaceFolder}/.vscode/private.env",
   "go.alternateTools": {
     "dlv": "${workspaceFolder}/.bootstrap/shell/dlv.sh",
-    "golangci-lint": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
+    "golangci-lint-v2": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
   },
   // This is disabled because it causes version mismatches between the
   // tools used/installed by asdf / stencil, and the ones updated by VSCode.
