@@ -13,9 +13,6 @@
 {{- define "toolVersions" }}
 - name: golang
   version: {{ stencil.ApplyTemplate "goVersion" | trim | squote }}
-# Not used for gRPC clients
-- name: nodejs
-  version: {{ stencil.Arg "versions.nodejs" }}
 # Used in CI
 - name: protoc
   version: 21.5
