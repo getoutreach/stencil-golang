@@ -89,7 +89,7 @@ vars:
     source: env
     default: 42097
   DEV_CONTAINER_WORKDIR: /home/dev/app
-  DEV_CONTAINER_IMAGE: {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev:stable
+  DEV_CONTAINER_IMAGE: {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev:{{ stencil.Arg "versions.devspaceImage" }}
   DEV_CONTAINER_LOGFILE: /tmp/app.log
   DEV_CONTAINER_CACHE: /home/dev/.cache
 
@@ -116,7 +116,7 @@ dev:
         cpu: 5
         memory: 10Gi
 
-    # Specifies the dev container to use. In this case {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev:stable
+    # Specifies the dev container to use. In this case {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev:{{ stencil.Arg "versions.devspaceImage" }}
     devImage: ${DEV_CONTAINER_IMAGE}
 
     # `dev.app.ports` specifies all ports that should be forwarded while `devspace dev` is running
@@ -453,7 +453,7 @@ profiles:
     patches:
       - op: replace
         path: vars.DEV_CONTAINER_IMAGE
-        value: {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev-slim:stable
+        value: {{ .Runtime.Box.Docker.ImagePullRegistry }}/bootstrap/dev-slim:{{ stencil.Arg "versions.devspaceImage" }}
       - op: replace
         path: dev.app.sync[0]
         value:

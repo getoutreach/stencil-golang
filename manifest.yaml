@@ -210,6 +210,11 @@ arguments:
       enum:
         - v2
         - v3
+  versions.devspaceImage:
+    description: The image tag for the dev/dev-slim images used by devspace
+    default: "stable"
+    schema:
+      type: string
   enableCgo:
     from: github.com/getoutreach/devbase
   disableGrpcGeneration:
