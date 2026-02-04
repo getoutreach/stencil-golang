@@ -13,7 +13,7 @@
   "go.testEnvFile": "${workspaceFolder}/.vscode/private.env",
   "go.alternateTools": {
     "dlv": "${workspaceFolder}/.bootstrap/shell/dlv.sh",
-    {{- if eq "gofumpt" (stencil.arg "go.formatter") }}
+    {{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
     "gofumpt": "${workspaceFolder}/.bootstrap/shell/gofumpt.sh",
     {{- else }}
     "goimports": "${workspaceFolder}/.bootstrap/shell/goimports.sh",
