@@ -6,7 +6,7 @@
   // <</Stencil::Block>>
   "go.lintTool": "golangci-lint-v2",
   "go.lintFlags": [],
-  {{- if neq "gofumpt" (stencil.Arg "go.formatter") }}
+  {{- if ne "gofumpt" (stencil.Arg "go.formatter") }}
   "go.formatTool": "goimports",
   {{- end }}
   "go.useLanguageServer": true,
@@ -48,7 +48,7 @@
     "build.buildFlags": [
       "-tags=or_test,or_dev,or_e2e,or_int"
     ],
-    {{- if eq "gofumpt" (stencil.arg "go.formatter") }}
+    {{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
     "formatting.gofumpt": true,
     {{- end }}
   },

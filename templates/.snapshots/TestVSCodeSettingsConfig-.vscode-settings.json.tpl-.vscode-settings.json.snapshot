@@ -1,8 +1,8 @@
-{
+(*codegen.File)({
   // Please consider contributing back all added
   // settings to stencil!
   // <<Stencil::Block(settings)>>
-  "githubPullRequests.ignoredPullRequestBranches": ["main"],
+
   // <</Stencil::Block>>
   "go.lintTool": "golangci-lint-v2",
   "go.lintFlags": [],
@@ -39,10 +39,15 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "gopls": {
-    "build.buildFlags": ["-tags=or_test,or_dev,or_e2e,or_int"]
+    "build.buildFlags": [
+      "-tags=or_test,or_dev,or_e2e,or_int"
+    ],
   },
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
   },
-  "protobuf.includes": ["${workspaceFolder}/api"]
+  "protobuf.includes": [
+    "${workspaceFolder}/api"
+  ]
 }
+)

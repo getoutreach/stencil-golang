@@ -254,6 +254,21 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestVSCodeSettingsConfig(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/settings.json.tpl", libraryTmpls...)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestVSCodeSettingsConfigGofumpt(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/settings.json.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"go": map[string]any{
+			"formatter": "gofumpt",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestGRPCServerRPC(t *testing.T) {
 	st := stenciltest.New(t, "internal/appName/rpc/rpc.go.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
