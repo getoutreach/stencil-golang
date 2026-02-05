@@ -216,6 +216,14 @@ arguments:
     description: Disable gRPC generation
     schema:
       type: boolean
+  go.formatter:
+    description: The Go formatter tool to use.
+    default: gofmt
+    schema:
+      type: string
+      enum:
+        - gofmt
+        - gofumpt
   go.stanza:
     description: Go stanza version
     default: "1.25.0"
