@@ -11,6 +11,7 @@
   "go.testEnvFile": "${workspaceFolder}/.vscode/private.env",
   "go.alternateTools": {
     "dlv": "${workspaceFolder}/.bootstrap/shell/dlv.sh",
+    "goimports": "${workspaceFolder}/.bootstrap/shell/goimports.sh",
     "golangci-lint-v2": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
   },
   // This is disabled because it causes version mismatches between the
