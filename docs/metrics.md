@@ -1,8 +1,8 @@
 # List of metrics used in Go services
 
-Bellow is a list of Prometheus metrics registered by Go services in Outreach, categorized based on their source.
+Below is a list of Prometheus metrics registered by Go services in Outreach, categorized based on their source.
 
-Only a subset of those metrics should be whitelisted by default for all Go services + their custom metrics.
+Only a subset of those metrics should be whitelisted by default for all Go services [here](https://github.com/getoutreach/stencil-golang/blob/85eaffd69138a3f685922544685afe2e8a44eca6/templates/deployments/appname/app.jsonnet.tpl#L243). Each service can then add to the whitelist other metrics from here and its custom ones.
 
 ## Outreach libraries
 
@@ -83,7 +83,7 @@ Source: https://github.com/getoutreach/httpx/blob/ec48b939121d1c5d460729cf5e74ac
 - svc_net_connection_new
 - svc_request_seconds
 
-###  redis
+### redis
 
 Source: ToDo
 
@@ -134,8 +134,8 @@ Source: https://github.com/getoutreach/monitoring-terraform/pull/1834/files
 
 Source: https://github.com/getoutreach/services/blob/main/pkg/stateguard/http_middleware.go
 
-- stateguard_http_request_count 
-         
+- stateguard_http_request_count
+
 
 ## Go runtime metrics
 
