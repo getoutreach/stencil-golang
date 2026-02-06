@@ -240,7 +240,36 @@ local all = {
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
 																'/metrics',
 								namespace: app.name,
-								metrics: ['*'],
+								metrics: [
+								  // system
+                  'go_goroutines',
+                  'go_threads',
+                  'go_gc_duration_seconds',
+                  'go_memstats_next_gc_bytes',
+                  'go_memstats_alloc_bytes',
+                  'go_memstats_sys_bytes',
+                  'process_cpu_seconds_total',
+                  'process_max_fds',
+                  'process_network_receive_bytes_total',
+                  'process_network_transmit_bytes_total',
+                  'process_open_fds',
+                  // clerk
+                  'clerk_consumer_commit_latency',
+                  'clerk_consumer_e2e_event_adjusted',
+                  'clerk_consumer_e2e_event_handled',
+                  'clerk_consumer_event_count',
+                  'clerk_consumer_event_handler',
+                  'clerk_consumer_fetch_latency',
+                  'clerk_consumer_rebalance_count',
+                  // graphql
+                  'graphql_request_duration',
+                  'graphql_request_duration',
+                  'graphql_resolver_duration',
+                  // grpc
+                  'grpc_request_handled',
+                  // searchquerylib
+                  'searchquerylib_es_call_time',
+								],
 								send_distribution_buckets: true,
 							},
 						],
