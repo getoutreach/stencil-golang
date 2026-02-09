@@ -253,6 +253,16 @@ local all = {
                   'process_network_receive_bytes_total',
                   'process_network_transmit_bytes_total',
                   'process_open_fds',
+                  //smartstore
+                  'smartstore_sql_idle_connections',
+                  'smartstore_sql_in_use_connections',
+                  'smartstore_sql_max_idle_closed_total',
+                  'smartstore_sql_max_idle_time_closed_total',
+                  'smartstore_sql_max_lifetime_closed_total',
+                  'smartstore_sql_max_open_connections',
+                  'smartstore_sql_open_connections',
+                  'smartstore_sql_wait_count_total',
+                  'smartstore_sql_wait_duration_seconds_total',
                   // clerk
                   'clerk_consumer_commit_latency',
                   'clerk_consumer_e2e_event_adjusted',
@@ -260,7 +270,11 @@ local all = {
                   'clerk_consumer_event_count',
                   'clerk_consumer_event_handler',
                   'clerk_consumer_fetch_latency',
+                  'clerk_consumer_internal_error_count',
                   'clerk_consumer_rebalance_count',
+                  'clerk_producer_write_latency',
+                  'clerk_dlq_write_latency',
+                  'clerk_producer_event_count',
                   // graphql
                   'graphql_request_duration',
                   'graphql_request_duration',
