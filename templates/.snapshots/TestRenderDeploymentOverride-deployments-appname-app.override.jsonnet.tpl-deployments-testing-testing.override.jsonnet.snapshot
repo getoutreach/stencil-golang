@@ -42,5 +42,42 @@ local overrideMixins = [
 ];
 
 local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {});
-mergedOverrideMixins + objects + (if isDev then dev_objects else {})
+
+// Custom metrics to be added to allow list
+local customMetrics = [
+  // <<Stencil::Block(customMetrics)>>
+  
+  // <</Stencil::Block>>
+];
+
+// Metrics to be excluded from allow list
+local excludedMetrics = [
+  // <<Stencil::Block(excludeMetrics)>>
+  
+  // <</Stencil::Block>>
+];
+
+local metricsAllowlistOverrides = {
+  deployment+: {
+  	spec+: {
+  		template+: {
+  			metadata+: {
+  				annotations+: {
+  					datadog_prom_instances_:: [
+  						super.datadog_prom_instances_[0] {
+  							metrics:
+                  std.filter(
+                    function(m) !std.member(excludedMetrics, m),
+                    super.metrics
+                  ) + customMetrics,
+  						},
+  					] + super.datadog_prom_instances_[1:],
+  				},
+  			},
+  		},
+  	},
+  },
+};
+
+mergedOverrideMixins + objects + (if isDev then dev_objects else {}) + metricsAllowlistOverrides
 )
