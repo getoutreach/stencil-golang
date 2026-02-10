@@ -256,7 +256,6 @@ local all = {
                 	  {{ . }}
                 	{{- end }}
 								],
-								exclude_metrics: [],
 								send_distribution_buckets: true,
 							},
 						],

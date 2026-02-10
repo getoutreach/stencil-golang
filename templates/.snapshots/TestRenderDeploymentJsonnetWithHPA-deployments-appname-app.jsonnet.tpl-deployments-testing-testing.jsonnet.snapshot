@@ -166,7 +166,6 @@ local all = {
                 	'process_network_transmit_bytes_total',
                 	'process_open_fds',
 								],
-								exclude_metrics: [],
 								send_distribution_buckets: true,
 							},
 						],
