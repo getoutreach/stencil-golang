@@ -241,6 +241,7 @@ local all = {
 																'/metrics',
 								namespace: app.name,
 								metrics: ['*'],
+								exclude_metrics: [],
 								send_distribution_buckets: true,
 							},
 						],

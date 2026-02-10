@@ -25,6 +25,31 @@ local objects = {
 	// <<Stencil::Block(override)>>
 {{ file.Block "override" }}
 	// <</Stencil::Block>>
+	deployment+: {
+		spec+: {
+			template+: {
+				metadata+: {
+					annotations+: {
+						datadog_prom_instances_:: [
+							super.datadog_prom_instances_[0] {
+								metrics+: [
+									// <<Stencil::Block(customMetrics)>>
+									{{ file.Block "customMetrics" }}
+									// <</Stencil::Block>>
+								],
+								exclude_metrics+: [
+									// <<Stencil::Block(excludeMetrics)>>
+									{{ file.Block "excludeMetrics" }}
+									// <</Stencil::Block>>
+								],
+							},
+						+ super.datadog_prom_instances_[1:],
+						],
+					},
+				},
+			},
+		},
+	},
 };
 
 // dev_objects contains kubernetes objects (or resources) that should be created
