@@ -60,6 +60,12 @@ local excludedMetrics = [
 ];
 
 local metricsAllowlistOverrides = {
+  _metricsAllowlist::
+    std.filter(
+      function(m) !std.member(excludedMetrics, m),
+      super._metricsAllowlist
+    ) + customMetrics,
+
   deployment+: {
   	spec+: {
   		template+: {
@@ -67,11 +73,7 @@ local metricsAllowlistOverrides = {
   				annotations+: {
   					datadog_prom_instances_:: [
   						super.datadog_prom_instances_[0] {
-  							metrics:
-                  std.filter(
-                    function(m) !std.member(excludedMetrics, m),
-                    super.metrics
-                  ) + customMetrics,
+  							metrics: $._metricsAllowlist,
   						},
   					] + super.datadog_prom_instances_[1:],
   				},
