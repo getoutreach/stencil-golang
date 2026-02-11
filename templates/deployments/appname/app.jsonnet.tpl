@@ -73,6 +73,7 @@ local all = {
 			},
 		},
 	},
+	// this variable can be referenced in override and other stencil modules
 	_baseMetricsAllowlist:: [
     'go_goroutines',
     'go_threads',
