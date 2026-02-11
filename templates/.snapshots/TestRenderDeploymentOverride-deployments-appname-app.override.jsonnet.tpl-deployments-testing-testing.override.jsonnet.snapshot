@@ -58,10 +58,11 @@ local excludedMetrics = [
 ];
 
 local metricsAllowlistOverrides = {
+  // this variable can be referenced in other stencil modules
   _metricsAllowlist::
     std.filter(
       function(m) !std.member(excludedMetrics, m),
-      super._metricsAllowlist
+      super._baseMetricsAllowlist
     ) + customMetrics,
 
   deployment+: {
