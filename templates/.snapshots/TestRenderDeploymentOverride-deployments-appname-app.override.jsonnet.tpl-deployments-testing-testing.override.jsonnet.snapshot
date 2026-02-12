@@ -58,28 +58,28 @@ local excludedMetrics = [
 ];
 
 local metricsAllowlistOverrides = {
-  // this variable can be referenced in other stencil modules
-  _metricsAllowlist::
-    std.filter(
-      function(m) !std.member(excludedMetrics, m),
-      super._baseMetricsAllowlist
-    ) + customMetrics,
+	// this variable can be referenced in other stencil modules
+	_metricsAllowlist::
+		std.filter(
+			function(m) !std.member(excludedMetrics, m),
+			super._baseMetricsAllowlist
+		) + customMetrics,
 
-  deployment+: {
-  	spec+: {
-  		template+: {
-  			metadata+: {
-  				annotations+: {
-  					datadog_prom_instances_:: [
-  						super.datadog_prom_instances_[0] {
-  							metrics: $._metricsAllowlist,
-  						},
-  					] + super.datadog_prom_instances_[1:],
-  				},
-  			},
-  		},
-  	},
-  },
+	deployment+: {
+		spec+: {
+			template+: {
+				metadata+: {
+					annotations+: {
+						datadog_prom_instances_:: [
+							super.datadog_prom_instances_[0] {
+								metrics: $._metricsAllowlist,
+							},
+						] + super.datadog_prom_instances_[1:],
+					},
+				},
+			},
+		},
+	},
 };
 
 mergedOverrideMixins + objects + (if isDev then dev_objects else {}) + metricsAllowlistOverrides

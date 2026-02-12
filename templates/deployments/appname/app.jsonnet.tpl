@@ -75,21 +75,21 @@ local all = {
 	},
 	// this variable can be referenced in override and other stencil modules
 	_baseMetricsAllowlist:: [
-  	'go_goroutines',
-  	'go_threads',
-  	'go_gc_duration_seconds',
-  	'go_memstats_next_gc_bytes',
-  	'go_memstats_alloc_bytes',
-  	'go_memstats_sys_bytes',
-  	'process_cpu_seconds_total',
-  	'process_max_fds',
-  	'process_network_receive_bytes_total',
-  	'process_network_transmit_bytes_total',
-  	'process_open_fds',
-    {{- range (stencil.GetModuleHook "metrics-allowlist") }}
-      {{ . }}
-    {{- end }}
-  ],
+		'go_goroutines',
+		'go_threads',
+		'go_gc_duration_seconds',
+		'go_memstats_next_gc_bytes',
+		'go_memstats_alloc_bytes',
+		'go_memstats_sys_bytes',
+		'process_cpu_seconds_total',
+		'process_max_fds',
+		'process_network_receive_bytes_total',
+		'process_network_transmit_bytes_total',
+		'process_open_fds',
+  	{{- range (stencil.GetModuleHook "metrics-allowlist") }}
+			{{ . }}
+  	{{- end }}
+	],
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
