@@ -70,7 +70,7 @@ local all = {
 		metadata+: {
 			labels+: sharedLabels,
 			annotations+: {
-				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ awsAccountID }}:role/%s-%s' % [app.bento, app.name]
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [awsAccountID, app.bento, app.name]
 			},
 		},
 	},
