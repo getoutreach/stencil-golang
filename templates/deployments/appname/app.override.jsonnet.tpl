@@ -47,16 +47,16 @@ local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {
 
 // Custom metrics to be added to allow list
 local customMetrics = [
-  // <<Stencil::Block(customMetrics)>>
-  {{ file.Block "customMetrics" }}
-  // <</Stencil::Block>>
+	// <<Stencil::Block(customMetrics)>>
+	{{ file.Block "customMetrics" }}
+	// <</Stencil::Block>>
 ];
 
 // Metrics to be excluded from allow list
 local excludedMetrics = [
-  // <<Stencil::Block(excludeMetrics)>>
-  {{ file.Block "excludeMetrics" }}
-  // <</Stencil::Block>>
+	// <<Stencil::Block(excludeMetrics)>>
+	{{ file.Block "excludeMetrics" }}
+	// <</Stencil::Block>>
 ];
 
 local metricsAllowlistOverrides = {
