@@ -47,6 +47,14 @@ local all = {
 		'process_network_transmit_bytes_total',
 		'process_open_fds',
 	],
+	_excludedMetrics:: [],
+
+	_metricsAllowlist:: std.set(
+		std.filter(
+			function(m) !std.member(self._excludedMetrics, m),
+			self._baseMetricsAllowlist
+		)
+	),
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {

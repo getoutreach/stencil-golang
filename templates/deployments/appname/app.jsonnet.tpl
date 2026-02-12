@@ -87,9 +87,17 @@ local all = {
 		'process_network_transmit_bytes_total',
 		'process_open_fds',
 		{{- range (stencil.GetModuleHook "metrics-allowlist") }}
-				{{ . }}
+		{{ . }}
 		{{- end }}
 	],
+	_excludedMetrics:: [],
+
+	_metricsAllowlist:: std.set(
+		std.filter(
+			function(m) !std.member(self._excludedMetrics, m),
+			self._baseMetricsAllowlist
+		)
+	),
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -276,7 +284,7 @@ local all = {
 							{
 								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
 								namespace: app.name,
-								metrics: ['*'],
+								metrics: $._metricsAllowlist,
 								send_distribution_buckets: true,
 							},
 						],

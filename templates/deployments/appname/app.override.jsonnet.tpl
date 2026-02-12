@@ -25,6 +25,16 @@ local objects = {
 	// <<Stencil::Block(override)>>
 {{ file.Block "override" }}
 	// <</Stencil::Block>>
+	_baseMetricsAllowlist+:: [
+	// <<Stencil::Block(customMetricsAllowlist)>>
+{{ file.Block "customMetricsAllowlist" }}
+	// <</Stencil::Block>>
+	],
+	_excludedMetrics+:: [
+	// <<Stencil::Block(customMetricsExcluded)>>
+{{ file.Block "customMetricsExcluded" }}
+	// <</Stencil::Block>>
+	],
 };
 
 // dev_objects contains kubernetes objects (or resources) that should be created
@@ -45,43 +55,4 @@ local overrideMixins = [
 
 local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {});
 
-// Custom metrics to be added to allow list
-local customMetrics = [
-	// <<Stencil::Block(customMetrics)>>
-	{{ file.Block "customMetrics" }}
-	// <</Stencil::Block>>
-];
-
-// Metrics to be excluded from allow list
-local excludedMetrics = [
-	// <<Stencil::Block(excludeMetrics)>>
-	{{ file.Block "excludeMetrics" }}
-	// <</Stencil::Block>>
-];
-
-local metricsAllowlistOverrides = {
-	// this variable can be referenced in other stencil modules
-	_metricsAllowlist::
-		std.filter(
-			function(m) !std.member(excludedMetrics, m),
-			super._baseMetricsAllowlist
-		) + customMetrics,
-
-	deployment+: {
-		spec+: {
-			template+: {
-				metadata+: {
-					annotations+: {
-						datadog_prom_instances_:: [
-							super.datadog_prom_instances_[0] {
-								metrics: $._metricsAllowlist,
-							},
-						] + super.datadog_prom_instances_[1:],
-					},
-				},
-			},
-		},
-	},
-};
-
-mergedOverrideMixins + objects + (if isDev then dev_objects else {}) + metricsAllowlistOverrides
+mergedOverrideMixins + objects + (if isDev then dev_objects else {})
