@@ -74,6 +74,31 @@ local all = {
 			},
 		},
 	},
+	// this variable can be referenced in override and other stencil modules
+	_baseMetricsAllowlist:: [
+		'go_goroutines',
+		'go_threads',
+		'go_gc_duration_seconds',
+		'go_memstats_next_gc_bytes',
+		'go_memstats_alloc_bytes',
+		'go_memstats_sys_bytes',
+		'process_cpu_seconds_total',
+		'process_max_fds',
+		'process_network_receive_bytes_total',
+		'process_network_transmit_bytes_total',
+		'process_open_fds',
+		{{- range (stencil.GetModuleHook "metrics-allowlist") }}
+		{{ . }}
+		{{- end }}
+	],
+	_excludedMetrics:: [],
+
+	_metricsAllowlist:: std.set(
+		std.filter(
+			function(m) !std.member(self._excludedMetrics, m),
+			self._baseMetricsAllowlist
+		)
+	),
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -241,7 +266,7 @@ local all = {
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
 																'/metrics',
 								namespace: app.name,
-								metrics: ['*'],
+								metrics: $._metricsAllowlist,
 								send_distribution_buckets: true,
 							},
 						],
@@ -260,7 +285,7 @@ local all = {
 							{
 								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
 								namespace: app.name,
-								metrics: ['*'],
+								metrics: $._metricsAllowlist,
 								send_distribution_buckets: true,
 							},
 						],
