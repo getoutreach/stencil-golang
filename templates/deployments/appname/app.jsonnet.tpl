@@ -11,6 +11,7 @@ local app = (import 'kubernetes/app.libsonnet').info('{{ $appName }}');
 local resources = import './resources.libsonnet';
 local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
+local awsAccountID = std.extVar('awsAccountID');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
 local isLocalDev = app.environment == 'local_development';
@@ -69,7 +70,7 @@ local all = {
 		metadata+: {
 			labels+: sharedLabels,
 			annotations+: {
-				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [awsAccountID, app.bento, app.name]
 			},
 		},
 	},
