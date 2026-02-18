@@ -25,6 +25,16 @@ local objects = {
 	// <<Stencil::Block(override)>>
 {{ file.Block "override" }}
 	// <</Stencil::Block>>
+	_baseMetricsAllowlist+:: [
+	// <<Stencil::Block(customMetricsAllowlist)>>
+{{ file.Block "customMetricsAllowlist" }}
+	// <</Stencil::Block>>
+	],
+	_excludedMetrics+:: [
+	// <<Stencil::Block(customMetricsExcluded)>>
+{{ file.Block "customMetricsExcluded" }}
+	// <</Stencil::Block>>
+	],
 };
 
 // dev_objects contains kubernetes objects (or resources) that should be created
@@ -44,4 +54,5 @@ local overrideMixins = [
 ];
 
 local mergedOverrideMixins = std.foldl(function(x, y) (x + y), overrideMixins, {});
+
 mergedOverrideMixins + objects + (if isDev then dev_objects else {})
