@@ -235,28 +235,83 @@ local all = {
 						'tollgate.outreach.io/port': '5000',
 						{{- end }}
 						{{- if or (eq "datadog" (stencil.Arg "metrics")) (eq "dual" (stencil.Arg "metrics")) }}
-						datadog_prom_instances_:: [
-							{
-								prometheus_url: 'http://%%host%%:' +
-																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
-																'/metrics',
-								namespace: app.name,
-								metrics: ['*'],
-								send_distribution_buckets: true,
+
+						trueVals(obj):: {
+							[f]: obj[f]
+							for f in std.objectFields(obj)
+							if obj[f] == true
+						},
+						// DatadogPrometheusInstance turns a datadog_prom_conf_ into a datadog
+						// prometheus/openmetrics instance, e.g.:
+						// https://docs.datadoghq.com/containers/kubernetes/prometheus/?tab=kubernetesadv1#configuration
+						DatadogPrometheusInstance(
+							port,
+							allowlisted_metrics,
+							blocklisted_metrics,
+							non_namespaced_metrics,
+						):: (
+							local alm = self.trueVals(allowlisted_metrics);
+							local blm = self.trueVals(blocklisted_metrics);
+							local nnm = self.trueVals(non_namespaced_metrics);
+							[
+								{
+									prometheus_url: 'http://%%host%%:' + port + '/metrics',
+									namespace: app.name,
+									metrics: if alm == {} then ['*'] else [k for k in std.objectFields(alm)],
+									send_distribution_buckets: true,
+								 } + if blm != {} || non_namespaced_metrics != {} then {
+									 // have to exclude non_namespaced_metrics because they'll be allowlisted in the second
+									 // prometheus instance which is not namespaced
+									 exclude_metrics: [k for k in std.objectFields(blm)] + [k for k in std.objectFields(non_namespaced_metrics)],
+								 } else {},
+							] + if non_namespaced_metrics == {} then [] else [
+								// this is the same host as before, but this time with no namespacing and allowlisted metrics
+								{
+									prometheus_url: 'http://%%host%%:' + port + '/metrics',
+									namespace: '',
+									metrics: [k for k in std.objectFields(non_namespaced_metrics)],
+									send_distribution_buckets: true,
+								},
+							]
+						),
+						// to override how metrics are configured, override datadog_prom_conf_.main_pod, or add
+						// more entries to datadog_prom_conf_
+						datadog_prom_conf_+:: {
+							main_pod: {
+								port: $.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort,
+								allowlisted_metrics: {},
+								blocklisted_metrics: {},
+								non_namespaced_metrics: {},
 							},
-						],
+						},
+
+						datadog_prom_instances_:: [],
+
+						dd_instances_::
+							if self.datadog_prom_instances_ != [] then
+								self.datadog_prom_instances_
+							else std.flattenArrays(
+								[
+									self.DatadogPrometheusInstance(
+										port=self.datadog_prom_conf_[pod_name].port,
+										allowlisted_metrics=self.datadog_prom_conf_[pod_name].allowlisted_metrics,
+										blocklisted_metrics=self.datadog_prom_conf_[pod_name].blocklisted_metrics,
+										non_namespaced_metrics=self.datadog_prom_conf_[pod_name].non_namespaced_metrics,
+									)
+									for pod_name in std.objectFields(self.datadog_prom_conf_)
+								]
+							),
+
 						// https://docs.datadoghq.com/integrations/openmetrics/
-            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
-						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
-            {{- else }}
-            // This is duplicated as k8s metrics collection requires a different port as we collect them using the
-            // prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
-						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics"]',
-						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}]',
-						['ad.datadoghq.com/' +  app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
-						k8s_datadog_prom_instances_:: self.datadog_prom_instances_+[
+
+						{{- if (empty (stencil.Arg "kubernetes.groups")) }}
+						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.dd_instances_, '  '),
+						['ad.datadoghq.com/' + app.name + '.init_configs']: std.manifestJsonMinified([{} for x in self.dd_instances_]),
+						['ad.datadoghq.com/' + app.name + '.check_names']: std.manifestJsonMinified(['openmetrics' for x in self.dd_instances_]),
+						{{- else }}
+						// This is duplicated as k8s metrics collection requires a different port as we collect them using the
+						// prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
+						k8s_datadog_prom_instances_:: self.dd_instances_+[
 							{
 								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
 								namespace: app.name,
@@ -264,6 +319,9 @@ local all = {
 								send_distribution_buckets: true,
 							},
 						],
+						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
+						['ad.datadoghq.com/' + app.name + '.init_configs']: std.manifestJsonMinified([{} for x in self.k8s_datadog_prom_instances_]),
+						['ad.datadoghq.com/' + app.name + '.check_names']: std.manifestJsonMinified(['openmetrics' for x in self.k8s_datadog_prom_instances_]),
 						{{- end }}
 						{{- end }}
 					},
