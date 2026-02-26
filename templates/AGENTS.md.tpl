@@ -12,7 +12,7 @@
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectDirectories" (list (stencil.ApplyTemplate "golangProjectDirectories")) }}
 
-{{- define "projectCommands" }}
+{{- define "golangProjectCommands" }}
 * Build command: `make build`
 * Go code generation command: `make gogenerate`
 * Linter command: `make lint`
@@ -20,9 +20,9 @@
 * Unit test command (depends on linter command): `make test`
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectCommands" (list (stencil.ApplyTemplate "projectCommands")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectCommands" (list (stencil.ApplyTemplate "golangProjectCommands")) }}
 
-{{- define "projectCodeStyle" }}
+{{- define "golangProjectCodeStyle" }}
 Code linting is validated by the linter command above.
 
 Go linters are run via `golangci-lint`. Its configuration is defined in `scripts/golangci.yml`.
@@ -30,4 +30,4 @@ Go linters are run via `golangci-lint`. Its configuration is defined in `scripts
 Code formatting is enforced by running the formatter command above.
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectCodeStyle" (list (stencil.ApplyTemplate "projectCodeStyle")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectCodeStyle" (list (stencil.ApplyTemplate "golangProjectCodeStyle")) }}
