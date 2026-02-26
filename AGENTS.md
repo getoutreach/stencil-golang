@@ -5,18 +5,19 @@ These are template instructions and should not be included in the final output.
 
 ## Project overview
 
-## <<Stencil::Block(customProjectOverview)>>
+<!-- <<Stencil::Block(customProjectOverview)>> -->
 
-## <</Stencil::Block>>
+<!-- <</Stencil::Block>> -->
 
 ## Project organization
+* `api/`: API definitions, such as protobuf files and OpenAPI specifications
 * `bin/`: generated project executables.
 * `cmd/`: main CLI Go code
 * `deployments/`: Container publishing configuration
 * `internal/`: internal (non-public) Go packages
-* `orb/`: CircleCI orb definition
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `testdata/`: test fixtures and other test data
+* `.vscode/`: VSCode configuration files
 
 If some of the directories do not exist, ignore their definitions.
 If no directories are defined, find more information in `docs/` directory.
@@ -86,6 +87,6 @@ For example:
 Assisted-By: LLM 1.2.3 via Claude Code
 ```
 
-## <<Stencil::Block(additionalAgentsInfo)>>
+<!-- <<Stencil::Block(additionalAgentsInfo)>> -->
 
-## <</Stencil::Block>>
+<!-- ## <</Stencil::Block>> -->
