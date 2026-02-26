@@ -1,7 +1,7 @@
 {{- file.Skip "Virtual file for AGENTS.md module hooks" }}
 
 {{- define "golangProjectDirectories" }}
-* `bin/`: generated project executables, if present.
+* `bin/`: generated project executables.
 * `cmd/`: main CLI Go code
 * `deployments/`: Container publishing configuration
 * `internal/`: internal (non-public) Go packages
