@@ -1,13 +1,14 @@
 {{- file.Skip "Virtual file for AGENTS.md module hooks" }}
 
 {{- define "golangProjectDirectories" }}
+* `api/`: API definitions, such as protobuf files and OpenAPI specifications
 * `bin/`: generated project executables.
 * `cmd/`: main CLI Go code
 * `deployments/`: Container publishing configuration
 * `internal/`: internal (non-public) Go packages
-* `orb/`: CircleCI orb definition
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `testdata/`: test fixtures and other test data
+* `.vscode/`: VSCode configuration files
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectDirectories" (list (stencil.ApplyTemplate "golangProjectDirectories")) }}

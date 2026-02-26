@@ -1,30 +1,39 @@
 # AI Agent instructions
 
-Ignore all lines containing "Stencil::Block" and "Stencil::Block".
+Ignore all lines containing "Stencil::Block".
 These are template instructions and should not be included in the final output.
 
-## Project overivew
+## Project overview
 
 ## <<Stencil::Block(customProjectOverview)>>
 
 ## <</Stencil::Block>>
 
 ## Project organization
-
-If some of the directories do not exist, ignore their definitions.
-
-* `bin/`: generated project executables
-* `cmd/crucible/`: main CLI Go code
+* `bin/`: generated project executables.
+* `cmd/`: main CLI Go code
 * `deployments/`: Container publishing configuration
 * `internal/`: internal (non-public) Go packages
 * `orb/`: CircleCI orb definition
-* `pkg/`: public Go packages
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
-* `docs/`: documentation, including design specs and API references
+* `testdata/`: test fixtures and other test data
+
+If some of the directories do not exist, ignore their definitions.
+If no directories are defined, find more information in `docs/` directory.
 
 ## Build and test commands
+* Build command: `make build`
+* Go code generation command: `make gogenerate`
+* Linter command: `make lint`
+* Formatter command: `make fmt`
+* Unit test command (depends on linter command): `make test`
 
 ## Code style
+Code linting is validated by the linter command above.
+
+Go linters are run via `golangci-lint`. Its configuration is defined in `scripts/golangci.yml`.
+
+Code formatting is enforced by running the formatter command above.
 
 ## Version control
 
