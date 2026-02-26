@@ -4,8 +4,8 @@ modules:
       url: https://github.com/getoutreach/devbase
       version: v2.35.1
     - name: github.com/getoutreach/stencil-base
-      url: https://github.com/getoutreach/stencil-base
-      version: v0.18.1-rc.1
+      url: file://../stencil-base
+      version: local
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
       version: v1.17.2
@@ -64,6 +64,9 @@ files:
     - name: .vscode/settings.json
       template: .vscode/settings.json.tpl
       module: github.com/getoutreach/stencil-golang
+    - name: AGENTS.md
+      template: AGENTS.md.tpl
+      module: github.com/getoutreach/stencil-base
     - name: Makefile
       template: Makefile.tpl
       module: github.com/getoutreach/stencil-golang

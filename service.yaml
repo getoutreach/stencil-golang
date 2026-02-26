@@ -31,3 +31,4 @@ modules:
     channel: rc
 replacements:
   github.com/getoutreach/stencil-golang: ./
+  github.com/getoutreach/stencil-base: ../stencil-base
