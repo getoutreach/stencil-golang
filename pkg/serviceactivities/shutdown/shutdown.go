@@ -1,8 +1,8 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
-// Description: See package comment.
+// Description: Service activity that handles graceful shutdowns.
 
-// Package shut down is a service activity that handles graceful shutdowns.
+// Package shutdown is a service activity that handles graceful shutdowns.
 package shutdown
 
 import (
