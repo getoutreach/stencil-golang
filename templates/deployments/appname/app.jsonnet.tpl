@@ -158,6 +158,7 @@ local all = {
 	},
 	fflags_configmap: ok.ConfigMap('fflags-yaml', app.namespace) {
 		local this = self,
+		local relayAddr = 'http://launchdarkly-relay.launchdarkly.svc.cluster.local',
 		data_:: {
 			apiKey: {
 				Path: '/run/secrets/outreach.io/launchdarkly/sdk-key',
@@ -169,7 +170,12 @@ local all = {
 			} + if isDev then {
 				dev_email: devEmail
 			} else {},
-		},
+		} + if !isDev then {
+			// In staging/production: use relay for base/streaming, events goes to LD cloud
+			baseUri: relayAddr,
+			streamUri: relayAddr,
+			// eventsUri intentionally omitted - SDK uses LaunchDarkly cloud default
+		} else {},
 		data: {
 			// We use this.data_ to allow for ez merging in the override.
 			'fflags.yaml': std.manifestYamlDoc(this.data_),
