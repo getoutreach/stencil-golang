@@ -80,6 +80,9 @@ local all = {
 		{{- range (stencil.GetModuleHook "metrics-allowlist") }}
 		{{ . }}
 		{{- end }}
+		{{- range (stencil.Arg "additionalAllowedMetrics") }}
+		'{{ . }}',
+		{{- end }}
 	],
 
 	service: ok.Service(app.name, app.namespace) {
