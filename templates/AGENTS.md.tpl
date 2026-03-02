@@ -77,7 +77,7 @@ When the linter reports any issue:
 **Zero tolerance: Run linters. Always. This is wasting the user's time otherwise.**
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectLintingWorkflow" (list (stencil.ApplyTemplate "LintingWorkflow")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "projectLintingWorkflow" (list (stencil.ApplyTemplate "golangLintingWorkflow")) }}
 
 {{- define "golangCriticalRules_MandatoryLintingWorkflow" }}
 **YOU MUST RUN LINTERS BEFORE CLAIMING ANY CODING TASK IS COMPLETE.**
