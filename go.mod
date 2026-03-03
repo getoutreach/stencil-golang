@@ -8,7 +8,7 @@ toolchain go1.25.7
 
 require (
 	github.com/blang/semver/v4 v4.0.0
-	github.com/getoutreach/gobox v1.110.3
+	github.com/getoutreach/gobox v1.111.1
 	github.com/getoutreach/stencil v1.43.1
 	github.com/google/go-cmp v0.7.0
 	github.com/magefile/mage v1.15.0
@@ -57,7 +57,7 @@ require (
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
-	github.com/kevinburke/ssh_config v1.4.0 // indirect
+	github.com/kevinburke/ssh_config v1.6.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
