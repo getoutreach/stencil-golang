@@ -10,19 +10,19 @@ Ignore lines containing "Stencil::Block"; they are templates.
 Purpose: concise rules and actionable workflows for AI-assisted contributors.
 
 **Quick Start**
-1. Format modified files and imports:
+* Format modified files and imports:
 
 ```bash
 gofmt -w ./... && goimports -w ./...
 ```
 
-2. Run linters (local):
+* Run linters (local):
 
 ```bash
 PATH="$BASH5_PATH:$PATH" make lint
 ```
 
-3. Run tests:
+* Run tests:
 
 ```bash
 PATH="$BASH5_PATH:$PATH" make test
@@ -463,4 +463,4 @@ Assisted-By: <Model Name> via <Tool Name>
 
 <!-- <<Stencil::Block(additionalAgentsInfo)>> -->
 
-<!-- ## <</Stencil::Block>> -->
+<!-- <</Stencil::Block>> -->
