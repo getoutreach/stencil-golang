@@ -1,19 +1,19 @@
 {{- file.Skip "Virtual file for AGENTS.md module hooks" }}
 
 {{- define "golangQuickStart" }}
-1. Format modified files and imports:
+* Format modified files and imports:
 
 ```bash
 gofmt -w ./... && goimports -w ./...
 ```
 
-2. Run linters (local):
+* Run linters (local):
 
 ```bash
 PATH="$BASH5_PATH:$PATH" make lint
 ```
 
-3. Run tests:
+* Run tests:
 
 ```bash
 PATH="$BASH5_PATH:$PATH" make test
