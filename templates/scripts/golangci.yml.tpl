@@ -2,6 +2,9 @@
 version: "2"
 lintroller:
   tier: "{{ stencil.Arg "lintroller" }}"
+  exclusions:
+    paths:
+      - "(^|/)node_modules(/|$)"
 output:
   formats:
     text:
@@ -159,6 +162,7 @@ linters:
       - third_party$
       - builtin$
       - examples$
+      - node_modules
 issues:
   max-same-issues: 10
 formatters:
@@ -175,3 +179,4 @@ formatters:
       - third_party$
       - builtin$
       - examples$
+      - node_modules
