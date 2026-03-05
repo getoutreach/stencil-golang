@@ -230,6 +230,8 @@ arguments:
     schema:
       type:
         - string
+  releaseOptions.enabled:
+    from: github.com/getoutreach/stencil-base
   # HPA fields
   hpa.enabled:
     description: Enable HPA for the primary deployment

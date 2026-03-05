@@ -1,5 +1,8 @@
-{{- if not (stencil.Arg "commands") }}
-{{ file.Skip "No commands defined" }}
+{{- if not (stencil.Arg "commands") -}}
+{{- file.Skip "No commands defined" -}}
+{{- end -}}
+{{- if not (stencil.Arg "releaseOptions.enabled") -}}
+{{- file.Skip "Releases disabled" -}}
 {{- end -}}
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 before:
