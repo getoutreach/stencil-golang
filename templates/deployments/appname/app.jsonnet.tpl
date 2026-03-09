@@ -75,7 +75,8 @@ local all = {
 		},
 	},
 
-	// this variable can be referenced in other stencil modules
+	// This variable contains all metrics used in Datadog.
+	// Use `additionalAllowedMetrics` stencil argument to manually add metrics to this list.
 	_metricsAllowlist:: [
 		{{- range (stencil.GetModuleHook "metrics-allowlist") }}
 		{{ . }}
