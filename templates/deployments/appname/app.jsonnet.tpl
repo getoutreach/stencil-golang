@@ -256,27 +256,22 @@ local all = {
 								metrics: $._metricsAllowlist,
 								send_distribution_buckets: true,
 							},
+							{{- if not (empty (stencil.Arg "kubernetes.groups")) }}
+              // This is duplicated since k8s metrics collection requires a different port as we
+              // collect them using the prometheus server hosted in the ControllerManager.
+              {
+                prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
+                namespace: app.name,
+                metrics: $._metricsAllowlist,
+                send_distribution_buckets: true,
+              },
+              {{- end }}
 						],
-						// https://docs.datadoghq.com/integrations/openmetrics/
-            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+						// The number of elements in .check_names and .init_configs must be the same as the number of
+						// elements in .instances, so populate all three from the objects in .datadog_prom_instances_
+						['ad.datadoghq.com/' + app.name + '.check_names']: std.manifestJsonMinified(['openmetrics' for x in self.datadog_prom_instances_]),
+						['ad.datadoghq.com/' + app.name + '.init_configs']: std.manifestJsonMinified([{} for x in self.datadog_prom_instances_]),
 						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
-            {{- else }}
-            // This is duplicated as k8s metrics collection requires a different port as we collect them using the
-            // prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
-						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics"]',
-						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}]',
-						['ad.datadoghq.com/' +  app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
-						k8s_datadog_prom_instances_:: self.datadog_prom_instances_+[
-							{
-								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
-								namespace: app.name,
-								metrics: $._metricsAllowlist,
-								send_distribution_buckets: true,
-							},
-						],
-						{{- end }}
 						{{- end }}
 					},
 				},
