@@ -38,6 +38,7 @@ local all = {
 	// This variable contains all metrics used in Datadog.
 	// Use `additionalAllowedMetrics` stencil argument to manually add metrics to this list.
 	_metricsAllowlist:: [
+		'*',
 		'my_custom_counter',
 		'my_custom_histogram_bucket',
 	],

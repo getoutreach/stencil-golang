@@ -45,6 +45,7 @@ local all = {
 	// This variable contains all metrics used in Datadog.
 	// Use `additionalAllowedMetrics` stencil argument to manually add metrics to this list.
 	_metricsAllowlist:: [
+		'*',
 	],
 
 	service: ok.Service(app.name, app.namespace) {

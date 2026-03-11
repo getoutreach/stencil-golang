@@ -78,8 +78,12 @@ local all = {
 	// This variable contains all metrics used in Datadog.
 	// Use `additionalAllowedMetrics` stencil argument to manually add metrics to this list.
 	_metricsAllowlist:: [
+		{{- if (stencil.GetModuleHook "metrics-allowlist") }}
 		{{- range (stencil.GetModuleHook "metrics-allowlist") }}
 		{{ . }}
+		{{- end }}
+		{{- else }}
+		'*',
 		{{- end }}
 		{{- range (stencil.Arg "additionalAllowedMetrics") }}
 		'{{ . }}',
