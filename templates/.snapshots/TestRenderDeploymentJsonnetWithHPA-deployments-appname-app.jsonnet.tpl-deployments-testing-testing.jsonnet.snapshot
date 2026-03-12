@@ -35,6 +35,13 @@ local all = {
 			},
 		},
 	},
+
+	// This variable contains all metrics used in Datadog.
+	// Use `additionalAllowedMetrics` stencil argument to manually add metrics to this list.
+	_metricsAllowlist:: [
+		'*',
+	],
+
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -155,13 +162,14 @@ local all = {
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
 																'/metrics',
 								namespace: app.name,
-								metrics: ['*'],
+								metrics: $._metricsAllowlist,
 								send_distribution_buckets: true,
 							},
 						],
-						// https://docs.datadoghq.com/integrations/openmetrics/
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+						// The number of elements in .check_names and .init_configs must be the same as the number of
+						// elements in .instances, so populate all three from the objects in .datadog_prom_instances_
+						['ad.datadoghq.com/' + app.name + '.check_names']: std.manifestJsonMinified(['openmetrics' for x in self.datadog_prom_instances_]),
+						['ad.datadoghq.com/' + app.name + '.init_configs']: std.manifestJsonMinified([{} for x in self.datadog_prom_instances_]),
 						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
 					},
 				},

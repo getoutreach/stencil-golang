@@ -185,7 +185,7 @@ arguments:
         - number
   versions.grpcClients.ruby:
     description: Ruby version to use for gRPC clients
-    default: "3.1.5"
+    default: "3.2.10"
     schema:
       type:
         - string
@@ -267,4 +267,10 @@ arguments:
     description: Enable Reloader to cycle pods when secrets or configmaps are modified
     schema:
       type: boolean
+  additionalAllowedMetrics:
+    description: Additional metric names to include in the Data Dog OpenMetrics scrape allowlist (_metricsAllowlist in app.jsonnet).
+    schema:
+      type: array
+      items:
+        type: string
 ## <</Stencil::Block>>

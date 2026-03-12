@@ -115,6 +115,17 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestRenderDeploymentJsonnet_AdditionalAllowedMetrics(t *testing.T) {
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"additionalAllowedMetrics": []interface{}{
+			"my_custom_counter",
+			"my_custom_histogram_bucket",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
