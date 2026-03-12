@@ -185,7 +185,7 @@ arguments:
         - number
   versions.grpcClients.ruby:
     description: Ruby version to use for gRPC clients
-    default: "3.1.5"
+    default: "3.2.10"
     schema:
       type:
         - string
