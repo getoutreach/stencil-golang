@@ -13,6 +13,7 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
+	"errors"
   "fmt"
 
 	"github.com/getoutreach/services/pkg/grpcx"
@@ -88,7 +89,7 @@ type client struct {
 func (c client) Close(ctx context.Context) error {
 	errors := make([]error, 0)
 	for _, fn := range c.closers {
-		if err := fn(ctx); err != nil {
+		if err := fn(ctx); err != nil && !errors.Is(err, context.Canceled) {
 			errors = append(errors, err)
 		}
 	}
