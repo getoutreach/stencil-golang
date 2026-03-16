@@ -15,14 +15,18 @@
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "directoryStructure" (list (stencil.ApplyTemplate "golangDirectoryStructure")) }}
 
-{{- define "golangComponents" }}
-What are components? (golang)
+{{- define "golangReferences" }}
+* Run `go mod tidy` to ensure your `go.mod` and `go.sum` files are up to date.
+  {{- if (stencil.Arg "service") }}
+* Use `make fmt` to format your code according to Go standards.
+* Use `make lint` to run linters and catch potential issues in your code.
+* Use `make test` to run your tests and ensure your code is working as expected.
+  {{- end }}
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsComponents" (list (stencil.ApplyTemplate "golangComponents")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsReferences" (list (stencil.ApplyTemplate "golangReferences")) }}
 
 {{- define "golangAgentsOther" }}
-Other agent information (golang)
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsOther" (list (stencil.ApplyTemplate "golangAgentsOther")) }}
