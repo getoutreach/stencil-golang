@@ -5,7 +5,7 @@ Ignore lines containing "Stencil::Block"; they are areas in your generated code 
 ## Project purpose
 
 <!-- <<Stencil::Block(projectPurpose)>> -->
-
+Stencil Module for Golang Applications
 <!-- <</Stencil::Block>> -->
 
 ## Directory structure
