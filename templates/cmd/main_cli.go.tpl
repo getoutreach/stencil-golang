@@ -105,6 +105,15 @@ func main() {
 		// <</Stencil::Block>>
 	}
 
+	app.After = func(ctx *cli.Context) error {
+		// <<Stencil::Block(after)>>
+{{ file.Block "after" }}
+		// <</Stencil::Block>>
+		// wait for LD client to be able to send events
+		time.Sleep(time.Second * 10)
+		return nil
+	}
+
 	// <<Stencil::Block(postApp)>>
 {{ file.Block "postApp" }}
 	// <</Stencil::Block>>
