@@ -67,9 +67,6 @@ files:
     - name: Makefile
       template: Makefile.tpl
       module: github.com/getoutreach/stencil-golang
-    - name: devenv.yaml
-      template: devenv.yaml.tpl
-      module: github.com/getoutreach/stencil-golang
     - name: go.mod
       template: go.mod.tpl
       module: github.com/getoutreach/stencil-golang
