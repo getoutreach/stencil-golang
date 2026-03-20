@@ -315,9 +315,9 @@ func TestRenderGolangcilintYaml(t *testing.T) {
 
 func TestRenderGolangcilintYamlGofumpt(t *testing.T) {
 	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
+	st.Args(map[string]any{
 		"lintroller": "platinum",
-		"go": map[string]interface{}{
+		"go": map[string]any{
 			"formatter": "gofumpt",
 		},
 	})
