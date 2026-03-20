@@ -229,13 +229,14 @@ func TestGoModStanzaVersion(t *testing.T) {
 
 func TestDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
-		"dependencies": map[string]interface{}{
-			"required": []interface{}{
+	st.Args(map[string]any{
+		"service": true,
+		"dependencies": map[string]any{
+			"required": []any{
 				"abc",
 				"def",
 			},
-			"optional": []interface{}{
+			"optional": []any{
 				"ghi",
 			},
 		},
@@ -243,7 +244,7 @@ func TestDevenvYaml(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
-func TestEmptyDevenvYaml(t *testing.T) {
+func TestNonServiceDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
 }
@@ -251,7 +252,7 @@ func TestEmptyDevenvYaml(t *testing.T) {
 func TestDevspaceYaml(t *testing.T) {
 	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "devspace.yaml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
+	st.Args(map[string]any{
 		"service": true,
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
