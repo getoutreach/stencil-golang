@@ -1,7 +1,7 @@
-# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
+(*codegen.File)(# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
 version: "2"
 lintroller:
-  tier: "{{ stencil.Arg "lintroller" }}"
+  tier: "platinum"
   exclusions:
     paths:
       - "(^|/)node_modules(/|$)"
@@ -154,10 +154,6 @@ linters:
       # We allow error shadowing
       - path: (.+)\.go$
         text: declaration of "err" shadows declaration at
-{{- $hook := (stencil.GetModuleHook "golangci-lint/exclude-rules") }}
-{{- if $hook }}
-{{ toYaml $hook | indent 6 }}
-{{- end }}
     paths:
       - third_party$
       - builtin$
@@ -167,11 +163,7 @@ issues:
   max-same-issues: 10
 formatters:
   enable:
-{{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
     - gofumpt
-{{- else }}
-    - gofmt
-{{- end }}
     - goimports
   exclusions:
     generated: lax
@@ -180,3 +172,4 @@ formatters:
       - builtin$
       - examples$
       - node_modules
+)
