@@ -107,6 +107,40 @@ Extra service rpcs to add to the `api.proto` file.
 {{ $myService := "rpc MyMethod (MyMessage) returns (MyMessage) {}" }}
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "api.proto.service" (list $myService) }}
 ```
+
+### `cli.additionalImports`
+
+**Type**: `[]string`
+
+**File**: `cmd/main_cli.go.tpl`
+
+Additional imports for all CLIs defined in the repository.
+
+```tpl
+{{ define "cliImports" }}
+- go.example.com/telemetrylib
+- go.example.com/someotherlib
+{{ end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "cli.additionalImports" (stencil.ApplyTemplate "cliImports" | fromYaml) }}
+```
+
+### `cli.after`
+
+**Type**: `string`
+
+**File**: `cmd/main_cli.go.tpl`
+
+Any code that need to be run upon completion of all of the CLIs defined in the repo.
+
+```tpl
+{{ define "finishCLI" }}
+telemetrylib.FlushMetrics()
+{{ end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "cli.after" (list (stencil.ApplyTemplate "finishCLI")) }}
+```
+
 ### `main.dependencies`
 
 **Type**: ``map[string]interface{}``

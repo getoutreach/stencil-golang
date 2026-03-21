@@ -67,6 +67,14 @@ func main() {
 		// <</Stencil::Block>>
 	}
 
+	app.After = func(cmd *cli.Context) error {
+		// <<Stencil::Block(appAfter)>>
+
+		// <</Stencil::Block>>
+
+		return nil
+	}
+
 	// <<Stencil::Block(postApp)>>
 
 	// <</Stencil::Block>>
