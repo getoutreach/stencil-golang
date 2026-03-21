@@ -17,6 +17,14 @@ func main() {
 
 {{- end }}
 
+{{- define "cliFunctionSignature" -}}
+{{- if eq (stencil.Arg "versions.urfave-cli") "v3" -}}
+ctx context.Context, cmd *cli.Command
+{{- else -}}
+cmd *cli.Context
+{{- end -}}
+{{- end -}}
+
 {{- define "main-cli" -}}
 // {{ stencil.ApplyTemplate "copyright" }}
 
@@ -43,6 +51,16 @@ import (
 	gcli "github.com/getoutreach/gobox/pkg/cli"
 	{{ $urfaveImport | quote }}
 	"github.com/getoutreach/gobox/pkg/cfg"
+
+	{{- $additionalImports := stencil.GetModuleHook "cli.additionalImports" }}
+	{{- if $additionalImports }}
+
+	// Code inserted by modules
+		{{- range $additionalImports }}
+	{{ . | quote }}
+		{{- end }}
+	// End code inserted by modules
+	{{- end }}
 
 	// Place any extra imports for your startup code here
 	// <<Stencil::Block(imports)>>
@@ -103,6 +121,17 @@ func main() {
 		// <<Stencil::Block(commands)>>
 {{ file.Block "commands" }}
 		// <</Stencil::Block>>
+	}
+
+	app.After = func({{ stencil.ApplyTemplate "cliFunctionSignature" }}) error {
+		{{- range stencil.GetModuleHook "cli.after" }}
+		{{- . }}
+		{{- end }}
+		// <<Stencil::Block(appAfter)>>
+{{ file.Block "appAfter" }}
+		// <</Stencil::Block>>
+
+		return nil
 	}
 
 	// <<Stencil::Block(postApp)>>
