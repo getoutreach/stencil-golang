@@ -1,3 +1,6 @@
+{{- if not (stencil.Arg "service") -}}
+{{ file.Skip "Not a service, can't be deployed to dev environment"}}
+{{- else -}}
 service: {{ stencil.Arg "service" }}
 dependencies:
 {{- if stencil.GetModuleHook "devenv.dependencies.optional" }}
@@ -17,4 +20,5 @@ dependencies:
 {{- else }}
   required:
 {{ toYaml (stencil.Arg "dependencies.required") | indent 4 }}
+{{- end }}
 {{- end }}
