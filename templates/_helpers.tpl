@@ -198,24 +198,12 @@ nodejs:
     version: {{ .version }}
 {{- end }}
   devDependencies:
-  - name: "@getoutreach/eslint-config"
-    version: ^2.0.0
+  - name: "@getoutreach/oxlint-config"
+    version: ^1.0.0
   - name: "@types/jest"
     version: ^26.0.15
   - name: "@types/node"
     version: ^22.18.3
-  - name: "@typescript-eslint/eslint-plugin"
-    version: ^7.8.0
-  - name: "@typescript-eslint/parser"
-    version: ^7.8.0
-  - name: eslint
-    version: ^8.57.0
-  - name: eslint-plugin-jest
-    version: ^28.3.0
-  - name: eslint-plugin-jsdoc
-    version: ^48.2.3
-  - name: eslint-plugin-node
-    version: ^11.1.0
   - name: grpc-tools
     version: ^1.12.4
   - name: grpc_tools_node_protoc_ts
@@ -224,6 +212,8 @@ nodejs:
     version: ^26.6.3
   - name: npm-run-all
     version: ^4.1.5
+  - name: oxlint
+    version: ^1.58.0
   - name: prettier
     version: ^3.0.0
   - name: ts-jest
