@@ -11,7 +11,7 @@ require (
 	github.com/getoutreach/gobox v1.111.1
 	github.com/getoutreach/stencil v1.43.1
 	github.com/google/go-cmp v0.7.0
-	github.com/magefile/mage v1.16.1
+	github.com/magefile/mage v1.17.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.4
 	golang.org/x/mod v0.34.0
