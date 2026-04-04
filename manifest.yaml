@@ -273,4 +273,9 @@ arguments:
       type: array
       items:
         type: string
+  useK8sYamlParser:
+    description: Use the k8s YAML parser instead of the native Jsonnet k8s parser
+    schema:
+      type: boolean
+    default: false
 ## <</Stencil::Block>>
