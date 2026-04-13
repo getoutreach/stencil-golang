@@ -178,7 +178,7 @@ arguments:
         - number
   versions.grpcClients.nodejs:
     description: Nodejs version to use for gRPC clients
-    default: "20.16.0"
+    default: "22.22.0"
     schema:
       type:
         - string
