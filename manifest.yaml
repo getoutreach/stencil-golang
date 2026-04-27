@@ -39,14 +39,8 @@ arguments:
           - http
           - grpc
           - temporal
-          - kafka
           - python
-    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, `python` and `kafka`.
-  aws.useKIAM:
-    schema:
-      type: boolean
-    default: false
-    description: Whether the application uses KIAM for IAM roles or IRSA roles for service accounts.
+    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, and `python`.
   oss:
     schema:
       type: boolean
@@ -96,7 +90,8 @@ arguments:
         enum:
           - node
           - ruby
-    description: List of grpc clients to generate for this gRPC service. Type must include gRPC
+          - python
+    description: List of gRPC clients to generate for this gRPC service, by programming language.
   reportingTeam:
     schema:
       type: string
@@ -187,30 +182,28 @@ arguments:
         - "" # current default deployment strategy is RollingUpdate
         - canary
     default: ""
+  deployment.buildContainerForCLI:
+    description: Whether to build a container image for the default CLI. Assumes that service is false and there is at least one entry in commands.
+    default: false
+    schema:
+      type: boolean
   versions.go:
     description: Go version to use
-    default: "1.23.4"
-    schema:
-      type:
-        - string
-        - number
-  versions.nodejs:
-    description: Nodejs version to use for build tooling (e.g., semantic-release)
-    default: "20.16.0"
+    default: "1.25.7"
     schema:
       type:
         - string
         - number
   versions.grpcClients.nodejs:
     description: Nodejs version to use for gRPC clients
-    default: "20.16.0"
+    default: "20.20.2"
     schema:
       type:
         - string
         - number
   versions.grpcClients.ruby:
     description: Ruby version to use for gRPC clients
-    default: "3.1.5"
+    default: "3.2.10"
     schema:
       type:
         - string
@@ -230,15 +223,28 @@ arguments:
       enum:
         - v2
         - v3
+  versions.devspaceImage:
+    description: The image tag for the dev/dev-slim images used by devspace
+    default: "stable"
+    schema:
+      type: string
   enableCgo:
     from: github.com/getoutreach/devbase
   disableGrpcGeneration:
     description: Disable gRPC generation
     schema:
       type: boolean
+  go.formatter:
+    description: The Go formatter tool to use.
+    default: gofmt
+    schema:
+      type: string
+      enum:
+        - gofmt
+        - gofumpt
   go.stanza:
     description: Go stanza version
-    default: "1.23.0"
+    default: "1.25.0"
     schema:
       type:
         - string
@@ -279,4 +285,10 @@ arguments:
     description: Enable Reloader to cycle pods when secrets or configmaps are modified
     schema:
       type: boolean
+  additionalAllowedMetrics:
+    description: Additional metric names to include in the Data Dog OpenMetrics scrape allowlist (_metricsAllowlist in app.jsonnet).
+    schema:
+      type: array
+      items:
+        type: string
 ## <</Stencil::Block>>

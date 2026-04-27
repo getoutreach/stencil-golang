@@ -1,3 +1,10 @@
+// Copyright 2026 Outreach Corporation. All Rights Reserved.
+//
+// Description: Service activity for setting GOMAXPROCS in a
+// containerized environment.
+
+// Package gomaxprocs provides a service activity for setting
+// GOMAXPROCS in a containerized environment.
 package gomaxprocs
 
 import (

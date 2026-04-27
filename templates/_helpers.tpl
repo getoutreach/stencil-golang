@@ -13,9 +13,6 @@
 {{- define "toolVersions" }}
 - name: golang
   version: {{ stencil.ApplyTemplate "goVersion" | trim | squote }}
-# Not used for gRPC clients
-- name: nodejs
-  version: {{ stencil.Arg "versions.nodejs" }}
 # Used in CI
 - name: protoc
   version: 21.5
@@ -72,10 +69,21 @@
 {{- end }}
 {{- end }}
 
+{{- /* skipUnlessBuildContainer skips the current file if we're not building a container image, either for a service or the default CLI. */}}
+{{- define "skipUnlessBuildContainer" }}
+{{- if not (or (stencil.Arg "service") (and (stencil.Arg "commands") (stencil.Arg "deployment.buildContainerForCLI"))) }}
+  {{ file.Skip "Not building a container image" }}
+{{- end }}
+{{- end }}
+
 
 # Returns the copyright string
 {{- define "copyright" }}
+{{- if stencil.Arg "oss" }}
+{{- printf "Copyright %s Outreach Corporation. Licensed under the Apache License 2.0." (stencil.ApplyTemplate "currentYear") }}
+{{- else }}
 {{- printf "Copyright %s Outreach Corporation. All Rights Reserved." (stencil.ApplyTemplate "currentYear") }}
+{{- end }}
 {{- end }}
 
 # Returns the import path for this application.
@@ -122,7 +130,7 @@ secrets:
 {{- define "dependencies" }}
 go:
 - name: github.com/getoutreach/gobox
-  version: v1.107.1
+  version: v1.111.4
 - name: github.com/getoutreach/stencil-golang/pkg
   # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
   # in a go.mod and run `go mod tidy`.
@@ -190,22 +198,12 @@ nodejs:
     version: {{ .version }}
 {{- end }}
   devDependencies:
-  - name: "@getoutreach/eslint-config"
-    version: ^2.0.0
+  - name: "@getoutreach/oxlint-config"
+    version: ^1.0.0
   - name: "@types/jest"
     version: ^26.0.15
-  - name: "@typescript-eslint/eslint-plugin"
-    version: ^7.8.0
-  - name: "@typescript-eslint/parser"
-    version: ^7.8.0
-  - name: eslint
-    version: ^8.57.0
-  - name: eslint-plugin-jest
-    version: ^28.3.0
-  - name: eslint-plugin-jsdoc
-    version: ^48.2.3
-  - name: eslint-plugin-node
-    version: ^11.1.0
+  - name: "@types/node"
+    version: ^22.18.3
   - name: grpc-tools
     version: ^1.12.4
   - name: grpc_tools_node_protoc_ts
@@ -214,6 +212,8 @@ nodejs:
     version: ^26.6.3
   - name: npm-run-all
     version: ^4.1.5
+  - name: oxlint
+    version: ^1.58.0
   - name: prettier
     version: ^3.0.0
   - name: ts-jest

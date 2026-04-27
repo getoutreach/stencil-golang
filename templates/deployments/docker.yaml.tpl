@@ -1,4 +1,4 @@
-{{- $_ := stencil.ApplyTemplate "skipIfNotService" -}}
+{{- $_ := stencil.ApplyTemplate "skipUnlessBuildContainer" -}}
 {{ .Config.Name }}:
 ## <<Stencil::Block(customDockerImages)>>
 {{ file.Block "customDockerImages" }}

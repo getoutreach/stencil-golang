@@ -1,8 +1,11 @@
 # syntax=docker/dockerfile:1.0-experimental
 {{- $goVersion := semver (stencil.ApplyTemplate "goVersion" | trim) }}
 {{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
-{{- $_ := stencil.ApplyTemplate "skipIfNotService" }}
-FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}.{{ $goVersion.Patch }} as builder
+{{- $_ := stencil.ApplyTemplate "skipUnlessBuildContainer" }}
+## <<Stencil::Block(buildStages)>>
+{{ file.Block "buildStages" }}
+## <</Stencil::Block>>
+FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}.{{ $goVersion.Patch }} AS builder
 ARG VERSION
 ENV GOCACHE "/go-build-cache"
 ENV GOPRIVATE github.com/{{ .Runtime.Box.Org }}/*
@@ -26,10 +29,16 @@ RUN --mount=type=ssh --mount=type=cache,target=/go/pkg --mount=type=cache,target
   go build -o /src/bin/ -ldflags "-X github.com/getoutreach/gobox/pkg/app.Version=$VERSION" -v ./cmd/...
 
 FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/alpine:{{ stencil.Arg "versions.alpine" }}
+{{- if stencil.Arg "service" }}
 ENTRYPOINT ["/usr/local/bin/{{ .Config.Name }}"]
+{{- else }}
+ENTRYPOINT ["/usr/local/bin/{{ .Config.Name }}", "--skip-update"]
+{{- end }}
 
 LABEL "io.outreach.reporting_team"="{{ stencil.Arg "reportingTeam" }}"
 LABEL "io.outreach.repo"="{{ .Config.Name }}"
+
+{{- if stencil.Arg "service" }}
 
 # Add timezone information.
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /zoneinfo.zip
@@ -39,6 +48,7 @@ ENV ZONEINFO=/zoneinfo.zip
 RUN wget --output-document /usr/local/share/ca-certificates/global-bundle.pem \
   "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem" \
   && update-ca-certificates
+{{- end }}
 
 ## <<Stencil::Block(afterBuild)>>
 {{ file.Block "afterBuild" }}

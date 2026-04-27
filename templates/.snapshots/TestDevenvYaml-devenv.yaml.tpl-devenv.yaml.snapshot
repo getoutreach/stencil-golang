@@ -1,4 +1,4 @@
-(*codegen.File)(service: false
+(*codegen.File)(service: true
 dependencies:
   optional:
     - "ghi"

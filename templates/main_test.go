@@ -19,11 +19,7 @@ var libraryTmpls = []string{
 // variable to a fake value for the duration of the test.
 func fakeDockerPullRegistry(t *testing.T) {
 	t.Helper()
-	oldRegistryValue := os.Getenv("BOX_DOCKER_PULL_IMAGE_REGISTRY")
-	os.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", "registry.example.com/foo")
-	t.Cleanup(func() {
-		os.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", oldRegistryValue)
-	})
+	t.Setenv("BOX_DOCKER_PULL_IMAGE_REGISTRY", "registry.example.com/foo")
 }
 
 func TestRenderAPIGoSuccess(t *testing.T) {
@@ -31,6 +27,14 @@ func TestRenderAPIGoSuccess(t *testing.T) {
 	// the ServiceManifest used by the `Run()` method in stenciltest, which is
 	// why this test does not verify correct handling of odd service names.
 	st := stenciltest.New(t, "api/api.go.tpl", libraryTmpls...)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestOSSCopyright(t *testing.T) {
+	st := stenciltest.New(t, "cmd/main.go.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"oss": true,
+	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
@@ -111,6 +115,17 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestRenderDeploymentJsonnet_AdditionalAllowedMetrics(t *testing.T) {
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"additionalAllowedMetrics": []interface{}{
+			"my_custom_counter",
+			"my_custom_histogram_bucket",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
@@ -119,10 +134,35 @@ func TestRenderDeploymentOverride(t *testing.T) {
 func TestRenderDeploymentDockerfile(t *testing.T) {
 	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
+	st.Args(map[string]any{
+		"service":       true,
 		"reportingTeam": "fnd-seal",
-		"versions": map[string]interface{}{
-			"golang": "1.0",
+		// Setting versions to avoid needing to update snapshots every
+		// time default versions change.
+		"versions": map[string]any{
+			"go":     "1.0",
+			"alpine": "3.1",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestRenderDeploymentDockerfileForCLI(t *testing.T) {
+	fakeDockerPullRegistry(t)
+	st := stenciltest.New(t, "deployments/appname/Dockerfile.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service": false,
+		"commands": []any{
+			"testing",
+		},
+		"deployments": map[string]any{
+			"buildContainerForCLI": true,
+		},
+		"reportingTeam": "fnd-seal",
+		// Setting versions to avoid needing to update snapshots every
+		// time default versions change.
+		"versions": map[string]any{
+			"go":     "1.0",
 			"alpine": "3.1",
 		},
 	})
@@ -189,13 +229,14 @@ func TestGoModStanzaVersion(t *testing.T) {
 
 func TestDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
-		"dependencies": map[string]interface{}{
-			"required": []interface{}{
+	st.Args(map[string]any{
+		"service": true,
+		"dependencies": map[string]any{
+			"required": []any{
 				"abc",
 				"def",
 			},
-			"optional": []interface{}{
+			"optional": []any{
 				"ghi",
 			},
 		},
@@ -203,7 +244,7 @@ func TestDevenvYaml(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
-func TestEmptyDevenvYaml(t *testing.T) {
+func TestNonServiceDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
 }
@@ -211,7 +252,7 @@ func TestEmptyDevenvYaml(t *testing.T) {
 func TestDevspaceYaml(t *testing.T) {
 	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "devspace.yaml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
+	st.Args(map[string]any{
 		"service": true,
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
@@ -221,6 +262,21 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	st := stenciltest.New(t, ".vscode/launch.json.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"service": true,
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestVSCodeSettingsConfig(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/settings.json.tpl", libraryTmpls...)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestVSCodeSettingsConfigGofumpt(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/settings.json.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"go": map[string]any{
+			"formatter": "gofumpt",
+		},
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }
@@ -308,6 +364,17 @@ func TestRenderGolangcilintYaml(t *testing.T) {
 	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
 		"lintroller": "platinum",
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestRenderGolangcilintYamlGofumpt(t *testing.T) {
+	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"lintroller": "platinum",
+		"go": map[string]any{
+			"formatter": "gofumpt",
+		},
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }

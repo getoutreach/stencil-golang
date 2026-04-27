@@ -1,15 +1,14 @@
 {
   "recommendations": [
+    "DrBlury.protobuf-vsc",
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "hashicorp.terraform",
+    "mads-hartmann.bash-ide-vscode",
     "golang.go",
     "Grafana.vscode-jsonnet",
-    "timonwong.shellcheck",
-    "zxh404.vscode-proto3",
     "redhat.vscode-yaml",
     "ms-azuretools.vscode-docker",
-    "foxundermoon.shell-format",
     {{- if and (has "grpc" (stencil.Arg "serviceActivities")) (has "node" (stencil.Arg "grpcClients")) }}
     "laktak.hjson",
     {{- end }}

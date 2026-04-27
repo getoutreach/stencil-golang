@@ -11,6 +11,7 @@ local app = (import 'kubernetes/app.libsonnet').info('{{ $appName }}');
 local resources = import './resources.libsonnet';
 local argo = import 'kubernetes/argo.libsonnet';
 local appImageRegistry = std.extVar('appImageRegistry');
+local awsAccountID = std.extVar('awsAccountID');
 local devEmail = std.extVar('dev_email');
 local isDev = app.environment == 'development' || app.environment == 'local_development';
 local isLocalDev = app.environment == 'local_development';
@@ -69,10 +70,27 @@ local all = {
 		metadata+: {
 			labels+: sharedLabels,
 			annotations+: {
-				'eks.amazonaws.com/role-arn': 'arn:aws:iam::{{ .Runtime.Box.AWS.DefaultAccountID }}:role/%s-%s' % [app.bento, app.name]
+				'eks.amazonaws.com/role-arn': 'arn:aws:iam::%s:role/%s-%s' % [awsAccountID, app.bento, app.name]
 			},
 		},
 	},
+
+	// This variable contains all metrics used in Datadog.
+	// Use `additionalAllowedMetrics` stencil argument to manually add metrics to this list.
+	{{- $metricsHook := stencil.GetModuleHook "metrics-allowlist" }}
+	_metricsAllowlist:: [
+		{{- if $metricsHook }}
+		{{- range $metricsHook }}
+		{{ . }}
+		{{- end }}
+		{{- else }}
+		'*',
+		{{- end }}
+		{{- range (stencil.Arg "additionalAllowedMetrics") }}
+		'{{ . }}',
+		{{- end }}
+	],
+
 	service: ok.Service(app.name, app.namespace) {
 		target_pod:: $.deployment.spec.template,
 		metadata+: {
@@ -240,30 +258,25 @@ local all = {
 																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
 																'/metrics',
 								namespace: app.name,
-								metrics: ['*'],
+								metrics: $._metricsAllowlist,
 								send_distribution_buckets: true,
 							},
+							{{- if not (empty (stencil.Arg "kubernetes.groups")) }}
+              // This is duplicated since k8s metrics collection requires a different port as we
+              // collect them using the prometheus server hosted in the ControllerManager.
+              {
+                prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
+                namespace: app.name,
+                metrics: $._metricsAllowlist,
+                send_distribution_buckets: true,
+              },
+              {{- end }}
 						],
-						// https://docs.datadoghq.com/integrations/openmetrics/
-            {{- if (empty (stencil.Arg "kubernetes.groups")) }}
-						['ad.datadoghq.com/' + app.name + '.check_names']: '["openmetrics"]',
-						['ad.datadoghq.com/' + app.name + '.init_configs']: '[{}]',
+						// The number of elements in .check_names and .init_configs must be the same as the number of
+						// elements in .instances, so populate all three from the objects in .datadog_prom_instances_
+						['ad.datadoghq.com/' + app.name + '.check_names']: std.manifestJsonMinified(['openmetrics' for x in self.datadog_prom_instances_]),
+						['ad.datadoghq.com/' + app.name + '.init_configs']: std.manifestJsonMinified([{} for x in self.datadog_prom_instances_]),
 						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
-            {{- else }}
-            // This is duplicated as k8s metrics collection requires a different port as we collect them using the
-            // prometheus server hosted in the ControllerManager. Make sure this is kept in sync with the previous block.
-						['ad.datadoghq.com/' +  app.name + '.check_names']: '["openmetrics","openmetrics"]',
-						['ad.datadoghq.com/' +  app.name + '.init_configs']: '[{}, {}]',
-						['ad.datadoghq.com/' +  app.name + '.instances']: std.manifestJsonEx(self.k8s_datadog_prom_instances_, '  '),
-						k8s_datadog_prom_instances_:: self.datadog_prom_instances_+[
-							{
-								prometheus_url: 'http://%%host%%:' + k8sMetricsPort + '/metrics',
-								namespace: app.name,
-								metrics: ['*'],
-								send_distribution_buckets: true,
-							},
-						],
-						{{- end }}
 						{{- end }}
 					},
 				},

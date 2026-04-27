@@ -4,13 +4,21 @@
   // <<Stencil::Block(settings)>>
 {{ file.Block "settings" }}
   // <</Stencil::Block>>
-  "go.lintTool": "golangci-lint",
+  "go.lintTool": "golangci-lint-v2",
   "go.lintFlags": [],
+  {{- if ne "gofumpt" (stencil.Arg "go.formatter") }}
   "go.formatTool": "goimports",
+  {{- end }}
   "go.useLanguageServer": true,
   "go.testEnvFile": "${workspaceFolder}/.vscode/private.env",
   "go.alternateTools": {
-    "golangci-lint": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
+    "dlv": "${workspaceFolder}/.bootstrap/shell/dlv.sh",
+    {{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
+    "gofumpt": "${workspaceFolder}/.bootstrap/shell/gofumpt.sh",
+    {{- else }}
+    "goimports": "${workspaceFolder}/.bootstrap/shell/goimports.sh",
+    {{- end }}
+    "golangci-lint-v2": "${workspaceFolder}/.bootstrap/shell/vscode/golang-linters.sh"
   },
   // This is disabled because it causes version mismatches between the
   // tools used/installed by asdf / stencil, and the ones updated by VSCode.
@@ -22,33 +30,32 @@
   "files.trimTrailingWhitespace": true,
   // This prevents 99% of issues with linters :)
   "editor.formatOnSave": true,
-  "shellcheck.customArgs": [
-    "-P",
-    "SCRIPTDIR",
-    "-x"
-  ],
-  "shellformat.path": "./.bootstrap/shell/shfmt.sh",
+  "bashIde.shellcheckPath": "./.bootstrap/shell/shellcheck.sh",
+  "bashIde.shfmt.path": "./.bootstrap/shell/shfmt.sh",
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[proto3]": {
-    "editor.defaultFormatter": "zxh404.vscode-proto3"
+    "editor.defaultFormatter": "DrBlury.protobuf-vsc"
   },
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "gopls": {
     "build.buildFlags": [
       "-tags=or_test,or_dev,or_e2e,or_int"
     ],
+    {{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
+    "formatting.gofumpt": true,
+    {{- end }}
   },
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
   },
-  "protoc": {
-    "options": ["--proto_path=${workspaceRoot}/api"]
-  }
+  "protobuf.includes": [
+    "${workspaceFolder}/api"
+  ]
 }
