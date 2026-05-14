@@ -191,6 +191,37 @@ func TestBasicGoMod(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestGoModWithService(t *testing.T) {
+	st := stenciltest.New(t, "go.mod.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"service": true,
+	})
+
+	p, err := plugin.NewStencilGolangPlugin(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	st.Ext("github.com/getoutreach/stencil-golang", p)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestGoModWithDisableLaunchDarklyClient(t *testing.T) {
+	st := stenciltest.New(t, "go.mod.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"service":                          true,
+		"disableDefaultLaunchDarklyClient": true,
+	})
+
+	p, err := plugin.NewStencilGolangPlugin(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	st.Ext("github.com/getoutreach/stencil-golang", p)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestMergeGoMod(t *testing.T) {
 	st := stenciltest.New(t, "go.mod.tpl", libraryTmpls...)
 
