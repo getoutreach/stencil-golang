@@ -131,6 +131,10 @@ secrets:
 go:
 - name: github.com/getoutreach/gobox
   version: v1.111.4
+{{- if and (stencil.Arg "service") (not (stencil.Arg "disableDefaultLaunchDarklyClient")) }}
+- name: github.com/getoutreach/fflags
+  version: v1.20.0
+{{- end }}
 - name: github.com/getoutreach/stencil-golang/pkg
   # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
   # in a go.mod and run `go mod tidy`.

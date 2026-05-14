@@ -272,4 +272,9 @@ arguments:
       type: array
       items:
         type: string
+  disableDefaultLaunchDarklyClient:
+    description: Disable default LaunchDarkly feature flags (fflags) client integration.
+    default: false
+    schema:
+      type: boolean
 ## <</Stencil::Block>>

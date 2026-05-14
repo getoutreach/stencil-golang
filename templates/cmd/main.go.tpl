@@ -13,6 +13,9 @@ import (
 	"context"
 	"os"
 
+{{- if not (stencil.Arg "disableDefaultLaunchDarklyClient") }}
+	"github.com/getoutreach/fflags/pkg/fflags"
+{{- end }}
 	"github.com/getoutreach/gobox/pkg/app"
 	"github.com/getoutreach/gobox/pkg/async"
 	"github.com/getoutreach/gobox/pkg/env"
@@ -128,6 +131,9 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		shutdown.New(),
 		gomaxprocs.New(),
 		automemlimit.New(),
+		{{- if not (stencil.Arg "disableDefaultLaunchDarklyClient") }}
+		fflags.New(),
+		{{- end }}
 		{{ $pkgName }}.NewHTTPService(cfg, &deps.privateHTTP),
 		{{- if has "http" (stencil.Arg "serviceActivities") }}
 		{{ $pkgName }}.NewPublicHTTPService(cfg, &deps.publicHTTP),

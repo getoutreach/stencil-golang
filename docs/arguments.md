@@ -146,3 +146,14 @@ Evaluation time frame for Datadog to evaluate the ArgoCD Application Health moni
 **Default**: `last_15m`
 
 Evaluation time frame for Datadog to evaluate the ArgoCD Sync Status monitor.
+
+## `disableDefaultLaunchDarklyClient`
+
+**Type**: `bool`
+**Default**: `false`
+
+When false (the default), stencil will:
+- Add fflags.New() to the runners collection in main.go
+- Enforce a minimum version of the fflags package (v1.20.0+) in go.mod
+  Set this to true if your service uses a custom LaunchDarkly client instead of the default fflags.
+  `disableDefaultLaunchDarklyClient: true`
