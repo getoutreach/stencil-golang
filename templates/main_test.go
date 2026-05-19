@@ -350,3 +350,12 @@ func TestUrfaveCLIV3(t *testing.T) {
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }
+func TestRenderNodeJSPackageHJSON(t *testing.T) {
+	st := stenciltest.New(t, "api/clients/node/package.hjson.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service":           true,
+		"serviceActivities": []any{"grpc"},
+		"grpcClients":       []any{"node"},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}

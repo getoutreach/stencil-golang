@@ -1,48 +1,56 @@
-{{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" -}}
-{
+(*codegen.File)({
   // This file is not automatically turned into package.json
   // In order to do so, run: `make gogenerate` in the root
   // of this repository.
 
-  "name": "@getoutreach/{{ .Config.Name }}-client",
+  "name": "@getoutreach/testing-client",
   "version": "0.0.1",
-  "description": "{{ .Config.Name }} client implementation",
+  "description": "testing client implementation",
   "main": "dist/index.js",
-  "repository": "https://github.com/getoutreach/{{ .Config.Name }}",
+  "repository": "https://github.com/getoutreach/testing",
   "files": [
     // <<Stencil::Block(nodeDistFiles)>>
-{{ file.Block "nodeDistFiles" }}
+
     // <</Stencil::Block>>
     "dist"
   ],
   "license": "UNLICENSED",
   "dependencies": {
     // <<Stencil::Block(nodeDependencies)>>
-{{ file.Block "nodeDependencies" }}
+
     // <</Stencil::Block>>
-  {{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.dependencies }}
-    "{{ $d.name }}": "{{ $d.version }}",
-  {{- end }}
+    "@grpc/grpc-js": "1.8.22",
+    "@getoutreach/grpc-client": "^2.4.0",
+    "@getoutreach/find": "^1.1.0",
+    "@types/google-protobuf": "^3.15.0",
+    "google-protobuf": "^3.15.0",
+    "ts-enum-util": "^4.0.2",
+    "winston": "^3.13.0",
   },
   "devDependencies": {
     // <<Stencil::Block(nodeDevDependencies)>>
-{{ file.Block "nodeDevDependencies" }}
+
     // <</Stencil::Block>>
-  {{- range $d := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.devDependencies }}
-    "{{ $d.name }}": "{{ $d.version }}",
-  {{- end }}
+    "@getoutreach/oxlint-config": "^1.0.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^22.18.3",
+    "grpc-tools": "^1.12.4",
+    "grpc_tools_node_protoc_ts": "^5.0.1",
+    "jest": "^26.6.3",
+    "npm-run-all": "^4.1.5",
+    "oxlint": "^1.58.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.9.5",
   },
-{{- $yarnResolutions := (stencil.ApplyTemplate "dependencies" | fromYaml).nodejs.yarnResolutions }}
-{{- if not (empty $yarnResolutions) }}
   "resolutions": {
-  {{- range $resolution := $yarnResolutions }}
-    {{ $resolution.name | quote }}: {{ $resolution.version | quote }}
-  {{- end }}
+    "grpc_tools_node_protoc_ts/handlebars": "^4.7.9"
   },
-{{- end }}
   "scripts": {
     // <<Stencil::Block(nodeScripts)>>
-{{ file.Block "nodeScripts" }}
+
     // <</Stencil::Block>>
     "build": "npm-run-all clean tsc",
     "ci": "npm-run-all pretty lint test-ci",
@@ -66,3 +74,4 @@
     "js"
   ]
 }
+)
