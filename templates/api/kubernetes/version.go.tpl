@@ -10,7 +10,11 @@
 package {{ .version }}
 
 //nolint:lll //Why: Long shell script
+	{{- if eq (stencil.Arg "useK8sYamlParser") true }}
+//go:generate /usr/bin/env bash -c "pushd ../../..{{if not (empty .package)}}/..{{end}} >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.7.0 -- controller-gen object paths=./api/k8s/{{ .package }}/{{ .version }} && popd >/dev/null 2>&1"
+	{{- else }}
 //go:generate /usr/bin/env bash -c "pushd ../../..{{if not (empty .package)}}/..{{end}} >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.20.0 -- controller-gen object paths=./api/k8s/{{ .package }}/{{ .version }} && popd >/dev/null 2>&1"
+	{{ end }}
 {{ end }}
 
 {{- range $g := stencil.Arg "kubernetes.groups" }}

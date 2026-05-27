@@ -277,4 +277,9 @@ arguments:
     schema:
       type: boolean
     default: false
+  lockControllerTools:
+    description: Lock the version of controller tools used for generating kubernetes code
+    schema:
+      type: boolean
+    default: false
 ## <</Stencil::Block>>
