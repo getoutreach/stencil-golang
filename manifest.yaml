@@ -46,6 +46,11 @@ arguments:
       type: boolean
     description: Deprecated, denotes this is an open source repository.
     deprecated: true
+  releaseOptions.enabled:
+    description: (From stencil-base) Whether the repository makes releases.
+    schema:
+      type: boolean
+    default: true
   commands:
     schema:
       type: array
