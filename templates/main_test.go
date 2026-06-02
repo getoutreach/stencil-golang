@@ -115,6 +115,17 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestRenderDeploymentJsonnet_AdditionalAllowedMetrics(t *testing.T) {
+	st := stenciltest.New(t, "deployments/appname/app.jsonnet.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"additionalAllowedMetrics": []interface{}{
+			"my_custom_counter",
+			"my_custom_histogram_bucket",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestRenderDeploymentOverride(t *testing.T) {
 	st := stenciltest.New(t, "deployments/appname/app.override.jsonnet.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
@@ -218,13 +229,14 @@ func TestGoModStanzaVersion(t *testing.T) {
 
 func TestDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
-		"dependencies": map[string]interface{}{
-			"required": []interface{}{
+	st.Args(map[string]any{
+		"service": true,
+		"dependencies": map[string]any{
+			"required": []any{
 				"abc",
 				"def",
 			},
-			"optional": []interface{}{
+			"optional": []any{
 				"ghi",
 			},
 		},
@@ -232,7 +244,7 @@ func TestDevenvYaml(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
-func TestEmptyDevenvYaml(t *testing.T) {
+func TestNonServiceDevenvYaml(t *testing.T) {
 	st := stenciltest.New(t, "devenv.yaml.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
 }
@@ -240,7 +252,7 @@ func TestEmptyDevenvYaml(t *testing.T) {
 func TestDevspaceYaml(t *testing.T) {
 	fakeDockerPullRegistry(t)
 	st := stenciltest.New(t, "devspace.yaml.tpl", libraryTmpls...)
-	st.Args(map[string]interface{}{
+	st.Args(map[string]any{
 		"service": true,
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
@@ -251,6 +263,19 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	st.Args(map[string]interface{}{
 		"service": true,
 	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestVSCodePrivateEnv(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/private.env.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service": true,
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestVSCodePrivateEnvNonService(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/private.env.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
@@ -302,6 +327,17 @@ func TestRenderGolangcilintYaml(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestRenderGolangcilintYamlGofumpt(t *testing.T) {
+	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"lintroller": "platinum",
+		"go": map[string]any{
+			"formatter": "gofumpt",
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestUrfaveCLIV2(t *testing.T) {
 	st := stenciltest.New(t, "cmd/main_cli.go.tpl", libraryTmpls...)
 	st.Args(map[string]any{
@@ -324,6 +360,15 @@ func TestUrfaveCLIV3(t *testing.T) {
 		"versions": map[string]any{
 			"urfave-cli": "v3",
 		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+func TestRenderNodeJSPackageHJSON(t *testing.T) {
+	st := stenciltest.New(t, "api/clients/node/package.hjson.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service":           true,
+		"serviceActivities": []any{"grpc"},
+		"grpcClients":       []any{"node"},
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }

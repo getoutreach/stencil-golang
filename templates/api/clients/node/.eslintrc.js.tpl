@@ -1,4 +1,3 @@
+{{- /* TODO: DELETE THIS TEMPLATE FILE - replaced by .oxlintrc.json.tpl as part of eslint-to-oxlint migration */ -}}
 {{- $_ := stencil.ApplyTemplate "skipGrpcClient" "node" }}
-module.exports = {
-  extends: ['@getoutreach/eslint-config/node'],
-};
+{{ file.Delete }}

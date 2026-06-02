@@ -13,6 +13,7 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 
 import (
 	"context"
+	"errors"
   "fmt"
 
 	"github.com/getoutreach/services/pkg/grpcx"
@@ -86,14 +87,14 @@ type client struct {
 
 // Close is necessary to avoid potential resource leaks
 func (c client) Close(ctx context.Context) error {
-	errors := make([]error, 0)
+	errs := make([]error, 0)
 	for _, fn := range c.closers {
-		if err := fn(ctx); err != nil {
-			errors = append(errors, err)
+		if err := fn(ctx); err != nil && !errors.Is(err, context.Canceled) {
+			errs = append(errs, err)
 		}
 	}
-	if len(errors) != 0 {
-		return fmt.Errorf("failed to close client: %v", errors)
+	if len(errs) != 0 {
+		return fmt.Errorf("failed to close client: %v", errs)
 	}
 
 	return nil

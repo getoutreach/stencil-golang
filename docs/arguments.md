@@ -17,7 +17,7 @@ service: true
 
 **Type**: `list`
 **Default**: `[]`
-**Options**: `['grpc', 'http', 'kafka']`
+**Options**: `['grpc', 'http']`
 
 A list of service activities that should be generated. Requires `service` to be set to `true`.
 
@@ -25,7 +25,6 @@ A list of service activities that should be generated. Requires `service` to be 
 serviceActivities:
   - grpc
   - http
-  - kafka
 ```
 
 ## `commands`
@@ -140,10 +139,10 @@ Enable/Disable Datadog P2 notification for ArgoCD Sync Status
 **Type**: `string`
 **Default**: `last_15m`
 
-Evaluation time frame for Datadog to evaluate the ArgoCD Application Health monitor. 
+Evaluation time frame for Datadog to evaluate the ArgoCD Application Health monitor.
 
 ## `terraform.datadog.monitoring.argocd.syncStatus.evaluationWindow`
 **Type**: `string`
 **Default**: `last_15m`
 
-Evaluation time frame for Datadog to evaluate the ArgoCD Sync Status monitor. 
+Evaluation time frame for Datadog to evaluate the ArgoCD Sync Status monitor.

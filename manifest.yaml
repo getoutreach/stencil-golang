@@ -39,14 +39,18 @@ arguments:
           - http
           - grpc
           - temporal
-          - kafka
           - python
-    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, `python` and `kafka`.
+    description: Any valid built-in service activities can be supplied here and they will be provided. The `service` flag must be set to true. Valid values for this are `http`, `grpc`, `temporal`, and `python`.
   oss:
     schema:
       type: boolean
     description: Deprecated, denotes this is an open source repository.
     deprecated: true
+  releaseOptions.enabled:
+    description: (From stencil-base) Whether the repository makes releases.
+    schema:
+      type: boolean
+    default: true
   commands:
     schema:
       type: array
@@ -178,14 +182,14 @@ arguments:
         - number
   versions.grpcClients.nodejs:
     description: Nodejs version to use for gRPC clients
-    default: "20.16.0"
+    default: "20.20.2"
     schema:
       type:
         - string
         - number
   versions.grpcClients.ruby:
     description: Ruby version to use for gRPC clients
-    default: "3.1.5"
+    default: "3.2.10"
     schema:
       type:
         - string
@@ -267,4 +271,10 @@ arguments:
     description: Enable Reloader to cycle pods when secrets or configmaps are modified
     schema:
       type: boolean
+  additionalAllowedMetrics:
+    description: Additional metric names to include in the Data Dog OpenMetrics scrape allowlist (_metricsAllowlist in app.jsonnet).
+    schema:
+      type: array
+      items:
+        type: string
 ## <</Stencil::Block>>

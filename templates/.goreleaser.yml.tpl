@@ -1,3 +1,4 @@
+{{- if stencil.Arg "releaseOptions.enabled" }}
 {{- if not (stencil.Arg "commands") }}
 {{ file.Skip "No commands defined" }}
 {{- end -}}
@@ -41,3 +42,6 @@ checksum:
 release:
   # We handle releasing via semantic-release
   disable: true
+{{- else }}
+{{- file.Delete }}
+{{- end }}
