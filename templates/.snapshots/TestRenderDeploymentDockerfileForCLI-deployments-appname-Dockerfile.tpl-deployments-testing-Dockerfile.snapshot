@@ -1,4 +1,4 @@
-(*codegen.File)(# syntax=docker/dockerfile:1.0-experimental
+(*codegen.File)(# syntax=docker/dockerfile:1
 ## <<Stencil::Block(buildStages)>>
 
 ## <</Stencil::Block>>
