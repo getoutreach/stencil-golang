@@ -27,6 +27,10 @@ stencil # Run stencil program with arguments specified in service.yaml file
 make fmt # Run formatters on project's code.
 make lint # Run linters on project's code.
 
+# golang
+make gogenerate # Run go generate to create any generated code, such as protobufs or Kubernetes CRDs.
+go mod tidy # Ensure your go.mod and go.sum files are up to date.
+
 # <<Stencil::Block(customCommands)>>
 
 # <</Stencil::Block>>
@@ -62,7 +66,6 @@ If you need more context, you can find more information in `docs/` directory. If
 <!--- -->
 <!--- * Run `make fmt` to format project. -->
 <!--- * Run `make lint` to run linters on project's code. -->
-* Run `go mod tidy` to ensure your `go.mod` and `go.sum` files are up to date.
 
 
 <!-- <<Stencil::Block(agentsReferencesCustom)>> -->

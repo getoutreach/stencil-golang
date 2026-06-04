@@ -1,5 +1,14 @@
 {{- file.Skip "Virtual file for AGENTS.md module hooks from stencil-base" }}
 
+{{- define "golangStenciledCommands" }}
+
+# golang
+make gogenerate # Run go generate to create any generated code, such as protobufs or Kubernetes CRDs.
+go mod tidy # Ensure your go.mod and go.sum files are up to date.
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "stenciledCommands" (list (stencil.ApplyTemplate "golangStenciledCommands")) }}
+
 {{- define "golangDirectoryStructure" }}
   {{- if (stencil.Arg "service") }}
 * `api/`: API definitions, such as protobuf files and OpenAPI specifications
@@ -16,17 +25,21 @@
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "directoryStructure" (list (stencil.ApplyTemplate "golangDirectoryStructure")) }}
 
 {{- define "golangReferences" }}
-* Run `go mod tidy` to ensure your `go.mod` and `go.sum` files are up to date.
-  {{- if (stencil.Arg "service") }}
-* Use `make fmt` to format your code according to Go standards.
-* Use `make lint` to run linters and catch potential issues in your code.
-* Use `make test` to run your tests and ensure your code is working as expected.
-  {{- end }}
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsReferences" (list (stencil.ApplyTemplate "golangReferences")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "referencesTable" (list (stencil.ApplyTemplate "golangReferences")) }}
 
-{{- define "golangAgentsOther" }}
+{{- define "golangBoundariesAlways" }}
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsOther" (list (stencil.ApplyTemplate "golangAgentsOther")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesAlways" (list (stencil.ApplyTemplate "golangBoundariesAlways")) }}
+
+{{- define "golangBoundariesAsk" }}
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesAsk" (list (stencil.ApplyTemplate "golangBoundariesAsk")) }}
+
+{{- define "golangBoundariesNever" }}
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesNever" (list (stencil.ApplyTemplate "golangBoundariesNever")) }}
