@@ -2,7 +2,7 @@ version: v1.43.2
 modules:
     - name: github.com/getoutreach/devbase
       url: https://github.com/getoutreach/devbase
-      version: v2.38.0-rc.6
+      version: v2.38.0
     - name: github.com/getoutreach/stencil-base
       url: file://../stencil-base
       version: local
@@ -70,6 +70,12 @@ files:
     - name: Makefile
       template: Makefile.tpl
       module: github.com/getoutreach/stencil-golang
+    - name: docs/mise-commands.md
+      template: docs/mise-commands.md.tpl
+      module: github.com/getoutreach/stencil-base
+    - name: docs/stencil-commands.md
+      template: docs/stencil-commands.md.tpl
+      module: github.com/getoutreach/stencil-base
     - name: go.mod
       template: go.mod.tpl
       module: github.com/getoutreach/stencil-golang
