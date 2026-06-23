@@ -78,8 +78,8 @@ require (
 	github.com/ulikunitz/xz v0.5.15 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/zalando/go-keyring v0.2.6 // indirect
-	go.opentelemetry.io/otel v1.42.0 // indirect
-	go.opentelemetry.io/otel/trace v1.42.0 // indirect
+	go.opentelemetry.io/otel v1.44.0 // indirect
+	go.opentelemetry.io/otel/trace v1.44.0 // indirect
 	golang.org/x/crypto v0.53.0 // indirect
 	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
