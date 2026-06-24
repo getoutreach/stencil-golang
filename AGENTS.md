@@ -60,6 +60,8 @@ If you need more context, you can find more information in `docs/` directory. If
 |----|----|
 | Stencil commands | [docs/stencil-commands.md](./docs/stencil-commands.md) |
 | Mise commands | [docs/mise-commands.md](./docs/mise-commands.md) |
+| Internal Go idioms | [webpage](https://outreach-io.atlassian.net/wiki/spaces/EN/pages/1124335785/Go+idioms) |
+| Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
