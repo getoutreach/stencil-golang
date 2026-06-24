@@ -22,12 +22,12 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 * `.vscode/`: VSCode configuration files
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "directoryStructure" (list (stencil.ApplyTemplate "golangDirectoryStructure")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsDirectoryStructure" (list (stencil.ApplyTemplate "golangDirectoryStructure")) }}
 
 {{- define "golangReferences" }}
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "referencesTable" (list (stencil.ApplyTemplate "golangReferences")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsReferencesTable" (list (stencil.ApplyTemplate "golangReferences")) }}
 
 {{- define "golangBoundariesAlways" }}
 {{- end }}
