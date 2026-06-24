@@ -1,13 +1,13 @@
 {{- file.Skip "Virtual file for AGENTS.md module hooks from stencil-base" }}
 
-{{- define "golangStenciledCommands" }}
+{{- define "golangGenericCommands" }}
 
 # golang
 make gogenerate # Run go generate to create any generated code, such as protobufs or Kubernetes CRDs.
 go mod tidy # Ensure your go.mod and go.sum files are up to date.
 {{- end }}
 
-{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "stenciledCommands" (list (stencil.ApplyTemplate "golangStenciledCommands")) }}
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsGenericCommands" (list (stencil.ApplyTemplate "golangGenericCommands")) }}
 
 {{- define "golangDirectoryStructure" }}
   {{- if (stencil.Arg "service") }}
