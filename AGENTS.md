@@ -4,8 +4,8 @@ Ignore lines containing "Stencil::Block"; they are areas in your generated code 
 
 ## Description
 
-<!-- <<Stencil::Block(projectDescription)>> -->
-Stencil module that scaffolds and maintains Golang applications and services.
+<!-- <<Stencil::Block(agentsProjectOverview)>> -->
+
 <!-- <</Stencil::Block>> -->
 
 ## Project overview
@@ -58,8 +58,8 @@ If you need more context, you can find more information in `docs/` directory. If
 
 | Description | Reference |
 |----|----|
-| Stencil commands | [docs/stencil-commands.md](./docs/stencil-commands.md) |
-| Mise commands | [docs/mise-commands.md](./docs/mise-commands.md) |
+| Stencil commands | [docs/stencil-commands.md](./docs/agents/stencil-commands.md) |
+| Mise commands | [docs/mise-commands.md](./docs/agents/mise-commands.md) |
 | Internal Go idioms | [webpage](https://outreach-io.atlassian.net/wiki/spaces/EN/pages/1124335785/Go+idioms) |
 | Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
