@@ -32,6 +32,11 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsReferencesTable" (list (stencil.ApplyTemplate "golangReferences")) }}
 
 {{- define "golangBoundariesAlways" }}
+- Run `go mod tidy` after adding or removing Go dependencies
+- Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
+- Follow idiomatic Go error handling (return errors, don't panic)
+- Use structured logging (e.g., log.WithError(err).Error(...)) instead of fmt.Printf
+- Add context to errors using `fmt.Errorf("...: %w", err)`
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesAlways" (list (stencil.ApplyTemplate "golangBoundariesAlways")) }}
@@ -42,6 +47,7 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesAsk" (list (stencil.ApplyTemplate "golangBoundariesAsk")) }}
 
 {{- define "golangBoundariesNever" }}
+- Use `panic()` in production code paths
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesNever" (list (stencil.ApplyTemplate "golangBoundariesNever")) }}
