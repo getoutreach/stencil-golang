@@ -55,6 +55,7 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 * `templates/`: Templates for generating project files, such as `AGENTS.md.tpl` for the AGENTS.md file. Used in stencil-modules to define the structure and content of generated files.
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `.vscode/`: VSCode configuration files
+* `.circleci/`: CircleCI configuration files.
 
 <!-- <<Stencil::Block(directoryStructureCustom)>> -->
 
@@ -111,6 +112,7 @@ If you need more context, you can find more information in `docs/` directory. If
 - Before adding new external dependencies
 - Before bumping major versions of dependencies
 - Before changing database schema or migration files // maybe different module?
+- Before modifying CI/CD pipeline configuration (.github/, .circleci/, etc.)
 
 
 <!-- <<Stencil::Block(agentsBoundariesAskCustom)>> -->

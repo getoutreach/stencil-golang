@@ -7,8 +7,8 @@ modules:
       url: file://../stencil-base
       version: local
     - name: github.com/getoutreach/stencil-circleci
-      url: https://github.com/getoutreach/stencil-circleci
-      version: v1.18.0
+      url: file://../stencil-circleci
+      version: local
     - name: github.com/getoutreach/stencil-golang
       url: file://./
       version: local
