@@ -73,11 +73,6 @@ If you need more context, you can find more information in `docs/` directory. If
 
 <!-- <</Stencil::Block>> -->
 
-
-<!-- <<Stencil::Block(agentsReferencesCustom)>> -->
-
-<!-- <</Stencil::Block>> -->
-
 ## Boundaries
 
 ### Always
