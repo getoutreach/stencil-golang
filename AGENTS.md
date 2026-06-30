@@ -5,7 +5,7 @@ Ignore lines containing "Stencil::Block"; they are areas in your generated code 
 ## Description
 
 <!-- <<Stencil::Block(agentsProjectOverview)>> -->
-
+Stencil Module for Golang Applications
 <!-- <</Stencil::Block>> -->
 
 ## Project overview
