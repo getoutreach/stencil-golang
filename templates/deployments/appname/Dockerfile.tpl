@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.0-experimental
+# syntax=docker/dockerfile:1
 {{- $goVersion := semver (stencil.ApplyTemplate "goVersion" | trim) }}
 {{- $_ := file.SetPath (printf "deployments/%s/%s" .Config.Name (base file.Path)) }}
 {{- $_ := stencil.ApplyTemplate "skipUnlessBuildContainer" }}
