@@ -27,6 +27,9 @@ stencil # Run stencil program with arguments specified in service.yaml file
 
 # mise
 mise tasks ls # List all tasks available through mise.
+mise run <task> # Run a task available through mise.
+
+# make
 make fmt # Run formatters on project's code.
 make lint # Run linters on project's code.
 
@@ -88,7 +91,7 @@ If you need more context, you can find more information in `docs/` directory. If
 - Run `make lint` after making code changes and fix any issues
 - Keep functions small and single-purpose
 - Check `stencil.lock` to determine file ownership before modifying generated files
-- Prefer running `mise` tasks over make targets when available
+- Prefer running `mise` tasks over make targets
 - Run `go mod tidy` after adding or removing Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
 - Follow idiomatic Go error handling (return errors, don't panic)
