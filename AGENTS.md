@@ -75,15 +75,9 @@ If you need more context, you can find more information in `docs/` directory. If
 
 ### Always
 
-- Run `make fmt` after making code changes
-- Run `make lint` after making code changes and fix any issues
-- Keep functions small and single-purpose
-- Check `stencil.lock` to determine file ownership before modifying generated files
 - Prefer running `mise` tasks over make targets
 - Run `go mod tidy` after adding or removing Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
-- Follow idiomatic Go error handling (return errors, don't panic)
-- Use structured logging (e.g., log.WithError(err).Error(...)) instead of fmt.Printf
 - Add context to errors using `fmt.Errorf("...: %w", err)`
 <!-- <<Stencil::Block(agentsBoundariesAlwaysCustom)>> -->
 
@@ -91,12 +85,10 @@ If you need more context, you can find more information in `docs/` directory. If
 
 ### Ask
 
-- Write unit tests for new functions and bug fixes
-- Before deleting or significantly refactoring a package or file
 - Before changing public API signatures (exported functions, types, or interfaces)
 - Before adding new external dependencies
 - Before bumping major versions of dependencies
-- Before changing database schema or migration files // maybe different module?
+- Before changing database schema or migration files
 - Before modifying CI/CD pipeline configuration (.github/, .circleci/, etc.)
 <!-- <<Stencil::Block(agentsBoundariesAskCustom)>> -->
 
@@ -107,8 +99,6 @@ If you need more context, you can find more information in `docs/` directory. If
 - Commit secrets, credentials, API keys, or tokens
 - Force-push to main or protected branches
 - Disable or skip linters/tests to make a build pass
-- Ignore or swallow errors silently (e.g., _ = someFunc() without justification)
-- Add TODO or FIXME comments without a linked issue or explanation
 - Use `panic()` in production code paths
 <!-- <<Stencil::Block(agentsBoundariesNeverCustom)>> -->
 
