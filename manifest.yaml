@@ -92,6 +92,11 @@ arguments:
     schema:
       type: boolean
     description: "Only applicable when `service` is true. This is a flag to enable topology aware routing in K8s for your service."
+  kubernetes.istioWaypoint.enabled:
+    schema:
+      type: boolean
+    default: true
+    description: "Only applicable when `service` is true and `grpc` is in serviceActivities. Enables an Istio Waypoint proxy for gRPC services outside of development to improve load balancing across pods (DT-5423). Set to false to opt out."
   lintroller:
     schema:
       type: string

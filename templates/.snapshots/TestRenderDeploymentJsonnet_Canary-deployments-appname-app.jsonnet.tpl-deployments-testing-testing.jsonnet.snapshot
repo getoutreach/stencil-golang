@@ -266,6 +266,34 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
+  // Istio Waypoint proxy for gRPC services (DT-5423). Waypoints improve load
+  // balancing by spreading gRPC connections across all pods instead of pinning
+  // them to a subset. Enabled by default outside of development; opt out with
+  // `kubernetes.istioWaypoint.enabled: false` in service.yaml.
+  service+: {
+    metadata+: {
+      labels+: {
+        'istio.io/use-waypoint': app.name + '-waypoint',
+      },
+    },
+  },
+  waypoint: ok.WaypointProxy(app.name + '-waypoint', namespace=app.namespace, team='test:team'),
+  waypointConfig: ok.WaypointProxyConfig(app.name + '-waypoint', namespace=app.namespace, team='test:team'),
+  grpcRoute: ok.GrpcRoute(app.name, app.namespace) {
+    spec+: {
+      parentRefs: [{
+        group: '',
+        kind: 'Service',
+        name: app.name,
+      }],
+      rules: [{
+        backendRefs: [{
+          name: app.name,
+          port: 5000,
+        }],
+      }],
+    },
+  },
   // ArgoRollouts objects
 	service_canary: ok.Service(app.name + '-canary', app.namespace) {
 		target_pod:: $.deployment.spec.template,
