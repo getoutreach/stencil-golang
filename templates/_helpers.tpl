@@ -228,4 +228,7 @@ nodejs:
   - name: {{ .name }}
     version: {{ .version }}
 {{- end }}
+  yarnResolutions:
+  - name: grpc_tools_node_protoc_ts/handlebars
+    version: ^4.7.9
 {{- end }}

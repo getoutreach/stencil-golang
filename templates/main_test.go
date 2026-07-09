@@ -266,6 +266,19 @@ func TestVSCodeLaunchConfig(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestVSCodePrivateEnv(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/private.env.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service": true,
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
+func TestVSCodePrivateEnvNonService(t *testing.T) {
+	st := stenciltest.New(t, ".vscode/private.env.tpl", libraryTmpls...)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestVSCodeSettingsConfig(t *testing.T) {
 	st := stenciltest.New(t, ".vscode/settings.json.tpl", libraryTmpls...)
 	st.Run(stenciltest.RegenerateSnapshots())
@@ -347,6 +360,15 @@ func TestUrfaveCLIV3(t *testing.T) {
 		"versions": map[string]any{
 			"urfave-cli": "v3",
 		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+func TestRenderNodeJSPackageHJSON(t *testing.T) {
+	st := stenciltest.New(t, "api/clients/node/package.hjson.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"service":           true,
+		"serviceActivities": []any{"grpc"},
+		"grpcClients":       []any{"node"},
 	})
 	st.Run(stenciltest.RegenerateSnapshots())
 }

@@ -45,7 +45,12 @@ arguments:
     schema:
       type: boolean
     description: Deprecated, denotes this is an open source repository.
-    deprecated: true
+    deprecated: "definition migrated to github.com/getoutreach/stencil-base"
+  releaseOptions.enabled:
+    description: (From stencil-base) Whether the repository makes releases.
+    schema:
+      type: boolean
+    default: true
   commands:
     schema:
       type: array
@@ -138,8 +143,8 @@ arguments:
       type: array
       items:
         type: string
-    description: "List of mixins to also import. Set in override.jsonnet instead"
-    deprecated: true
+    description: "Deprecated, list of mixins to also import. Set in override.jsonnet instead"
+    deprecated: "set mixins in your .override.jsonnet file instead"
   dependencies.optional:
     schema:
       type: array
