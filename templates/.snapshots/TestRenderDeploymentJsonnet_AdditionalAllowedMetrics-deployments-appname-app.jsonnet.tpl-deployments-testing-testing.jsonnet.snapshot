@@ -67,6 +67,14 @@ local all = {
 		},
 		spec+: { maxUnavailable: '15%' },
 	},
+	// ServiceMonitor tells the Prometheus operator to scrape this service's
+	// /metrics endpoint. See go/metrics for details.
+	servicemonitor: ok.ServiceMonitor(app.name, app.namespace) {
+		target_service:: $.service,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+	},
 	// Default configuration for the service, managed by stencil.
 	// all other configuration should be done in the
 	// testing.config.jsonnet file
