@@ -359,6 +359,36 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
+  {{- if and (has "grpc" (stencil.Arg "serviceActivities")) (stencil.Arg "kubernetes.istioWaypoint.enabled") }}
+  // Istio Waypoint proxy for gRPC services (DT-5423). Waypoints improve load
+  // balancing by spreading gRPC connections across all pods instead of pinning
+  // them to a subset. Enabled by default outside of development; opt out with
+  // `kubernetes.istioWaypoint.enabled: false` in service.yaml.
+  service+: {
+    metadata+: {
+      labels+: {
+        'istio.io/use-waypoint': app.name + '-waypoint',
+      },
+    },
+  },
+  waypoint: ok.WaypointProxy(app.name + '-waypoint', namespace=app.namespace, team='{{ stencil.Arg "reportingTeam" }}'),
+  waypointConfig: ok.WaypointProxyConfig(app.name + '-waypoint', namespace=app.namespace, team='{{ stencil.Arg "reportingTeam" }}'),
+  grpcRoute: ok.GrpcRoute(app.name, app.namespace) {
+    spec+: {
+      parentRefs: [{
+        group: '',
+        kind: 'Service',
+        name: app.name,
+      }],
+      rules: [{
+        backendRefs: [{
+          name: app.name,
+          port: 5000,
+        }],
+      }],
+    },
+  },
+  {{- end }}
   {{- if (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
   // VaultSecrets to be deployed
 	{{- range $secretPath := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
