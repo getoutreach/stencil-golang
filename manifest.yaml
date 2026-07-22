@@ -121,7 +121,7 @@ arguments:
       type: string
       enum:
         - opentelemetry
-    descriptions: Tracing backend to send traces to
+    description: Tracing backend to send traces to
     default: opentelemetry
   slack:
     schema:
