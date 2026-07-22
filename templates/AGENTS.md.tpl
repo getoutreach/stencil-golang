@@ -25,14 +25,14 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsDirectoryStructure" (list (stencil.ApplyTemplate "golangDirectoryStructure")) }}
 
 {{- define "golangReferences" }}
-| Internal Go idioms | [webpage](https://outreach-io.atlassian.net/wiki/spaces/EN/pages/1124335785/Go+idioms) |
 | Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | [webpage](https://go.dev/doc/effective_go) |
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsReferencesTable" (list (stencil.ApplyTemplate "golangReferences")) }}
 
 {{- define "golangBoundariesAlways" }}
-- Run `go mod tidy` after adding or removing Go dependencies
+- Run `go mod tidy` after adding, removing or upgrading Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
 - Add context to errors using `fmt.Errorf("...: %w", err)`
 {{- end }}

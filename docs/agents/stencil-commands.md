@@ -12,7 +12,6 @@ mise tasks | grep stencil
 |---|---|
 | `stencil` | Run Stencil without updating module versions |
 | `stencil:upgrade` | Run Stencil and update module versions if available |
-| `stencil:post` | Run all post-Stencil tasks |
 
 ## Usage
 

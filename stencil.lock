@@ -2,10 +2,10 @@ version: v1.43.2
 modules:
     - name: github.com/getoutreach/devbase
       url: https://github.com/getoutreach/devbase
-      version: v2.39.0-rc.1
+      version: v2.39.1
     - name: github.com/getoutreach/stencil-base
       url: https://github.com/getoutreach/stencil-base
-      version: v0.19.1-rc.1
+      version: v0.20.0-rc.1
     - name: github.com/getoutreach/stencil-circleci
       url: https://github.com/getoutreach/stencil-circleci
       version: v1.18.0
@@ -13,8 +13,8 @@ modules:
       url: file://./
       version: local
     - name: github.com/getoutreach/stencil-template-base
-      url: file://../stencil-template-base
-      version: local
+      url: https://github.com/getoutreach/stencil-template-base
+      version: v0.5.0
 files:
     - name: .circleci/config.yml
       template: .circleci/config.yml.tpl
@@ -73,9 +73,6 @@ files:
     - name: Makefile
       template: Makefile.tpl
       module: github.com/getoutreach/stencil-golang
-    - name: docs/agents/mise-commands.md
-      template: docs/agents/mise-commands.md.tpl
-      module: github.com/getoutreach/stencil-base
     - name: docs/agents/stencil-commands.md
       template: docs/agents/stencil-commands.md.tpl
       module: github.com/getoutreach/stencil-base

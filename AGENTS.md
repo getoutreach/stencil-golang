@@ -1,6 +1,6 @@
 # stencil-golang
 
-Ignore lines containing "Stencil::Block"; they are areas in your generated code that you’d like to persist across runs and are repository specific. These lines are for template generator and do not contain agent instructions.
+Ignore lines containing `Stencil::Block`; they are areas in your generated code that you'd like to persist across runs and are repository specific. These lines are for the template generator and do not contain agent instructions.
 
 ## Description
 
@@ -26,8 +26,7 @@ repo-specific edits and `stencil.lock` tracks module versions and file ownership
 stencil # Run stencil program with arguments specified in service.yaml file
 
 # mise
-mise tasks ls # List all tasks available through mise.
-mise run <task> # Run a task available through mise.
+mise --help # Show help for mise commands.
 
 # make
 make fmt # Run formatters on project's code.
@@ -44,28 +43,23 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 ## Directory structure
 
 * service.yaml: File used as configuration for `stencil` program containing additional arguments and stencil modules to use
-* stencil.lock: File used as record for:
-  1. What modules were used and their version
-  2. What module owns which file
-  3. If a file is not listed here, the owner is current repository
+* stencil.lock: A lockfile for Stencil which also declares which files in the repo are managed, and which module manages it. Third party generated files are not cataloged.
 * docs/: Directory used to store documentation files and reference materials for the project.
-* `templates/`: Templates for generating project files, such as `AGENTS.md.tpl` for the AGENTS.md file. Used in stencil-modules to define the structure and content of generated files.
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `.vscode/`: VSCode configuration files
 <!-- <<Stencil::Block(directoryStructureCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
 
-If you need more context, you can find more information in `docs/` directory. If the directory does not exist, ignore this line.
+If you need more context, you can find more information in `docs/` directory.
 
 ## References table
 
 | Description | Reference |
 |----|----|
-| Stencil commands | [docs/stencil-commands.md](./docs/agents/stencil-commands.md) |
-| Mise commands | [docs/mise-commands.md](./docs/agents/mise-commands.md) |
-| Internal Go idioms | [webpage](https://outreach-io.atlassian.net/wiki/spaces/EN/pages/1124335785/Go+idioms) |
+| Stencil commands | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
 | Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | [webpage](https://go.dev/doc/effective_go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -73,9 +67,7 @@ If you need more context, you can find more information in `docs/` directory. If
 ## Boundaries
 
 ### Always
-
-- Prefer running `mise` tasks over make targets
-- Run `go mod tidy` after adding or removing Go dependencies
+- Run `go mod tidy` after adding, removing or upgrading Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
 - Add context to errors using `fmt.Errorf("...: %w", err)`
 <!-- <<Stencil::Block(agentsBoundariesAlwaysCustom)>> -->
@@ -84,10 +76,12 @@ If you need more context, you can find more information in `docs/` directory. If
 
 ### Ask
 
-- Before changing public API signatures (exported functions, types, or interfaces)
-- Before adding new external dependencies
-- Before bumping major versions of dependencies
-- Before changing database schema or migration files
+Before each scenario in the following list, ask the user if they allow the change to occur. For every question, include: root reason for change, list the tradeoffs for the change.
+
+- Changing public API signatures (exported functions, types, or interfaces)
+- Adding new external dependencies
+- Bumping major versions of dependencies
+- Changing database schema or migration files
 <!-- <<Stencil::Block(agentsBoundariesAskCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -95,8 +89,6 @@ If you need more context, you can find more information in `docs/` directory. If
 ### Never
 
 - Commit secrets, credentials, API keys, or tokens
-- Force-push to main or protected branches
-- Disable or skip linters/tests to make a build pass
 - Use `panic()` in production code paths
 <!-- <<Stencil::Block(agentsBoundariesNeverCustom)>> -->
 
