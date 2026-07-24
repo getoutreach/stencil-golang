@@ -234,6 +234,11 @@ arguments:
     schema:
       type:
         - string
+  go.linters.strict:
+    description: Enable a stricter set of golangci-lint linters and rules for higher code quality enforcement.
+    default: false
+    schema:
+      type: boolean
   # HPA fields
   hpa.enabled:
     description: Enable HPA for the primary deployment
