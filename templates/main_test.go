@@ -338,6 +338,19 @@ func TestRenderGolangcilintYamlGofumpt(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestRenderGolangcilintYamlStrict(t *testing.T) {
+	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
+	st.Args(map[string]any{
+		"lintroller": "platinum",
+		"go": map[string]any{
+			"linters": map[string]any{
+				"strict": true,
+			},
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestUrfaveCLIV2(t *testing.T) {
 	st := stenciltest.New(t, "cmd/main_cli.go.tpl", libraryTmpls...)
 	st.Args(map[string]any{

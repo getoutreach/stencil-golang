@@ -1,7 +1,7 @@
-# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
+(*codegen.File)(# yaml-language-server: $schema=https://json.schemastore.org/golangci-lint
 version: "2"
 lintroller:
-  tier: "{{ stencil.Arg "lintroller" }}"
+  tier: "platinum"
   exclusions:
     paths:
       - "(^|/)node_modules(/|$)"
@@ -33,12 +33,7 @@ linters:
     - revive
     - staticcheck
     - unconvert
-{{- if not (stencil.Arg "go.linters.strict") }}
-    # - unparam # Previously suppressed by --fast in v1, disabling for now to avoid noise
-    # - unused # Previously suppressed by --fast in v1, disabling for now to avoid noise
-{{- end }}
     - whitespace
-{{- if stencil.Arg "go.linters.strict" }}
     - asciicheck # Flags non-ASCII identifiers (guards against homoglyph/confusable-character tricks).
     - bidichk # Flags dangerous unicode bidi control characters (Trojan Source-style attacks).
     - canonicalheader
@@ -85,7 +80,6 @@ linters:
     - usestdlibvars
     - wastedassign
     - zerologlint
-{{- end }}
   settings:
     dupl:
       threshold: 100
@@ -110,12 +104,10 @@ linters:
         - style
     gocyclo:
       min-complexity: 25
-{{- if stencil.Arg "go.linters.strict" }}
     godot:
       exclude:
         - "^\\s*<<Stencil::Block\\(.+\\)>>$"
         - "^\\s*<</Stencil::Block>>$"
-{{- end }}
     govet:
       enable:
         - shadow
@@ -148,22 +140,12 @@ linters:
         - name: range
         - name: receiver-naming
         - name: time-naming
-{{- if not (stencil.Arg "go.linters.strict") }}
-        - name: unexported-return
-          disabled: true # Previously suppressed by --fast in v1, disabling for now to avoid noise
-{{- end }}
         - name: indent-error-flow
         - name: errorf
         - name: empty-block
         - name: superfluous-else
         - name: unreachable-code
         - name: redefines-builtin-id
-{{- if not (stencil.Arg "go.linters.strict") }}
-        # While we agree with this rule, right now it would break too many
-        # projects. So, we disable it by default.
-        - name: unused-parameter
-          disabled: true
-{{- end }}
     staticcheck:
       checks:
         [
@@ -214,10 +196,6 @@ linters:
       # We allow error shadowing
       - path: (.+)\.go$
         text: declaration of "err" shadows declaration at
-{{- $hook := (stencil.GetModuleHook "golangci-lint/exclude-rules") }}
-{{- if $hook }}
-{{ toYaml $hook | indent 6 }}
-{{- end }}
     paths:
       - third_party$
       - builtin$
@@ -227,11 +205,7 @@ issues:
   max-same-issues: 10
 formatters:
   enable:
-{{- if eq "gofumpt" (stencil.Arg "go.formatter") }}
-    - gofumpt
-{{- else }}
     - gofmt
-{{- end }}
     - goimports
   exclusions:
     generated: lax
@@ -240,3 +214,4 @@ formatters:
       - builtin$
       - examples$
       - node_modules
+)
