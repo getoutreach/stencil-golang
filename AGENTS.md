@@ -44,6 +44,7 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 
 * service.yaml: File used as configuration for `stencil` program containing additional arguments and stencil modules to use
 * stencil.lock: A lockfile for Stencil which also declares which files in the repo are managed, and which module manages it. Third party generated files are not cataloged.
+* CONTRIBUTING.md: File containing guidelines for contributing to the project.
 * docs/: Directory used to store documentation files and reference materials for the project.
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `.vscode/`: VSCode configuration files
