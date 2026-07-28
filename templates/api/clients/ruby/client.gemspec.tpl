@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = Gem::Requirement.new(">= {{ stencil.Arg "versions.grpcClients.ruby" }}")
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+    `git ls-files -z lib`.split("\x0")
   end
   spec.require_paths = ["lib", "lib/{{ .Config.Name }}_client"]
   spec.add_dependency 'grpc', '~> 1.72'
