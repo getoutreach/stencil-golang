@@ -11,7 +11,12 @@ Stencil Module for Golang Applications
 ## Project overview
 
 <!-- <<Stencil::Block(projectOverview)>> -->
-
+This repository is a Stencil module that scaffolds and maintains Golang
+applications and services at Outreach. It provides `templates/` (`*.tpl`)
+rendered by the `stencil` program—covering Go source, gRPC/HTTP APIs,
+Kubernetes deployments, Dockerfiles, CI, and tooling config. Behavior is
+driven by `service.yaml` arguments, while `Stencil::Block` regions preserve
+repo-specific edits and `stencil.lock` tracks module versions and file ownership.
 <!-- <</Stencil::Block>> -->
 
 ## Generic commands
@@ -26,6 +31,10 @@ mise --help # Show help for mise commands.
 # make
 make fmt # Run formatters on project's code.
 make lint # Run linters on project's code.
+
+# golang
+make gogenerate # Run go generate to create any generated code, such as protobufs or Kubernetes CRDs.
+go mod tidy # Ensure your go.mod and go.sum files are up to date.
 # <<Stencil::Block(customCommands)>>
 
 # <</Stencil::Block>>
@@ -35,7 +44,10 @@ make lint # Run linters on project's code.
 
 * service.yaml: File used as configuration for `stencil` program containing additional arguments and stencil modules to use
 * stencil.lock: A lockfile for Stencil which also declares which files in the repo are managed, and which module manages it. Third party generated files are not cataloged.
+* CONTRIBUTING.md: File containing guidelines for contributing to the project.
 * docs/: Directory used to store documentation files and reference materials for the project.
+* `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
+* `.vscode/`: VSCode configuration files
 <!-- <<Stencil::Block(directoryStructureCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -47,6 +59,8 @@ If you need more context, you can find more information in `docs/` directory.
 | Description | Reference |
 |----|----|
 | Stencil commands | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
+| Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | [webpage](https://go.dev/doc/effective_go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -54,6 +68,9 @@ If you need more context, you can find more information in `docs/` directory.
 ## Boundaries
 
 ### Always
+- Run `go mod tidy` after adding, removing or upgrading Go dependencies
+- Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
+- Add context to errors using `fmt.Errorf("...: %w", err)`
 <!-- <<Stencil::Block(agentsBoundariesAlwaysCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -73,6 +90,7 @@ Before each scenario in the following list, ask the user if they allow the chang
 ### Never
 
 - Commit secrets, credentials, API keys, or tokens
+- Use `panic()` in production code paths
 <!-- <<Stencil::Block(agentsBoundariesNeverCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
