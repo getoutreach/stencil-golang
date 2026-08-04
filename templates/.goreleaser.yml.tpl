@@ -17,11 +17,13 @@ builds:
     id: &name {{ $cmdName }}
     binary: *name
     goos:
-      - linux
-      - darwin
+      {{- range ($opts.goos | default (list "linux" "darwin")) }}
+      - {{ . }}
+      {{- end }}
     goarch:
-      - amd64
-      - arm64
+      {{- range ($opts.goarch | default (list "amd64" "arm64")) }}
+      - {{ . }}
+      {{- end }}
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ "{{" }} .Version {{ "}}" }}"'
       {{- if not $opts.delibird }}

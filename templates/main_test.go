@@ -319,6 +319,27 @@ func TestGoreleaserYml(t *testing.T) {
 	st.Run(stenciltest.RegenerateSnapshots())
 }
 
+func TestGoreleaserYmlCustomPlatforms(t *testing.T) {
+	st := stenciltest.New(t, ".goreleaser.yml.tpl", libraryTmpls...)
+	st.Args(map[string]interface{}{
+		"commands": []interface{}{
+			"cmd1",
+			map[string]interface{}{
+				"cmd2": map[string]interface{}{
+					"goos": []interface{}{"linux"},
+				},
+			},
+			map[string]interface{}{
+				"cmd3": map[string]interface{}{
+					"goos":   []interface{}{"linux"},
+					"goarch": []interface{}{"amd64"},
+				},
+			},
+		},
+	})
+	st.Run(stenciltest.RegenerateSnapshots())
+}
+
 func TestRenderGolangcilintYaml(t *testing.T) {
 	st := stenciltest.New(t, "scripts/golangci.yml.tpl", libraryTmpls...)
 	st.Args(map[string]interface{}{
