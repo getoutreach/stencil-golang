@@ -15,6 +15,7 @@ linters:
   enable:
     - bodyclose
     - copyloopvar # Detects places where loop variables are copied.
+    - depguard
     - dogsled
     - errcheck
     - errorlint
@@ -87,6 +88,14 @@ linters:
     - zerologlint
 {{- end }}
   settings:
+    depguard:
+      rules:
+        main:
+          files:
+            - "$all"
+          deny:
+            - pkg: "github.com/getoutreach/async/pkg/async"
+              desc: "archived since 2022; use github.com/getoutreach/gobox/pkg/async instead"
     dupl:
       threshold: 100
     errcheck:
