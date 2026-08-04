@@ -359,6 +359,15 @@ local all = {
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {
+  // ServiceMonitor tells the Prometheus operator to scrape this service's
+  // /metrics endpoint. See go/metrics for details.
+	servicemonitor: ok.ServiceMonitor(app.name, app.namespace) {
+		target_service:: $.service,
+		metadata+: {
+			labels+: sharedLabels,
+		},
+	},
+
   {{- if (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
   // VaultSecrets to be deployed
 	{{- range $secretPath := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
