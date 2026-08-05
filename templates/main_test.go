@@ -34,13 +34,13 @@ func TestRenderDeploymentConfig(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnet(t *testing.T) {
-	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
 		"mixins": []interface{}{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
 	})
 }
 
 func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
-	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
 			"strategy": "canary",
@@ -55,7 +55,7 @@ func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
-	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
 		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
 			"strategy": "canary",
@@ -67,7 +67,7 @@ func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
-	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
 		"hpa": map[string]interface{}{
 			"enabled":        true,
 			"cpuUtilization": 50,
@@ -98,7 +98,7 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 }
 
 func TestRenderDeploymentJsonnet_AdditionalAllowedMetrics(t *testing.T) {
-	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
 		"additionalAllowedMetrics": []interface{}{
 			"my_custom_counter",
 			"my_custom_histogram_bucket",
@@ -145,7 +145,7 @@ func TestRenderDeploymentDockerfileForCLI(t *testing.T) {
 }
 
 func TestRenderDependabot(t *testing.T) {
-	assertTemplateSnapshot(t, ".github/dependabot.yml.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, ".github/dependabot.yml.tpl", map[string]any{
 		"service":           true,
 		"serviceActivities": []interface{}{"grpc"},
 		"grpcClients":       []interface{}{"node"},
@@ -171,7 +171,7 @@ func TestMergeGoMod(t *testing.T) {
 }
 
 func TestGoModStanzaVersion(t *testing.T) {
-	st := newStencilTestWithGolangPlugin(t, "go.mod.tpl", map[string]interface{}{
+	st := newStencilTestWithGolangPlugin(t, "go.mod.tpl", map[string]any{
 		"go": map[string]interface{}{
 			"stanza": "1.19",
 		},
@@ -206,7 +206,7 @@ func TestDevspaceYaml(t *testing.T) {
 }
 
 func TestVSCodeLaunchConfig(t *testing.T) {
-	assertTemplateSnapshot(t, ".vscode/launch.json.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, ".vscode/launch.json.tpl", map[string]any{
 		"service": true,
 	})
 }
@@ -234,7 +234,7 @@ func TestVSCodeSettingsConfigGofumpt(t *testing.T) {
 }
 
 func TestGRPCServerRPC(t *testing.T) {
-	assertTemplateSnapshot(t, "internal/appName/rpc/rpc.go.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "internal/appName/rpc/rpc.go.tpl", map[string]any{
 		"service": true,
 		"serviceActivities": []interface{}{
 			"grpc",
@@ -243,7 +243,7 @@ func TestGRPCServerRPC(t *testing.T) {
 }
 
 func TestGoreleaserYml(t *testing.T) {
-	assertTemplateSnapshot(t, ".goreleaser.yml.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, ".goreleaser.yml.tpl", map[string]any{
 		"commands": []interface{}{
 			"cmd1",
 			"cmd2",
@@ -255,7 +255,7 @@ func TestGoreleaserYml(t *testing.T) {
 }
 
 func TestRenderGolangcilintYaml(t *testing.T) {
-	assertTemplateSnapshot(t, "scripts/golangci.yml.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "scripts/golangci.yml.tpl", map[string]any{
 		"lintroller": "platinum",
 	})
 }

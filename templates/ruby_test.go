@@ -9,14 +9,14 @@ import (
 )
 
 func TestIncludeRubyToolVersionsIfRubyGRPCClient(t *testing.T) {
-	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]any{
 		"grpcClients": []interface{}{"ruby"},
 	})
 }
 
 func TestIncludeRubyToolVersionsIfRubyGRPCClientLibrary(t *testing.T) {
 	// Need to use testdata because stenciltest cannot test file.Skip
-	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]interface{}{
+	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]any{
 		"grpcClients":       []interface{}{"ruby"},
 		"service":           false,
 		"serviceActivities": []interface{}{},
@@ -24,5 +24,5 @@ func TestIncludeRubyToolVersionsIfRubyGRPCClientLibrary(t *testing.T) {
 }
 
 func TestDontIncludeRubyToolVersionsIfNotRubyGRPCClient(t *testing.T) {
-	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]interface{}{})
+	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]any{})
 }
