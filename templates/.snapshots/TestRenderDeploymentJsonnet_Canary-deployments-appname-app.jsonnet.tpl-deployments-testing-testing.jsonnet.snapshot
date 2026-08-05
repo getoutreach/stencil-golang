@@ -17,7 +17,7 @@ local isLocalDev = app.environment == 'local_development';
 local sharedLabels = {
 	repo: app.name,
 	bento: app.bento,
-	reporting_team: 'test:team',
+	reporting_team: 'org-team',
 };
 local deploymentMetrics = [
   argo.AnalysisMetricDatadog('pod-restart') {

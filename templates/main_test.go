@@ -41,7 +41,6 @@ func TestRenderDeploymentJsonnet(t *testing.T) {
 
 func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
 			"strategy": "canary",
 		},
@@ -56,7 +55,6 @@ func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 
 func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"reportingTeam": "test:team",
 		"deployment": map[string]interface{}{
 			"strategy": "canary",
 		},
@@ -113,8 +111,7 @@ func TestRenderDeploymentOverride(t *testing.T) {
 func TestRenderDeploymentDockerfile(t *testing.T) {
 	fakeDockerPullRegistry(t)
 	assertTemplateSnapshot(t, "deployments/appname/Dockerfile.tpl", map[string]any{
-		"service":       true,
-		"reportingTeam": "fnd-seal",
+		"service": true,
 		// Setting versions to avoid needing to update snapshots every
 		// time default versions change.
 		"versions": map[string]any{
@@ -134,7 +131,6 @@ func TestRenderDeploymentDockerfileForCLI(t *testing.T) {
 		"deployments": map[string]any{
 			"buildContainerForCLI": true,
 		},
-		"reportingTeam": "fnd-seal",
 		// Setting versions to avoid needing to update snapshots every
 		// time default versions change.
 		"versions": map[string]any{
