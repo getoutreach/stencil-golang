@@ -1,12 +1,12 @@
 package main_test
 
 import (
-	"context"
 	"maps"
 	"testing"
 
 	"github.com/getoutreach/stencil-golang/internal/plugin"
 	"github.com/getoutreach/stencil/pkg/stenciltest"
+	"gotest.tools/v3/assert"
 )
 
 // stencilArgs provides base arguments which are merged with the
@@ -38,10 +38,8 @@ func newStencilTestWithGolangPlugin(t *testing.T, templateFilename string, args 
 	t.Helper()
 	st := newStencilTest(t, templateFilename, args)
 
-	p, err := plugin.NewStencilGolangPlugin(context.Background())
-	if err != nil {
-		t.Fatal(err)
-	}
+	p, err := plugin.NewStencilGolangPlugin(t.Context())
+	assert.NilError(t, err)
 	st.Ext("github.com/getoutreach/stencil-golang", p)
 
 	return st
