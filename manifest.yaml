@@ -3,6 +3,7 @@ name: github.com/getoutreach/stencil-golang
 modules:
   - name: github.com/getoutreach/devbase
     version: ">=2.21.0"
+  - name: github.com/getoutreach/stencil-circleci
 type: templates,extension
 arguments:
   # The following terraform.datadog fields are used for Canary deployments in app.jsonnet.tpl
