@@ -1,0 +1,9 @@
+(*codegen.File)(version: v1
+name: "github.com/getoutreach/testing"
+build:
+  excludes:
+    ## <<Stencil::Block(buf_excludes)>>
+    
+    ## <</Stencil::Block>>
+breaking:
+)
