@@ -28,11 +28,11 @@ import (
 	{{- $additionalImports := stencil.GetModuleHook "main/additionalImports" }}
 	{{- if $additionalImports }}
 
-	// Code inserted by modules
+	// Begin imports inserted by modules.
 		{{- range $additionalImports  }}
 	{{ . | quote }}
 		{{- end }}
-	// End code inserted by modules
+	// End imports inserted by modules.
 	{{- end }}
 
 	// Place any extra imports for your startup code here
@@ -41,7 +41,7 @@ import (
 	// <</Stencil::Block>>
 )
 
-// Place any customized code for your service in this block
+// Place any customized code for your service in this block.
 //
 // <<Stencil::Block(customized)>>
 {{ file.Block "customized" }}
@@ -68,7 +68,7 @@ type dependencies struct{
 }
 
 // main is the entrypoint for the {{ .Config.Name }} service.
-func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
+func main() { //nolint:nolintlint,funlen // Why: We can't dwindle this down anymore without adding complexity.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -103,11 +103,11 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	{{- $preInitializationBlock := stencil.GetModuleHook "preInitializationBlock" }}
 	{{- if $preInitializationBlock }}
 
-	// Code inserted by modules
+	// Begin pre-initialization code inserted by modules.
 		{{- range $preInitializationBlock  }}
 	{{ . }}
 		{{- end }}
-	// End code inserted by modules
+	// End pre-initialization code inserted by modules.
 	{{- end }}
 
 	// Place any code for your service to run before registering service activities in this block
@@ -117,11 +117,11 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 	{{- $postInitializationBlock := stencil.GetModuleHook "postInitializationBlock" }}
 	{{- if $postInitializationBlock }}
 
-	// Code inserted by modules
+	// Begin post-initialization code inserted by modules.
 		{{- range $postInitializationBlock  }}
 	{{ . }}
 		{{- end }}
-	// End code inserted by modules
+	// End post-initialization code inserted by modules.
 	{{- end }}
 
 	acts := []async.Runner{
@@ -141,21 +141,22 @@ func main() { //nolint: funlen // Why: We can't dwindle this down anymore withou
 		{{- $svcActs := stencil.GetModuleHook "serviceActivities" }}
 		{{- if $svcActs }}
 
-		// Service activities inserted by modules here
+		// Begin service activities inserted by modules.
 			{{- range $svcActs  }}
 			{{ . }},
 			{{- end }}
-		// End service activities inserted by modules
+		// End service activities inserted by modules.
 		{{- end }}
 
-		// Place any additional ServiceActivities that your service has built here to have them handled automatically
+		// Place any additional ServiceActivities that your service has
+		// built here to have them handled automatically.
 		//
 		// <<Stencil::Block(services)>>
 {{ file.Block "services" }}
 		// <</Stencil::Block>>
 	}
 
-	// Place any code for your service to run during startup in this block
+	// Place any code for your service to run during startup in this block.
 	//
 	// <<Stencil::Block(startup)>>
 {{ file.Block "startup" }}

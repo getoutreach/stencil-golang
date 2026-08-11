@@ -9,7 +9,7 @@
 // API defined in api/{{ .Config.Name }}.proto. This implementation is used in the
 // rpc.go when creating and exposing the gRPC server.
 
-package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:nolintlint,revive // Why: We allow [-_].
 
 {{- $server_definition_overrides := stencil.GetModuleHook "internal/rpc/server_definition_overrides" }}
 {{- if $server_definition_overrides }}
@@ -19,14 +19,17 @@ package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: 
 {{- else }}
 import (
 	"context"
-  "fmt"
+  "errors"
 )
+
+// ErrCloseNotAllowed is the error used by the dummy `Server#Close` method.
+var ErrCloseNotAllowed = errors.New("closing the server is not allowed")
 
 // Server is the actual server implementation of the API.
 //
 // Note that tracing, logging and metrics are already handled for these
 // methods.
-type Server struct{
+type Server struct {
 	// Place any handler state for your service here.
 }
 
@@ -35,7 +38,7 @@ func NewServer(ctx context.Context, cfg *Config) (*Server, error) {
 	return &Server{}, nil
 }
 
-// Ping is a simple ping endpoint that returns "pong" + message when called
+// Ping is a simple ping endpoint that returns "pong" + message when called.
 func (s *Server) Ping(ctx context.Context, message string) (string, error) {
 	return "pong:" + message, nil
 }
@@ -48,6 +51,6 @@ func (s *Server) Pong(ctx context.Context, message string) (string, error) {
 // Close is a dummy method which will always return an error. It is neither
 // called nor used on the server, but is required by the api.Service interface.
 func (s *Server) Close(_ context.Context) error {
-	return fmt.Errorf("closing the server is not allowed")
+	return ErrCloseNotAllowed
 }
 {{- end}}

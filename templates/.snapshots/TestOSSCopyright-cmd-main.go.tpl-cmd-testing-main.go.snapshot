@@ -44,7 +44,7 @@ type dependencies struct{
 }
 
 // main is the entrypoint for the testing service.
-func main() { //nolint: funlen // Why: We can't dwindle this down anymore without adding complexity.
+func main() { //nolint:nolintlint,funlen // Why: We can't dwindle this down anymore without adding complexity.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
