@@ -7,7 +7,7 @@
 // Description: This file exposes the private HTTP service for {{ .Config.Name }}.
 // Managed: true
 
-package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:nolintlint,revive // Why: We allow [-_].
 
 import (
 	"context"
@@ -18,14 +18,14 @@ import (
 
   {{- $additionalImports := stencil.GetModuleHook "internal/http/additionalImports" }}
 	{{- if $additionalImports }}
-	// imports added by modules
+	// Begin imports added by modules.
 		{{- range $additionalImports }}
 	{{ . | quote }}
 		{{- end }}
-	// end imports added by modules
+	// End imports added by modules.
 	{{- end }}
 
-	// Place any extra imports for your service code here
+	// Place any extra imports for your service code here.
 	// <<Stencil::Block(imports)>>
 {{ file.Block "imports" }}
 	// <</Stencil::Block>>
