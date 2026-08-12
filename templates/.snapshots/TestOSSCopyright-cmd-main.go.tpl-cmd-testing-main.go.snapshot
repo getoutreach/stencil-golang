@@ -28,7 +28,7 @@ import (
 	// <</Stencil::Block>>
 )
 
-// Place any customized code for your service in this block
+// Place any customized code for your service in this block.
 //
 // <<Stencil::Block(customized)>>
 
@@ -88,14 +88,15 @@ func main() { //nolint:nolintlint,funlen // Why: We can't dwindle this down anym
 		automemlimit.New(),
 		testing.NewHTTPService(cfg, &deps.privateHTTP),
 
-		// Place any additional ServiceActivities that your service has built here to have them handled automatically
+		// Place any additional ServiceActivities that your service has
+		// built here to have them handled automatically.
 		//
 		// <<Stencil::Block(services)>>
 
 		// <</Stencil::Block>>
 	}
 
-	// Place any code for your service to run during startup in this block
+	// Place any code for your service to run during startup in this block.
 	//
 	// <<Stencil::Block(startup)>>
 
