@@ -3,6 +3,7 @@ name: github.com/getoutreach/stencil-golang
 modules:
   - name: github.com/getoutreach/devbase
     version: ">=2.21.0"
+  - name: github.com/getoutreach/stencil-base
   - name: github.com/getoutreach/stencil-circleci
 type: templates,extension
 arguments:
@@ -53,6 +54,7 @@ arguments:
       type: boolean
     default: true
   commands:
+    refines: github.com/getoutreach/stencil-base
     schema:
       type: array
       items:
