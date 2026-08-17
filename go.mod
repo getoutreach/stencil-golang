@@ -14,7 +14,7 @@ require (
 	github.com/magefile/mage v1.17.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.4
-	golang.org/x/mod v0.38.0
+	golang.org/x/mod v0.39.0
 	gotest.tools/v3 v3.5.2
 )
 
