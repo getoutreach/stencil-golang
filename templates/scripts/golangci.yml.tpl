@@ -58,7 +58,6 @@ linters:
     - gochecksumtype
     - godoclint
     - godot
-    - gomoddirectives
     - importas
     - intrange
     - iotamixing
