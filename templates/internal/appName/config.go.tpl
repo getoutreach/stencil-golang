@@ -21,6 +21,9 @@ import (
 	{{- end }}
 	// End code inserted by modules
   {{- end }}
+  {{- if eq (stencil.Arg "useK8sYamlParser") true }}
+	"sigs.k8s.io/yaml"
+  {{- end }}
 
 	// <<Stencil::Block(configImports)>>
 {{ file.Block "configImports" }}
@@ -46,7 +49,7 @@ type Config struct {
   {{- end }}
   // End code inserted by modules
   {{- end }}
-	
+
   // <<Stencil::Block(config)>>
 {{ file.Block "config" }}
 	// <</Stencil::Block>>
@@ -86,10 +89,21 @@ func LoadConfig(ctx context.Context) (*Config, error) {
 		// <</Stencil::Block>>
 	}
 
+	{{- if eq (stencil.Arg "useK8sYamlParser") true }}
+	b, err := os.ReadFile("/run/config/outreach.io/resourcer.yaml")
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to open config file")
+	}
+
+	if err := yaml.Unmarshal(b, &c); err != nil {
+		return nil, errors.Wrap(err, "failed to decode config file")
+	}
+	{{- else }}
 	// Attempt to load a local config file on top of the defaults
 	if err := cfg.Load("{{ .Config.Name }}.yaml", &c); err != nil {
 		return nil, err
 	}
+	{{- end }}
 
   {{ $configCode := stencil.GetModuleHook "internal/config.go/additionalConfigLogic" }}
   {{- if $configCode }}
