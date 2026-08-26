@@ -22,6 +22,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    ignore:
+      - goos: darwin
+        goarch: amd64
     ldflags:
       - '-w -s -X "github.com/getoutreach/gobox/pkg/app.Version=v{{ "{{" }} .Version {{ "}}" }}"'
       {{- if not $opts.delibird }}
