@@ -286,6 +286,8 @@ dev:
               - "-c"
               - "mkdir -p ${DEV_CONTAINER_WORKDIR} && chown 1000:1000 ${DEV_CONTAINER_WORKDIR}"
             securityContext:
+              # chown needs root; this container exits before the dev one starts.
+              # Pod-level `fsGroup: 1000` would avoid root entirely.
               runAsUser: 0
             volumeMounts:
               - mountPath: ${DEV_CONTAINER_WORKDIR}
