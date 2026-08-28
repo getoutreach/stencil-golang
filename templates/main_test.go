@@ -297,6 +297,19 @@ func TestUrfaveCLIV3(t *testing.T) {
 		},
 	})
 }
+
+func TestCLIDisableTelemetry(t *testing.T) {
+	assertTemplateSnapshot(t, "cmd/main_cli.go.tpl", map[string]any{
+		"commands": []any{
+			map[string]any{
+				"cmd1": map[string]any{
+					"telemetryEnabled": false,
+				},
+			},
+		},
+	})
+}
+
 func TestRenderNodeJSPackageHJSON(t *testing.T) {
 	assertTemplateSnapshot(t, "api/clients/node/package.hjson.tpl", map[string]any{
 		"service":           true,

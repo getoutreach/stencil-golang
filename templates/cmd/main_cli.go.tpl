@@ -109,6 +109,11 @@ func main() {
 {{ file.Block "postApp" }}
 	// <</Stencil::Block>>
 
+{{- $telemetryEnabled := true }}
+{{- if hasKey .opts "telemetryEnabled" }}
+{{- $telemetryEnabled = .opts.telemetryEnabled }}
+{{- end }}
+
 	// Insert global flags, tracing, updating and start the application.
 	gcli.{{ $gcliRun }}(ctx, cancel, &app, &gcli.Config{
 		Logger:    log,
@@ -116,6 +121,7 @@ func main() {
 			{{- if .opts.delibird }}
 			UseDelibird: true,
 			{{- else }}
+			Disabled: {{ not $telemetryEnabled }}
 			Otel: gcli.TelemetryOtelConfig{
 				Dataset:         HoneycombDataset,
 				HoneycombAPIKey: cfg.SecretData(HoneycombTracingKey),

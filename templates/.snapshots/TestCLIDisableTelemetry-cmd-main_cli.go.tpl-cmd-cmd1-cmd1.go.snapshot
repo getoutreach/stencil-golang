@@ -12,7 +12,7 @@ import (
 	oapp "github.com/getoutreach/gobox/pkg/app"
 	"github.com/sirupsen/logrus"
 	gcli "github.com/getoutreach/gobox/pkg/cli"
-	"github.com/urfave/cli/v3"
+	"github.com/urfave/cli/v2"
 	"github.com/getoutreach/gobox/pkg/cfg"
 
 	// Place any extra imports for your startup code here
@@ -49,10 +49,9 @@ func main() {
 
 	// <</Stencil::Block>>
 
-	app := cli.Command{
+	app := cli.App{
 		Version: oapp.Version,
 		Name: "cmd1",
-		EnableShellCompletion: true,
 		// <<Stencil::Block(app)>>
 
 		// <</Stencil::Block>>
@@ -73,10 +72,10 @@ func main() {
 	// <</Stencil::Block>>
 
 	// Insert global flags, tracing, updating and start the application.
-	gcli.RunV3(ctx, cancel, &app, &gcli.Config{
+	gcli.Run(ctx, cancel, &app, &gcli.Config{
 		Logger:    log,
 		Telemetry: gcli.TelemetryConfig{
-			Disabled: false
+			Disabled: true
 			Otel: gcli.TelemetryOtelConfig{
 				Dataset:         HoneycombDataset,
 				HoneycombAPIKey: cfg.SecretData(HoneycombTracingKey),
