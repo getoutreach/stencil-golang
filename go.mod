@@ -13,7 +13,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/magefile/mage v1.17.2
 	github.com/pkg/errors v0.9.1
-	github.com/sirupsen/logrus v1.10.0
+	github.com/sirupsen/logrus v1.10.1
 	golang.org/x/mod v0.40.0
 	gotest.tools/v3 v3.5.2
 )
