@@ -174,25 +174,9 @@ local all = {
 			'trace.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
-	fflags_configmap: ok.ConfigMap('fflags-yaml', app.namespace) {
-		local this = self,
-		data_:: {
-			apiKey: {
-				Path: '/run/secrets/outreach.io/launchdarkly/sdk-key',
-			},
-			flagsToAdd: {
-				appName: app.name,
-				bento: app.bento,
-				channel: if isDev then 'dev' else app.channel,
-			} + if isDev then {
-				dev_email: devEmail
-			} else {},
-		},
-		data: {
-			// We use this.data_ to allow for ez merging in the override.
-			'fflags.yaml': std.manifestYamlDoc(this.data_),
-		},
-	},
+	{{- range stencil.GetModuleHook "deployment.configmaps" }}
+{{ . }}
+	{{- end }}
 	deployment: ok.Deployment(app.name, app.namespace) {
 		local deployment_volume_mounts = {
 			// default configuration files
@@ -204,10 +188,9 @@ local all = {
 				mountPath: '/run/config/outreach.io/trace.yaml',
 				subPath: 'trace.yaml',
 			},
-			'fflags-yaml-volume': {
-				mountPath: '/run/config/outreach.io/fflags.yaml',
-				subPath: 'fflags.yaml',
-			},
+			{{- range stencil.GetModuleHook "deployment.volumeMounts" }}
+{{ . }}
+			{{- end }}
 			// user provided secrets
 			{{- range $secret := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
 			'secret-{{ $secret | base }}-volume' : {
@@ -343,7 +326,9 @@ local all = {
 						// default configs
 						['config-%s' % app.name]: ok.ConfigMapVolume(ok.ConfigMap('config', app.namespace)),
 						'config-trace-volume': ok.ConfigMapVolume(ok.ConfigMap('config-trace', app.namespace)),
-						'fflags-yaml-volume': ok.ConfigMapVolume(ok.ConfigMap('fflags-yaml', app.namespace)),
+						{{- range stencil.GetModuleHook "deployment.volumes" }}
+{{ . }}
+						{{- end }}
 
 						// user provided secrets
 						{{- range $secret := (stencil.ApplyTemplate "vaultSecrets" | fromYaml).secrets }}
@@ -355,7 +340,6 @@ local all = {
 		},
 	},
 };
-
 // nonDevelopmentObjects defines objects for staging/production environments.
 // Note: The vault secrets here are not related to the development vault secrets operator.
 local nonDevelopmentObjects = {

@@ -408,3 +408,70 @@ This hook allows you to add more recommended extensions for the workspace in VSC
   )
 }}
 ```
+
+### `deployment.configmaps`
+
+**Type**: `string`
+
+**File**: `deployments/appname/app.jsonnet.tpl`
+
+This hook allows you to set additional ConfigMaps in the service deployment.
+
+```tpl
+{{- define "configmap" }}
+foobar_configmap: ok.ConfigMap('foobar-yaml', app.namespace) {
+  data: {
+    // Some data
+  },
+},
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "deployment.configmaps"
+  (list
+    (stencil.ApplyTemplate "configmap")
+  )
+}}
+```
+
+### `deployment.volumes`
+
+**Type**: `string`
+
+**File**: `deployments/appname/app.jsonnet.tpl`
+
+This hook allows you to set ConfigMap volumes in the service deployment.
+
+```tpl
+{{- define "volume" }}
+'foobar-yaml-volume': ok.ConfigMapVolume(ok.ConfigMap('foobar-yaml', app.namespace)),
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "deployment.volumes"
+  (list
+    (stencil.ApplyTemplate "volume")
+  )
+}}
+```
+
+### `deployment.volumeMounts`
+
+**Type**: `string`
+
+**File**: `deployments/appname/app.jsonnet.tpl`
+
+This hook allows you to set volume mounts in the service deployment.
+
+```tpl
+{{- define "volumeMount" -}}
+'foobar-yaml-volume': {
+  mountPath: '/run/config/org.name/foobar.yaml',
+  subPath: 'foobar.yaml',
+},
+{{- end }}
+
+{{ stencil.AddToModuleHook "github.com/getoutreach/stencil-golang" "deployment.volumeMounts"
+  (list
+    (stencil.ApplyTemplate "volumeMount")
+  )
+}}
+```
