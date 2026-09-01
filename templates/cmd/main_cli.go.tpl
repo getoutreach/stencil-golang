@@ -123,8 +123,10 @@ func main() {
 		// <</Stencil::Block>>
 	}
 
+	{{- $afterHooks := stencil.GetModuleHook "cli.after" }}
+	{{- if $afterHooks }}
 	app.After = func({{ stencil.ApplyTemplate "cliFunctionSignature" }}) error {
-		{{- range stencil.GetModuleHook "cli.after" }}
+		{{- range $afterHooks }}
 		{{- . }}
 		{{- end }}
 		// <<Stencil::Block(appAfter)>>
@@ -133,6 +135,7 @@ func main() {
 
 		return nil
 	}
+	{{- end }}
 
 	// <<Stencil::Block(postApp)>>
 {{ file.Block "postApp" }}
