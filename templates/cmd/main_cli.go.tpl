@@ -55,11 +55,11 @@ import (
 	{{- $additionalImports := stencil.GetModuleHook "cli.additionalImports" }}
 	{{- if $additionalImports }}
 
-	// Code inserted by modules
+	// Begin code inserted by modules.
 		{{- range $additionalImports }}
 	{{ . | quote }}
 		{{- end }}
-	// End code inserted by modules
+	// End code inserted by modules.
 	{{- end }}
 
 	// Place any extra imports for your startup code here
