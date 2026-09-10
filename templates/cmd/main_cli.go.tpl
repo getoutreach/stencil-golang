@@ -153,7 +153,7 @@ func main() {
 			{{- if .opts.delibird }}
 			UseDelibird: true,
 			{{- else }}
-			Disabled: {{ not $telemetryEnabled }}
+			Disabled: {{ not $telemetryEnabled }},
 			Otel: gcli.TelemetryOtelConfig{
 				Dataset:         HoneycombDataset,
 				HoneycombAPIKey: cfg.SecretData(HoneycombTracingKey),
