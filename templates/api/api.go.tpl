@@ -14,9 +14,9 @@ import (
 	"context"
 )
 
-// Service is the {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }} server interface
+// Service is the {{ stencil.ApplyTemplate "serviceNameLanguageSafe" }} server interface.
 //
-// This interface is implemented by the server and the rpc client
+// This interface is implemented by both the server and the client.
 type Service interface {
 	// Close all connections and release resources.
 	Close(ctx context.Context) error

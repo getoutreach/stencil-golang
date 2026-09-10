@@ -71,6 +71,7 @@ If you need more context, you can find more information in `docs/` directory.
 - Run `go mod tidy` after adding, removing or upgrading Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
 - Add context to errors using `fmt.Errorf("...: %w", err)`
+- Prefer `gotest.tools/v3/assert` in tests over `github.com/stretchr/testify` or hand-rolled assertions
 <!-- <<Stencil::Block(agentsBoundariesAlwaysCustom)>> -->
 
 <!-- <</Stencil::Block>> -->

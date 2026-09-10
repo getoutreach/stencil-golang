@@ -9,7 +9,7 @@
 // Description: This file contains the gRPC client implementation for the
 // {{ .Config.Name }} service.
 
-package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:revive // Why: We allow [-_].
+package {{ stencil.ApplyTemplate "goPackageSafeName" }} //nolint:nolintlint,revive // Why: We allow [-_].
 
 import (
 	"context"
@@ -21,20 +21,20 @@ import (
 
 	{{- $additionalImports := stencil.GetModuleHook "api/rpc/client.additionalImports" }}
 	{{- if $additionalImports }}
-	// imports added by modules
+	// Begin imports added by modules.
 		{{- range $additionalImports }}
 	{{ . | quote }}
 		{{- end }}
-	// end imports added by modules
+	// End imports added by modules.
 	{{- end }}
 )
 
-// New returns a new grpc client for the {{ .Config.Name }} Service
+// New returns a new gRPC client for the {{ .Config.Name }} Service.
 //
 // The client is concurrency safe and handles reconnecting.
 // All calls automatically handle logging, tracing, metrics,
 // service discovery, and authn.
-func New(ctx context.Context) (api.Service, error) {	
+func New(ctx context.Context) (api.Service, error) {
 	{{- $initializeClient := stencil.GetModuleHook "api/rpc/client.initializeClient" }}
 	{{- if $initializeClient }}
 	// Inserted by modules
@@ -80,12 +80,13 @@ func New(ctx context.Context) (api.Service, error) {
 // client is the type that actually implements the correct interface to serve as
 // a gRPC client for the rms service as per the protobuf files.
 type client struct {
-	closers []func(ctx context.Context) error
 	api.{{ $titleName }}Client
+
+	closers []func(ctx context.Context) error
 	// Place your client struct data here
 }
 
-// Close is necessary to avoid potential resource leaks
+// Close is necessary to avoid potential resource leaks.
 func (c client) Close(ctx context.Context) error {
 	errs := make([]error, 0)
 	for _, fn := range c.closers {
@@ -94,20 +95,20 @@ func (c client) Close(ctx context.Context) error {
 		}
 	}
 	if len(errs) != 0 {
-		return fmt.Errorf("failed to close client: %v", errs)
+		return fmt.Errorf("failed to close client: %w", errs)
 	}
 
 	return nil
 }
 
-// Place any client handler functions for your service here
+// Place any client handler functions for your service here.
 func (c client) Ping(ctx context.Context, message string) (string, error) {
 	in := &api.PingRequest{Message: message}
 	resp, err := c.{{ $titleName }}Client.Ping(ctx, in)
 	if err != nil {
 		return "", err
 	}
-	return resp.Message, nil
+	return resp.GetMessage(), nil
 }
 
 func (c client) Pong(ctx context.Context, message string) (string, error) {
@@ -116,7 +117,7 @@ func (c client) Pong(ctx context.Context, message string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return resp.Message, nil
+	return resp.GetMessage(), nil
 }
 
 {{- range stencil.GetModuleHook "api.rpc.client" }}

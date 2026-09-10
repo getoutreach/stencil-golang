@@ -272,6 +272,27 @@ dev:
           mountPath: ${DEV_CONTAINER_WORKDIR}
           name: devspace-appcache
 
+      # A fresh devspace-appcache volume is mounted root-owned, so the initial
+      # sync (running as UID 1000) fails. Fix ownership here to keep the dev
+      # container non-root.
+      - op: add
+        path: spec.initContainers
+        value:
+          - name: init-appcache
+            image: ${DEV_CONTAINER_IMAGE}
+            imagePullPolicy: Always
+            command:
+              - bash
+              - "-c"
+              - "mkdir -p ${DEV_CONTAINER_WORKDIR} && chown 1000:1000 ${DEV_CONTAINER_WORKDIR}"
+            securityContext:
+              # chown needs root; this container exits before the dev one starts.
+              # Pod-level `fsGroup: 1000` would avoid root entirely.
+              runAsUser: 0
+            volumeMounts:
+              - mountPath: ${DEV_CONTAINER_WORKDIR}
+                name: devspace-appcache
+
 commands:
   # The image tags get replaced by devspace automatically.
   build-jsonnet: |-
