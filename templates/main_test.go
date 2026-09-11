@@ -326,7 +326,9 @@ func TestRenderAppConfig(t *testing.T) {
 
 func TestRenderAppConfigWithK8sYamlParser(t *testing.T) {
 	assertTemplateSnapshot(t, "internal/appName/config.go.tpl", map[string]any{
-		"service":          true,
-		"useK8sYamlParser": true,
+		"service": true,
+		"kubernetes": map[string]any{
+			"useK8sYamlParser": true,
+		},
 	})
 }

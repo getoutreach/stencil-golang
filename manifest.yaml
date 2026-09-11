@@ -89,21 +89,6 @@ arguments:
     schema:
       type: string
     description: ID of team that that manages the repository
-  kubernetes.groups:
-    schema:
-      type: array
-      items:
-        type: object
-    description: List of Kubernetes groups to generate
-  kubernetes.leaderElection:
-    schema:
-      type: boolean
-    default: true
-    description: Have stencil render code related to leader election for kubernetes operators/webhooks/controllers
-  kubernetes.useTopologyAwareRouting:
-    schema:
-      type: boolean
-    description: "Only applicable when `service` is true. This is a flag to enable topology aware routing in K8s for your service."
   lintroller:
     schema:
       type: string
@@ -281,8 +266,24 @@ arguments:
       type: array
       items:
         type: string
-  useK8sYamlParser:
-    description: Use the k8s YAML parser instead of the native Jsonnet k8s parser
+  # Kubernetes-related
+  kubernetes.groups:
+    schema:
+      type: array
+      items:
+        type: object
+    description: List of Kubernetes groups to generate
+  kubernetes.leaderElection:
+    schema:
+      type: boolean
+    default: true
+    description: Have stencil render code related to leader election for kubernetes operators/webhooks/controllers
+  kubernetes.useTopologyAwareRouting:
+    schema:
+      type: boolean
+    description: "Only applicable when `service` is true. This is a flag to enable topology aware routing in K8s for your service."
+  kubernetes.useK8sYamlParser:
+    description: Use the k8s YAML parser to load service config instead of the default used by the gobox cfg package.
     schema:
       type: boolean
     default: false
