@@ -317,3 +317,16 @@ func TestRenderNodeJSPackageHJSON(t *testing.T) {
 		"grpcClients":       []any{"node"},
 	})
 }
+
+func TestRenderAppConfig(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/appName/config.go.tpl", map[string]any{
+		"service": true,
+	})
+}
+
+func TestRenderAppConfigWithK8sYamlParser(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/appName/config.go.tpl", map[string]any{
+		"service":          true,
+		"useK8sYamlParser": true,
+	})
+}

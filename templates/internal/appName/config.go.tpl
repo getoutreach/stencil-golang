@@ -90,7 +90,7 @@ func LoadConfig(ctx context.Context) (*Config, error) {
 	}
 
 	{{- if eq (stencil.Arg "useK8sYamlParser") true }}
-	b, err := os.ReadFile("/run/config/outreach.io/resourcer.yaml")
+	b, err := os.ReadFile("/run/config/outreach.io/{{ .Config.Name }}.yaml")
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open config file")
 	}
