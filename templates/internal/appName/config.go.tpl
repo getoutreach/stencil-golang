@@ -21,7 +21,7 @@ import (
 	{{- end }}
 	// End code inserted by modules
   {{- end }}
-  {{- if eq (stencil.Arg "useK8sYamlParser") true }}
+  {{- if stencil.Arg "kubernetes.useK8sYamlParser" }}
 	"sigs.k8s.io/yaml"
   {{- end }}
 
@@ -89,8 +89,8 @@ func LoadConfig(ctx context.Context) (*Config, error) {
 		// <</Stencil::Block>>
 	}
 
-	{{- if eq (stencil.Arg "useK8sYamlParser") true }}
-	b, err := os.ReadFile("/run/config/outreach.io/resourcer.yaml")
+	{{- if stencil.Arg "kubernetes.useK8sYamlParser" }}
+	b, err := os.ReadFile("/run/config/outreach.io/{{ .Config.Name }}.yaml")
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to open config file")
 	}
