@@ -9,8 +9,15 @@
 // the version/group combo provided.
 package {{ .version }}
 
+{{- $hasConfig := false }}
+{{- range $r := .resources }}
+{{- if $r.addConfig }}
+{{- $hasConfig = true }}
+{{- end }}
+{{- end }}
+
 //nolint:lll //Why: Long shell script
-//go:generate /usr/bin/env bash -c "pushd ../../..{{if not (empty .package)}}/..{{end}} >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.20.0 -- controller-gen object paths=./api/k8s/{{ .package }}/{{ .version }} && popd >/dev/null 2>&1"
+//go:generate /usr/bin/env bash -c "pushd ../../..{{if not (empty .package)}}/..{{end}} >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.20.0 -- controller-gen object paths=./api/k8s/{{ .package }}/{{ .version }}{{ if $hasConfig }} paths=./internal/config{{ end }} && popd >/dev/null 2>&1"
 {{ end }}
 
 {{- range $g := stencil.Arg "kubernetes.groups" }}
