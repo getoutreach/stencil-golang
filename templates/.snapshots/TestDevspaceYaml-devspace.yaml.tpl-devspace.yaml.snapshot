@@ -248,26 +248,16 @@ dev:
           mountPath: ${DEV_CONTAINER_WORKDIR}
           name: devspace-appcache
 
-      # A fresh devspace-appcache volume is mounted root-owned, so the initial
-      # sync (running as UID 1000) fails. Fix ownership here to keep the dev
-      # container non-root.
+      # The volumes above are provisioned root-owned, so a non-root dev
+      # container cannot sync into them. fsGroup makes kubelet fix group
+      # ownership of every mounted volume on each pod start, which keeps the
+      # dev container non-root and needs no privileged init container.
       - op: add
-        path: spec.initContainers
+        path: spec.securityContext
         value:
-          - name: init-appcache
-            image: ${DEV_CONTAINER_IMAGE}
-            imagePullPolicy: Always
-            command:
-              - bash
-              - "-c"
-              - "mkdir -p ${DEV_CONTAINER_WORKDIR} && chown 1000:1000 ${DEV_CONTAINER_WORKDIR}"
-            securityContext:
-              # chown needs root; this container exits before the dev one starts.
-              # Pod-level `fsGroup: 1000` would avoid root entirely.
-              runAsUser: 0
-            volumeMounts:
-              - mountPath: ${DEV_CONTAINER_WORKDIR}
-                name: devspace-appcache
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
 
 commands:
   # The image tags get replaced by devspace automatically.
@@ -501,15 +491,6 @@ profiles:
               operator: "Equal"
               value: "true"
               effect: "NoSchedule"
-      - op: add
-        path: dev.app.patches
-        value:
-          op: add
-          path: spec.securityContext
-          value:
-            runAsUser: 1000
-            fsGroup: 1000
-            runAsGroup: 1000
       - op: add
         path: dev.app.patches
         value:
