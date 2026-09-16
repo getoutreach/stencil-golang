@@ -386,3 +386,11 @@ func TestRenderKubernetesWebhookWithConfig(t *testing.T) {
 	assertTemplateSnapshot(t, "internal/appName/k8s/webhook.go.tpl", kubernetesArgs(true),
 		"internal/appName/k8s/_helpers.tpl")
 }
+
+func TestRenderInternalConfigDoc(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/config/doc.go.tpl", kubernetesArgs(false))
+}
+
+func TestRenderInternalConfigDocWithConfig(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/config/doc.go.tpl", kubernetesArgs(true))
+}
