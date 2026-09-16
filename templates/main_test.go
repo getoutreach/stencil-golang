@@ -297,10 +297,38 @@ func TestUrfaveCLIV3(t *testing.T) {
 		},
 	})
 }
+
+func TestCLIDisableTelemetry(t *testing.T) {
+	assertTemplateSnapshot(t, "cmd/main_cli.go.tpl", map[string]any{
+		"commands": []any{
+			map[string]any{
+				"cmd1": map[string]any{
+					"telemetryEnabled": false,
+				},
+			},
+		},
+	})
+}
+
 func TestRenderNodeJSPackageHJSON(t *testing.T) {
 	assertTemplateSnapshot(t, "api/clients/node/package.hjson.tpl", map[string]any{
 		"service":           true,
 		"serviceActivities": []any{"grpc"},
 		"grpcClients":       []any{"node"},
+	})
+}
+
+func TestRenderAppConfig(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/appName/config.go.tpl", map[string]any{
+		"service": true,
+	})
+}
+
+func TestRenderAppConfigWithK8sYamlParser(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/appName/config.go.tpl", map[string]any{
+		"service": true,
+		"kubernetes": map[string]any{
+			"useK8sYamlParser": true,
+		},
 	})
 }
