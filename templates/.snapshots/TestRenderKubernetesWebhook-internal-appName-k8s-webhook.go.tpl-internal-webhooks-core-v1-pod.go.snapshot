@@ -1,0 +1,73 @@
+(*codegen.File)(// Copyright 2026 Outreach Corporation. All Rights Reserved.
+
+// Description: This file defines a kubernetes webhook for v1/Pod.
+// Managed: true
+
+package v1
+
+import (
+	"context"
+
+	ctrl "sigs.k8s.io/controller-runtime"
+
+	"github.com/getoutreach/gobox/pkg/events"
+	"github.com/getoutreach/gobox/pkg/log"
+	apiv1 "github.com/getoutreach/testing/api/k8s/core/v1"
+
+	// <<Stencil::Block(imports)>>
+
+	// <</Stencil::Block>>
+)
+
+// PodWebhook registers the webhook for Pod.
+// All webhook related functionality should be implemented on the
+// Pod type itself.
+type PodWebhook struct {
+	// Place extra fields here.
+	// <<Stencil::Block(webhookFields)>>
+
+	// <</Stencil::Block>>
+}
+
+// MarshalLog implements log.Marshaler for use in logging/tracing/metrics
+func (r *PodWebhook) MarshalLog(addField func(k string, v interface{})) {
+	addField("resource.kind", "Pod")
+	addField("resource.version", "v1")
+	addField("controller.type", "webhook")
+}
+
+// Kind returns the k8s kind served by this webhook
+func (r *PodWebhook) Kind() string {
+	return "Pod"
+}
+
+// Version returns the version of this webhook
+func (r *PodWebhook) Version() string {
+	// we always lowercase the version when used with K8s
+	return "v1"
+}
+
+// Setup registers the PodWebhook as a webhook with the manager.
+func (r *PodWebhook) Setup(mgr ctrl.Manager) error {
+	// all relevant validation or other webhook related methods must be defined on the Pod itself
+	err := ctrl.NewWebhookManagedBy(mgr).
+		For(&apiv1.Pod{}).
+		Complete()
+	if err != nil {
+		log.Error(context.Background(), "failed to register webhook handler", r, events.Err(err))
+	}
+	return err
+}
+
+// Close cleans up the resource upon exit.
+func (r *PodWebhook) Close(ctx context.Context) error {
+	// <<Stencil::Block(webhookClose)>>
+
+	// <</Stencil::Block>>
+
+	return nil
+}
+
+// <<Stencil::Block(webhookAddons)>>
+
+// <</Stencil::Block>>)
