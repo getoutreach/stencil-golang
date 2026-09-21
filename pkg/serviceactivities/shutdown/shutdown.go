@@ -12,12 +12,19 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/getoutreach/gobox/pkg/async"
 	"github.com/getoutreach/gobox/pkg/events"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/orerr"
 )
+
+// GraceTimeout - how much time we're gona give pod to finish all running activities
+// default kubernetes terminationGracePeriodSeconds is 30
+// if we remove timeout and stop the pod right away a lot of running activites will fail
+// moreover, minimum timeout is required to give kubernetes time to rebuild iptables
+const GraceTimeout = 15
 
 // SignalError is an error struct used by the Shutdown activity to indicate which signal caused the shutdown.
 type SignalError struct {
@@ -61,6 +68,7 @@ func (s *ServiceActivity) Run(ctx context.Context) error {
 
 	select {
 	case sig := <-c:
+		time.Sleep(time.Second * GraceTimeout)
 		// Allow interrupt signals to be caught again in worse-case scenario
 		// situations when the service hangs during a graceful shutdown.
 		signal.Reset(os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
