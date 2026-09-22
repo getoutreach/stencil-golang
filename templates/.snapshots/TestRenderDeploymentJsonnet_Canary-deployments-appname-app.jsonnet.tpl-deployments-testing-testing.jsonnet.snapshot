@@ -224,6 +224,9 @@ local all = {
 								MY_ENVIRONMENT: app.environment,
 								MY_CLUSTER: app.cluster,
 								MY_REGION: app.region,
+								// Route gobox's standard logger through olog so it honors the
+								// logging ConfigMap above.
+								GOBOX_AS_SLOG_FACADE: 'yes',
 								LOG_LEVELS_CONFIG_PATH: '/run/config/outreach.io/log-levels/log-levels.yaml',
 							},
 							readinessProbe: {
