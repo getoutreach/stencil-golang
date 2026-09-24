@@ -140,10 +140,6 @@ local all = {
 			'trace.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
-	// Log-level configuration for gobox olog (GOBOX_AS_SLOG_FACADE). Mounted as
-	// a directory volume (no subPath) so the kubelet live-propagates ConfigMap
-	// edits to the pod, where olog.PollConfigurationFile picks them up without
-	// a restart. https://kubernetes.io/docs/concepts/storage/volumes/#configmap
 	logging_configmap: ok.ConfigMap('logging', app.namespace) {
 		local this = self,
 		data_:: {
