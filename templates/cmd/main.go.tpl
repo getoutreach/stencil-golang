@@ -12,12 +12,14 @@ package main
 import (
 	"context"
 	"os"
+	"time"
 
 	"github.com/getoutreach/gobox/pkg/app"
 	"github.com/getoutreach/gobox/pkg/async"
 	"github.com/getoutreach/gobox/pkg/env"
 	"github.com/getoutreach/gobox/pkg/log"
 	"github.com/getoutreach/gobox/pkg/events"
+	"github.com/getoutreach/gobox/pkg/olog"
 	"github.com/getoutreach/gobox/pkg/trace"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/automemlimit"
 	"github.com/getoutreach/stencil-golang/pkg/serviceactivities/shutdown"
@@ -100,6 +102,21 @@ func main() { //nolint:nolintlint,funlen // Why: We can't dwindle this down anym
 	var deps dependencies
 
 	log.Info(ctx, "starting", app.Info(), cfg, log.F{"app.pid": os.Getpid()})
+
+	// Watch the log-level configuration file
+	logLevelsPath := os.Getenv("LOG_LEVELS_CONFIG_PATH")
+	if logLevelsPath == "" {
+		logLevelsPath = "/run/config/outreach.io/log-levels/log-levels.yaml"
+	}
+	go olog.PollConfigurationFile(ctx, logLevelsPath, 30*time.Second, func(err error) bool {
+		if err != nil {
+			log.Warn(ctx, "failed to apply log level configuration", events.NewErrorInfo(err),
+				log.F{"path": logLevelsPath})
+		} else {
+			log.Info(ctx, "updated log level configuration", log.F{"path": logLevelsPath})
+		}
+		return true
+	})
 	{{- $preInitializationBlock := stencil.GetModuleHook "preInitializationBlock" }}
 	{{- if $preInitializationBlock }}
 
