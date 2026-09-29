@@ -35,9 +35,9 @@ make lint # Run linters on project's code.
 # golang
 make gogenerate # Run go generate to create any generated code, such as protobufs or Kubernetes CRDs.
 go mod tidy # Ensure your go.mod and go.sum files are up to date.
-# <<Stencil::Block(customCommands)>>
+## <<Stencil::Block(customCommands)>>
 
-# <</Stencil::Block>>
+## <</Stencil::Block>>
 ```
 
 ## Directory structure
@@ -56,11 +56,11 @@ If you need more context, you can find more information in `docs/` directory.
 
 ## References table
 
-| Description | Reference |
-|----|----|
-| Stencil commands | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
-| Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
-| Effective Go | [webpage](https://go.dev/doc/effective_go) |
+| Description | Purpose | Reference |
+|----|----|----|
+| Stencil commands | `stencil` code generation usage guide and commands list | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
+| Idiomatic Go practices | Community guide for writing idiomatic Go | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | Official guide for writing clear, idiomatic Go | [webpage](https://go.dev/doc/effective_go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
