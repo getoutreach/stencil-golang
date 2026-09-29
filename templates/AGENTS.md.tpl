@@ -25,8 +25,8 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsDirectoryStructure" (list (stencil.ApplyTemplate "golangDirectoryStructure")) }}
 
 {{- define "golangReferences" }}
-| Idiomatic Go practices | Community guide for writing idiomatic Go | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
-| Effective Go | Official guide for writing clear, idiomatic Go | [webpage](https://go.dev/doc/effective_go) |
+| Idiomatic Go practices | Community-maintained checklist of common code review comments for Go | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | Official Go team guide to writing clear, idiomatic code | [webpage](https://go.dev/doc/effective_go) |
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsReferencesTable" (list (stencil.ApplyTemplate "golangReferences")) }}
