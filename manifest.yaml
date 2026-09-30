@@ -180,7 +180,7 @@ arguments:
         - number
   versions.alpine:
     description: Alpine version to use
-    default: "3.22"
+    default: "3.24"
     schema:
       type:
         - string
