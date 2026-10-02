@@ -36,6 +36,9 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
 - Add context to errors using `fmt.Errorf("...: %w", err)`
 - Prefer `gotest.tools/v3/assert` in tests over `github.com/stretchr/testify` or hand-rolled assertions
+- When a task touches `.go` files (PR review, writing code), read
+  References table and fetch relevant references before you produce output,
+  and name in the output which of its rules you applied or cleared.
 {{- end }}
 
 {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "agentsBoundariesAlways" (list (stencil.ApplyTemplate "golangBoundariesAlways")) }}
