@@ -26,3 +26,10 @@ func TestIncludeRubyToolVersionsIfRubyGRPCClientLibrary(t *testing.T) {
 func TestDontIncludeRubyToolVersionsIfNotRubyGRPCClient(t *testing.T) {
 	assertTemplateSnapshot(t, "testdata/tool-versions-ruby/.tool-versions.tpl", map[string]any{})
 }
+
+func TestRubyClientHasPreServiceRequiresBlock(t *testing.T) {
+	assertTemplateSnapshot(t, "api/clients/ruby/lib/client/client.rb.tpl", map[string]any{
+		"service":     true,
+		"grpcClients": []interface{}{"ruby"},
+	})
+}

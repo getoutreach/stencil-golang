@@ -1,0 +1,11 @@
+(*codegen.File)(
+export * as TestingTypes from './grpc/testing_pb';
+export * from './client-helpers';
+
+// <<Stencil::Block(nodeIndexExports)>>
+
+// <</Stencil::Block>>
+
+import { TestingClient } from './grpc/testing_grpc_pb';
+export default TestingClient;
+)
