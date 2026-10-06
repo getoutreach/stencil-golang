@@ -35,9 +35,9 @@ make lint # Run linters on project's code.
 # golang
 make gogenerate # Run go generate to create any generated code, such as protobufs or Kubernetes CRDs.
 go mod tidy # Ensure your go.mod and go.sum files are up to date.
-# <<Stencil::Block(customCommands)>>
+## <<Stencil::Block(customCommands)>>
 
-# <</Stencil::Block>>
+## <</Stencil::Block>>
 ```
 
 ## Directory structure
@@ -48,6 +48,8 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 * docs/: Directory used to store documentation files and reference materials for the project.
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `.vscode/`: VSCode configuration files
+* `templates/`: Templates for generating project files, such as `AGENTS.md.tpl` for the AGENTS.md file. Used in stencil-modules to define the structure and content of generated files.
+* `.snapshots/`: Contains snapshot files for testing template rendering outputs.
 <!-- <<Stencil::Block(directoryStructureCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -56,9 +58,9 @@ If you need more context, you can find more information in `docs/` directory.
 
 ## References table
 
-| Description | Reference |
-|----|----|
-| Stencil commands | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
+| Description | Purpose | Reference |
+|----|----|----|
+| Stencil commands | `stencil` code generation usage guide and commands list | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
 | Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
 | Effective Go | [webpage](https://go.dev/doc/effective_go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
