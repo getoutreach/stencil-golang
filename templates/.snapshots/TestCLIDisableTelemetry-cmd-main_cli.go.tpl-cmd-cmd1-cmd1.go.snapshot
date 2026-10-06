@@ -31,8 +31,8 @@ var TeleforkAPIKey = "NOTSET" //nolint:gochecknoglobals // Why: We can't compile
 
 // <<Stencil::Block(honeycombDataset)>>
 
-// HoneycombDataset is a constant denoting the dataset that traces should be stored
-// in in honeycomb.
+// HoneycombDataset is a constant denoting the dataset where traces should be stored
+// in Honeycomb.
 const HoneycombDataset = ""
 // <</Stencil::Block>>
 

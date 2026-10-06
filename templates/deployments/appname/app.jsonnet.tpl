@@ -174,6 +174,20 @@ local all = {
 			'trace.yaml': std.manifestYamlDoc(this.data_),
 		},
 	},
+	logging_configmap: ok.ConfigMap('logging', app.namespace) {
+		local this = self,
+		data_:: {
+			// Entries map a module or package path ("address") to a level:
+			// DEBUG, INFO, WARN, ERROR, or OFF. Examples:
+			//   { address: 'github.com/getoutreach/{{ .Config.Name }}', level: 'DEBUG' },
+			//   { address: 'github.com/getoutreach/gobox', level: 'WARN' },
+			log: [],
+		},
+		data: {
+			// We use this.data_ to allow for ez merging in the override.
+			'log-levels.yaml': std.manifestYamlDoc(this.data_),
+		},
+	},
 	{{- range stencil.GetModuleHook "deployment.configmaps" }}
 {{ . }}
 	{{- end }}
@@ -187,6 +201,10 @@ local all = {
 			'config-trace-volume': {
 				mountPath: '/run/config/outreach.io/trace.yaml',
 				subPath: 'trace.yaml',
+			},
+			// Directory mount (no subPath) so logging ConfigMap updates propagate live.
+			'logging-volume': {
+				mountPath: '/run/config/outreach.io/log-levels',
 			},
 			{{- range stencil.GetModuleHook "deployment.volumeMounts" }}
 {{ . }}
@@ -280,6 +298,10 @@ local all = {
 								MY_ENVIRONMENT: app.environment,
 								MY_CLUSTER: app.cluster,
 								MY_REGION: app.region,
+								// Route gobox's standard logger through olog so it honors the
+								// logging ConfigMap above.
+								GOBOX_AS_SLOG_FACADE: 'yes',
+								LOG_LEVELS_CONFIG_PATH: '/run/config/outreach.io/log-levels/log-levels.yaml',
 							},
 							readinessProbe: {
 								httpGet: {
@@ -326,6 +348,7 @@ local all = {
 						// default configs
 						['config-%s' % app.name]: ok.ConfigMapVolume(ok.ConfigMap('config', app.namespace)),
 						'config-trace-volume': ok.ConfigMapVolume(ok.ConfigMap('config-trace', app.namespace)),
+						'logging-volume': ok.ConfigMapVolume(ok.ConfigMap('logging', app.namespace)),
 						{{- range stencil.GetModuleHook "deployment.volumes" }}
 {{ . }}
 						{{- end }}
