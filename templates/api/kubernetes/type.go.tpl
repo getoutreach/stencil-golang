@@ -4,6 +4,7 @@
 // {{ stencil.ApplyTemplate "copyright" }}
 {{- $g := .group }}
 {{- $r := .resource }}
+{{- $root := .root }}
 {{- $isCustomResource := contains "." $g.group }}
 
 // Description: This file stores type information
@@ -18,6 +19,10 @@ import (
 	{{ $g.group | lower }}{{ $g.version }} "k8s.io/api/{{ $g.group | default "core" | lower }}/{{ $g.version }}"
 	{{- end }}
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	{{- if $r.configPackage }}
+
+	"{{ stencil.ApplyTemplate "appImportPath" $root }}/{{ $r.configPackage }}"
+	{{- end }}
 
 	// Place imports here
 	// <<Stencil::Block(imports)>>
@@ -121,6 +126,6 @@ func init() { //nolint:gochecknoinits // Why: used for registering
 {{- range $_, $g := stencil.Arg "kubernetes.groups" }}
 {{- range $_, $r := $g.resources }}
 {{ file.Create (printf "api/k8s/%s/%s/%s_types.go" $g.package $g.version ($r.kind | lower)) 0600 now }}
-{{ file.SetContents (stencil.ApplyTemplate "api/kubernetes/type" (dict "group" $g "resource" $r)) }}
+{{ file.SetContents (stencil.ApplyTemplate "api/kubernetes/type" (dict "group" $g "resource" $r "root" $root)) }}
 {{- end }}
 {{- end }}
