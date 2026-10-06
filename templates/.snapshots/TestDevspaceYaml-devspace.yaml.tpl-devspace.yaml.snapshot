@@ -248,10 +248,10 @@ dev:
           mountPath: ${DEV_CONTAINER_WORKDIR}
           name: devspace-appcache
 
-      # The volumes above are provisioned root-owned, so a non-root dev
-      # container cannot sync into them. fsGroup makes kubelet fix group
-      # ownership of every mounted volume on each pod start, which keeps the
-      # dev container non-root and needs no privileged init container.
+      # The volumes above start out owned by root, so the non-root dev
+      # container cannot sync into them. fsGroup gives the dev user's group
+      # write access to these volumes when the pod starts, so we no longer
+      # need a root init container.
       - op: add
         path: spec.securityContext
         value:
