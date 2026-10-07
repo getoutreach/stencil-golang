@@ -5,6 +5,8 @@ arguments:
     skipE2e: true
   # confluenceSpaceKey: DT
   description: Stencil Module for Golang Applications
+  go:
+    formatter: gofumpt
   # lifecycle: public_ga
   lintroller: platinum
   notifications:
