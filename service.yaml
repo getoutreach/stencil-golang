@@ -7,6 +7,8 @@ arguments:
   description: Stencil Module for Golang Applications
   go:
     formatter: gofumpt
+    linters:
+      strict: true
   # lifecycle: public_ga
   lintroller: platinum
   notifications:

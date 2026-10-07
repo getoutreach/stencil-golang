@@ -33,7 +33,7 @@ func (*StencilGolangPlugin) GetConfig() (*apiv1.Config, error) {
 
 // ExecuteTemplateFunction serves as a router for template functions that the stencil-golang
 // plugin exports.
-func (*StencilGolangPlugin) ExecuteTemplateFunction(t *apiv1.TemplateFunctionExec) (interface{}, error) {
+func (*StencilGolangPlugin) ExecuteTemplateFunction(t *apiv1.TemplateFunctionExec) (any, error) {
 	switch t.Name {
 	case "ParseGoMod":
 		fileNameInf := t.Arguments[0]
