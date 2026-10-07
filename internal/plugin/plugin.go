@@ -1,5 +1,7 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
+// Description: Provides helpers for working with Go plugins.
+
 // Package plugin provides helpers for working with Go plugins.
 package plugin
 
@@ -12,6 +14,7 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
+// Static errors returned by the plugin's template functions.
 var (
 	// ErrInvalidArgumentType is returned when a template function receives an
 	// argument of an unexpected type.
