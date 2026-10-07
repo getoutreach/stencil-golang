@@ -37,7 +37,7 @@ func New() *ServiceActivity {
 // Run runs the gomaxprocs service activity.
 func (s *ServiceActivity) Run(ctx context.Context) error {
 	var err error
-	s.undo, err = maxprocs.Set(maxprocs.Logger(func(m string, args ...interface{}) {
+	s.undo, err = maxprocs.Set(maxprocs.Logger(func(m string, args ...any) {
 		message := fmt.Sprintf(m, args...)
 		log.Info(ctx, "maxprocs.Set", log.F{"message": message})
 	}))
