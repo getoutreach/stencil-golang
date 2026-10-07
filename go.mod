@@ -9,7 +9,7 @@ toolchain go1.25.7
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.120.1
-	github.com/getoutreach/stencil v1.45.1
+	github.com/getoutreach/stencil v1.46.0
 	github.com/google/go-cmp v0.7.0
 	github.com/magefile/mage v1.17.2
 	github.com/pkg/errors v0.9.1

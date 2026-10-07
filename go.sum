@@ -84,8 +84,8 @@ github.com/frankban/quicktest v1.14.6 h1:7Xjx+VpznH+oBnejlPUj8oUpdxnVs4f8XU8WnHk
 github.com/frankban/quicktest v1.14.6/go.mod h1:4ptaffx2x8+WTWXmUCuVU6aPUX1/Mz7zb5vbUoiM6w0=
 github.com/getoutreach/gobox v1.120.1 h1:uQ59eb7g2k0GEv5MUi8sP/f0nW1gYz62B4+NfMFzlLs=
 github.com/getoutreach/gobox v1.120.1/go.mod h1:3Yy7NJjxbHBb4yJneeBOahABfRFd+ebVqbfsbmiwUeM=
-github.com/getoutreach/stencil v1.45.1 h1:3kNEg1GTU/XAeJ1GoP0GYUfmdOLN1FZt3tpc/L2bjLo=
-github.com/getoutreach/stencil v1.45.1/go.mod h1:4ODBTktHPAjMc9661u/mYhQaYPWw1/VKC6VY9ooV/Ls=
+github.com/getoutreach/stencil v1.46.0 h1:C9OzOSvavqz59knYuiq7s/s6M7M7TpCBnhaX1DTueN0=
+github.com/getoutreach/stencil v1.46.0/go.mod h1:uR9JogaOcu4FA3vB7Xyt2OXrWUwa5/rk+JeeqBDtWpY=
 github.com/gliderlabs/ssh v0.3.8 h1:a4YXD1V7xMF9g5nTkdfnja3Sxy1PVDCj1Zg4Wb8vY6c=
 github.com/gliderlabs/ssh v0.3.8/go.mod h1:xYoytBv1sV0aL3CavoDuJIQNURXkkfPA/wxQ1pL1fAU=
 github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 h1:+zs/tPmkDkHx3U66DAb0lQFJrpS6731Oaa12ikc+DiI=
