@@ -18,6 +18,8 @@ arguments:
     prereleasesBranch: main
   reportingTeam: fnd-dt
   tier: 2
+  versions:
+    prettier: "3"
 modules:
   - name: github.com/getoutreach/stencil-template-base
     channel: rc
