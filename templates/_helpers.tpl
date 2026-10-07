@@ -134,7 +134,9 @@ go:
 - name: github.com/getoutreach/stencil-golang/pkg
   # To obtain, set `github.com/getoutreach/stencil-golang/pkg` to 'main'
   # in a go.mod and run `go mod tidy`.
-  version: v0.0.0-20250109193043-fa44ea640e7e
+  version: v0.0.0-20261006153409-014647f9a514
+- name: github.com/KimMachineGun/automemlimit
+  version: v1.0.0
 
 {{- if has "grpc" (stencil.Arg "serviceActivities") }}
 - name: google.golang.org/grpc
