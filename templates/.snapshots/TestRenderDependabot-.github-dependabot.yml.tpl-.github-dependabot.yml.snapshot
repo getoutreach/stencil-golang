@@ -14,7 +14,6 @@ updates:
     ignore:
       - dependency-name: github.com/getoutreach/gobox
       - dependency-name: github.com/getoutreach/stencil-golang/pkg
-      - dependency-name: github.com/KimMachineGun/automemlimit
       - dependency-name: google.golang.org/grpc
       - dependency-name: github.com/getoutreach/orgservice
       - dependency-name: github.com/getoutreach/services

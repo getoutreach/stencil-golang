@@ -82,7 +82,6 @@ require (
 	gotest.tools/v3 v3.3.0 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 	github.com/getoutreach/stencil-golang/pkg v0.0.0-20261006153409-014647f9a514
-	github.com/KimMachineGun/automemlimit v1.0.0
 )
 
 replace github.com/getoutreach/stencil => ../stencil
