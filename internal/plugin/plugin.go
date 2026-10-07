@@ -1,8 +1,6 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
-// Description: provides helpers  for working with Go plugins.
-
-// Package plugin provides helpers  for working with Go plugins.
+// Package plugin provides helpers for working with Go plugins.
 package plugin
 
 import (

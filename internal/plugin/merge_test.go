@@ -1,6 +1,5 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
-// Description: provides tools for merging plugins.
 package plugin
 
 import (
