@@ -6,7 +6,7 @@ toolchain go1.25.7
 
 require (
 	github.com/KimMachineGun/automemlimit v1.0.0
-	github.com/getoutreach/gobox v1.113.2
+	github.com/getoutreach/gobox v1.120.1
 	go.uber.org/automaxprocs v1.6.0
 )
 
