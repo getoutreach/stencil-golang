@@ -61,8 +61,8 @@ If you need more context, you can find more information in `docs/` directory.
 | Description | Purpose | Reference |
 |----|----|----|
 | Stencil commands | `stencil` code generation usage guide and commands list | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
-| Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
-| Effective Go | [webpage](https://go.dev/doc/effective_go) |
+| Idiomatic Go practices | Community-maintained checklist of common code review comments for Go. Fetch on every review and before generating Golang code. | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | Official Go team guide to writing clear, idiomatic code. Fetch on every review and before generating Golang code. | [webpage](https://go.dev/doc/effective_go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
