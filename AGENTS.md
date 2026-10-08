@@ -48,6 +48,8 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 * docs/: Directory used to store documentation files and reference materials for the project.
 * `scripts/`: internal development shell scripts _(**deprecated**, prefer to use `mise` tasks when appropriate)_
 * `.vscode/`: VSCode configuration files
+* `templates/`: Templates for generating project files, such as `AGENTS.md.tpl` for the AGENTS.md file. Used in stencil-modules to define the structure and content of generated files.
+* `.snapshots/`: Contains snapshot files for testing template rendering outputs.
 <!-- <<Stencil::Block(directoryStructureCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -58,9 +60,9 @@ If you need more context, you can find more information in `docs/` directory.
 
 | Description | Purpose | Reference |
 |----|----|----|
-| Stencil commands | `stencil` code generation usage guide and commands list. Read before running or changing stencil commands. | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
-| Idiomatic Go practices | Community-maintained checklist of common code review comments for Go. Read when reviewing Go code for style and naming. | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
-| Effective Go | Official Go team guide to writing clear, idiomatic code. Read when writing new Go code or unsure about a language feature. | [webpage](https://go.dev/doc/effective_go) |
+| Stencil commands | `stencil` code generation usage guide and commands list | [docs/agents/stencil-commands.md](./docs/agents/stencil-commands.md) |
+| Idiomatic Go practices | [webpage](https://dmitri.shuralyov.com/idiomatic-go) |
+| Effective Go | [webpage](https://go.dev/doc/effective_go) |
 <!-- <<Stencil::Block(referencesTableCustom)>> -->
 
 <!-- <</Stencil::Block>> -->
@@ -72,6 +74,9 @@ If you need more context, you can find more information in `docs/` directory.
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
 - Add context to errors using `fmt.Errorf("...: %w", err)`
 - Prefer `gotest.tools/v3/assert` in tests over `github.com/stretchr/testify` or hand-rolled assertions
+- When a task touches `.go` files (PR review, writing code), read
+  References table and fetch relevant references before you produce output,
+  and name in the output which of its rules you applied or cleared.
 <!-- <<Stencil::Block(agentsBoundariesAlwaysCustom)>> -->
 
 <!-- <</Stencil::Block>> -->

@@ -6,5 +6,5 @@ toolchain go1.25.7
 
 require (
 	github.com/getoutreach/gobox v1.120.1
-	github.com/getoutreach/stencil-golang/pkg v0.0.0-20250109193043-fa44ea640e7e
+	github.com/getoutreach/stencil-golang/pkg v0.0.0-20261006153409-014647f9a514
 ))

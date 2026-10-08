@@ -19,9 +19,12 @@ package automemlimit
 
 import (
 	"context"
+	"errors"
 
 	"github.com/KimMachineGun/automemlimit/memlimit"
 	"github.com/getoutreach/gobox/pkg/async"
+	"github.com/getoutreach/gobox/pkg/events"
+	"github.com/getoutreach/gobox/pkg/log"
 )
 
 // _ ensures that ServiceActivity implements the async.Runner interface.
@@ -41,7 +44,9 @@ func New() *ServiceActivity {
 
 // Run runs the automemlimit service activity
 func (s *ServiceActivity) Run(ctx context.Context) error {
-	memlimit.SetGoMemLimitWithEnv()
+	if _, err := memlimit.Set(); err != nil && !errors.Is(err, memlimit.ErrCgroupsNotSupported) {
+		log.Warn(ctx, "automemlimit: failed to set GOMEMLIMIT", events.NewErrorInfo(err))
+	}
 	<-ctx.Done()
 	return nil
 }
