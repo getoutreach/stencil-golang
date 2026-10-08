@@ -3,9 +3,13 @@ arguments:
   ciOptions:
     skipDocker: true
     skipE2e: true
-  confluenceSpaceKey: DT
+  # confluenceSpaceKey: DT
   description: Stencil Module for Golang Applications
-  lifecycle: public_ga
+  go:
+    formatter: gofumpt
+    linters:
+      strict: true
+  # lifecycle: public_ga
   lintroller: platinum
   notifications:
     slackChannel: "#dt-notifications"
@@ -17,7 +21,9 @@ arguments:
     force: true
     prereleasesBranch: main
   reportingTeam: fnd-dt
-  tier: 2
+  # tier: 2
+  versions:
+    prettier: "3"
 modules:
   - name: github.com/getoutreach/stencil-template-base
     channel: rc
