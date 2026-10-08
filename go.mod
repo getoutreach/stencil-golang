@@ -2,9 +2,7 @@
 
 module github.com/getoutreach/stencil-golang
 
-go 1.25.0
-
-toolchain go1.25.7
+go 1.26.0
 
 require (
 	github.com/blang/semver/v4 v4.0.0
@@ -14,7 +12,7 @@ require (
 	github.com/magefile/mage v1.17.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.10.2
-	golang.org/x/mod v0.40.0
+	golang.org/x/mod v0.41.0
 	gotest.tools/v3 v3.5.2
 )
 
