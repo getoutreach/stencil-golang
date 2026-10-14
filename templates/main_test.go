@@ -332,3 +332,61 @@ func TestRenderAppConfigWithK8sYamlParser(t *testing.T) {
 		},
 	})
 }
+
+// kubernetesArgs returns the arguments for a Kubernetes service with a single
+// group holding a single built-in (non-custom) resource. When addConfig is set,
+// the resource also declares the config package to generate deepcopy methods
+// for.
+func kubernetesArgs(addConfig bool) map[string]any {
+	resource := map[string]any{
+		"kind":      "Pod",
+		"addConfig": addConfig,
+		"generate": map[string]any{
+			"webhook":    true,
+			"controller": false,
+		},
+	}
+	if addConfig {
+		resource["configPackage"] = "internal/config"
+	}
+
+	return map[string]any{
+		"service": true,
+		"kubernetes": map[string]any{
+			"groups": []any{
+				map[string]any{
+					"group":     "core",
+					"version":   "v1",
+					"package":   "core",
+					"resources": []any{resource},
+				},
+			},
+		},
+	}
+}
+
+func TestRenderKubernetesType(t *testing.T) {
+	assertTemplateSnapshot(t, "api/kubernetes/type.go.tpl", kubernetesArgs(false))
+}
+
+func TestRenderKubernetesTypeWithConfig(t *testing.T) {
+	assertTemplateSnapshot(t, "api/kubernetes/type.go.tpl", kubernetesArgs(true))
+}
+
+func TestRenderKubernetesVersion(t *testing.T) {
+	assertTemplateSnapshot(t, "api/kubernetes/version.go.tpl", kubernetesArgs(false))
+}
+
+func TestRenderKubernetesVersionWithConfig(t *testing.T) {
+	assertTemplateSnapshot(t, "api/kubernetes/version.go.tpl", kubernetesArgs(true))
+}
+
+func TestRenderKubernetesWebhook(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/appName/k8s/webhook.go.tpl", kubernetesArgs(false),
+		"internal/appName/k8s/_helpers.tpl")
+}
+
+func TestRenderKubernetesWebhookWithConfig(t *testing.T) {
+	assertTemplateSnapshot(t, "internal/appName/k8s/webhook.go.tpl", kubernetesArgs(true),
+		"internal/appName/k8s/_helpers.tpl")
+}
