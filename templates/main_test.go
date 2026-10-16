@@ -35,17 +35,17 @@ func TestRenderDeploymentConfig(t *testing.T) {
 
 func TestRenderDeploymentJsonnet(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"mixins": []interface{}{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
+		"mixins": []any{"c", "b", "a"}, // These should be sorted alphabetically in the snapshot
 	})
 }
 
 func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"deployment": map[string]interface{}{
+		"deployment": map[string]any{
 			"strategy": "canary",
 		},
 		"service": true,
-		"serviceActivities": []interface{}{
+		"serviceActivities": []any{
 			"http",
 			"grpc",
 		},
@@ -55,37 +55,37 @@ func TestRenderDeploymentJsonnet_Canary(t *testing.T) {
 
 func TestRenderDeploymentJsonnet_Canary_emptyServiceActivities(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"deployment": map[string]interface{}{
+		"deployment": map[string]any{
 			"strategy": "canary",
 		},
 		"service":           true,
-		"serviceActivities": []interface{}{},
+		"serviceActivities": []any{},
 		"slack":             "hello",
 	})
 }
 
 func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"hpa": map[string]interface{}{
+		"hpa": map[string]any{
 			"enabled":        true,
 			"cpuUtilization": 50,
-			"scaleDown": map[string]interface{}{
+			"scaleDown": map[string]any{
 				"stabilizationWindowSeconds": 1200,
 			},
-			"scaleUp": map[string]interface{}{
+			"scaleUp": map[string]any{
 				"stabilizationWindowSeconds": 300,
 			},
-			"metrics": map[string]interface{}{
-				"cpu": map[string]interface{}{
+			"metrics": map[string]any{
+				"cpu": map[string]any{
 					"averageUtilization": 75,
 				},
 			},
-			"env": map[string]interface{}{
-				"staging": map[string]interface{}{
+			"env": map[string]any{
+				"staging": map[string]any{
 					"maxReplicas": 4,
 					"minReplicas": 1,
 				},
-				"production": map[string]interface{}{
+				"production": map[string]any{
 					"maxReplicas": 32,
 					"minReplicas": 1,
 				},
@@ -97,7 +97,7 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 
 func TestRenderDeploymentJsonnet_AdditionalAllowedMetrics(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
-		"additionalAllowedMetrics": []interface{}{
+		"additionalAllowedMetrics": []any{
 			"my_custom_counter",
 			"my_custom_histogram_bucket",
 		},
@@ -143,8 +143,8 @@ func TestRenderDeploymentDockerfileForCLI(t *testing.T) {
 func TestRenderDependabot(t *testing.T) {
 	assertTemplateSnapshot(t, ".github/dependabot.yml.tpl", map[string]any{
 		"service":           true,
-		"serviceActivities": []interface{}{"grpc"},
-		"grpcClients":       []interface{}{"node"},
+		"serviceActivities": []any{"grpc"},
+		"grpcClients":       []any{"node"},
 	})
 }
 
@@ -168,7 +168,7 @@ func TestMergeGoMod(t *testing.T) {
 
 func TestGoModStanzaVersion(t *testing.T) {
 	st := newStencilTestWithGolangPlugin(t, "go.mod.tpl", map[string]any{
-		"go": map[string]interface{}{
+		"go": map[string]any{
 			"stanza": "1.19",
 		},
 	})
@@ -232,7 +232,7 @@ func TestVSCodeSettingsConfigGofumpt(t *testing.T) {
 func TestGRPCServerRPC(t *testing.T) {
 	assertTemplateSnapshot(t, "internal/appName/rpc/rpc.go.tpl", map[string]any{
 		"service": true,
-		"serviceActivities": []interface{}{
+		"serviceActivities": []any{
 			"grpc",
 		},
 	})
@@ -240,7 +240,7 @@ func TestGRPCServerRPC(t *testing.T) {
 
 func TestGoreleaserYml(t *testing.T) {
 	assertTemplateSnapshot(t, ".goreleaser.yml.tpl", map[string]any{
-		"commands": []interface{}{
+		"commands": []any{
 			"cmd1",
 			"cmd2",
 			"cmd3-sub1",

@@ -11,6 +11,6 @@ import (
 func TestNodeClientIndexHasExportsBlock(t *testing.T) {
 	assertTemplateSnapshot(t, "api/clients/node/src/index.ts.tpl", map[string]any{
 		"service":     true,
-		"grpcClients": []interface{}{"node"},
+		"grpcClients": []any{"node"},
 	})
 }

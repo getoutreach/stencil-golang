@@ -37,12 +37,12 @@ var _ async.Closer = (*ServiceActivity)(nil)
 // GOMEMLIMIT properly in a containerized environment.
 type ServiceActivity struct{}
 
-// New creates a new automemlimit service activity
+// New creates a new automemlimit service activity.
 func New() *ServiceActivity {
 	return &ServiceActivity{}
 }
 
-// Run runs the automemlimit service activity
+// Run runs the automemlimit service activity.
 func (s *ServiceActivity) Run(ctx context.Context) error {
 	if _, err := memlimit.Set(); err != nil && !errors.Is(err, memlimit.ErrCgroupsNotSupported) {
 		log.Warn(ctx, "automemlimit: failed to set GOMEMLIMIT", events.NewErrorInfo(err))

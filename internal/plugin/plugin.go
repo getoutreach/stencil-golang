@@ -1,17 +1,27 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
-// Description: provides helpers  for working with Go plugins.
+// Description: Provides helpers for working with Go plugins.
 
-// Package plugin provides helpers  for working with Go plugins.
+// Package plugin provides helpers for working with Go plugins.
 package plugin
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"reflect"
 
 	"github.com/getoutreach/stencil/pkg/extensions/apiv1"
 	"golang.org/x/mod/modfile"
+)
+
+// Static errors returned by the plugin's template functions.
+var (
+	// ErrInvalidArgumentType is returned when a template function receives an
+	// argument of an unexpected type.
+	ErrInvalidArgumentType = errors.New("invalid argument type")
+
+	// ErrUnknownFunction is returned when an unknown template function is requested.
+	ErrUnknownFunction = errors.New("unknown function")
 )
 
 // _ ensures that StencilGolangPlugin fits the apiv1.Implementation interface.
@@ -33,7 +43,7 @@ func (*StencilGolangPlugin) GetConfig() (*apiv1.Config, error) {
 
 // ExecuteTemplateFunction serves as a router for template functions that the stencil-golang
 // plugin exports.
-func (*StencilGolangPlugin) ExecuteTemplateFunction(t *apiv1.TemplateFunctionExec) (interface{}, error) {
+func (*StencilGolangPlugin) ExecuteTemplateFunction(t *apiv1.TemplateFunctionExec) (any, error) {
 	switch t.Name {
 	case "ParseGoMod":
 		fileNameInf := t.Arguments[0]
@@ -41,19 +51,19 @@ func (*StencilGolangPlugin) ExecuteTemplateFunction(t *apiv1.TemplateFunctionExe
 
 		fileName, ok := fileNameInf.(string)
 		if !ok {
-			return nil, fmt.Errorf("expected go mod file to be of type string, got %s", reflect.TypeOf(fileNameInf).String())
+			return nil, fmt.Errorf("%w: expected go mod file name to be of type string, got %T", ErrInvalidArgumentType, fileNameInf)
 		}
 
 		modFile, ok := modFileInf.(string)
 		if !ok {
-			return nil, fmt.Errorf("expected go mod file to be of type string, got %s", reflect.TypeOf(fileNameInf).String())
+			return nil, fmt.Errorf("%w: expected go mod file to be of type string, got %T", ErrInvalidArgumentType, modFileInf)
 		}
 
 		return modfile.Parse(fileName, []byte(modFile), nil)
 	case "MergeGoMod":
 		return MergeGoMod(t)
 	default:
-		return nil, fmt.Errorf("unknown function %q", t.Name)
+		return nil, fmt.Errorf("%w: %q", ErrUnknownFunction, t.Name)
 	}
 }
 

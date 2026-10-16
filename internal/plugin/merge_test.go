@@ -1,6 +1,7 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
-// Description: provides tools for merging plugins.
+// Description: Provides tools for merging plugins.
+
 package plugin
 
 import (
@@ -12,7 +13,7 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
-// goMod is a wrapper around modfile.File meant for easier testing
+// goMod is a wrapper around modfile.File meant for easier testing.
 type goMod struct {
 	// goVersion is the version of the go statement
 	goVersion string
@@ -35,11 +36,11 @@ type goMod struct {
 // 1. modules
 // 2. replacements
 // 3. goVersion
-// 4. toolchain
+// 4. toolchain.
 func newGoMod(args ...any) goMod {
 	var g goMod
 
-	for i := 0; i < len(args); i++ {
+	for i := range args {
 		// skip nil values
 		if args[i] == nil {
 			continue
@@ -272,7 +273,7 @@ func TestMergeGoMod(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotStr, err := MergeGoMod(&apiv1.TemplateFunctionExec{
 				Name: "MergeGoMod",
-				Arguments: []interface{}{
+				Arguments: []any{
 					"go.left.mod",
 					tt.args.left.Marshal(),
 					"go.right.mod",
