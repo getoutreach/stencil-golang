@@ -39,7 +39,9 @@ builds:
       ## <</Stencil::Block>>
       {{- end }}
 
-archives: []
+## <<Stencil::Block(archives)>>
+{{ (file.Block "archives") | trim | default "archives: []" }}
+## <</Stencil::Block>>
 checksum:
   name_template: 'checksums.txt'
 release:
