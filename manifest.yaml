@@ -53,6 +53,11 @@ arguments:
     schema:
       type: boolean
     default: true
+  releaseOptions.enableCLIs:
+    description: Whether to release CLIs defined in `commands` as versioned binaries (assumes that `releaseOptions.enabled` is true).
+    schema:
+      type: boolean
+    default: true
   commands:
     refines: github.com/getoutreach/stencil-base
     schema:
