@@ -34,7 +34,7 @@ go mod tidy # Ensure your go.mod and go.sum files are up to date.
 {{- define "golangBoundariesAlways" }}
 - Run `go mod tidy` after adding, removing or upgrading Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
-- Add context to errors using `fmt.Errorf("...: %w", err)`
+- Use `github.com/pkg/errors` for errors: `errors.New`, `errors.Errorf`, `errors.Wrap(err, "...")`, `errors.Wrapf`, `errors.Is`, `errors.As`. Do not use `fmt.Errorf` or the standard library `errors` package.
 - Prefer `gotest.tools/v3/assert` in tests over `github.com/stretchr/testify` or hand-rolled assertions
 - When a task touches `.go` files (PR review, writing code), read
   References table and fetch relevant references before you produce output,
