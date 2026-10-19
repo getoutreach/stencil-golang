@@ -157,6 +157,11 @@ arguments:
     default: false
     schema:
       type: boolean
+  preferTestifyTools:
+    description: Whether the generated AGENTS.md instructs agents to prefer `github.com/stretchr/testify` in tests. When false, it instructs agents to prefer `gotest.tools/v3/assert` instead.
+    default: false
+    schema:
+      type: boolean
   versions.go:
     description: Go version to use
     default: "1.25.7"
