@@ -109,7 +109,9 @@ builds:
       
       ## <</Stencil::Block>>
 
+## <<Stencil::Block(archives)>>
 archives: []
+## <</Stencil::Block>>
 checksum:
   name_template: 'checksums.txt'
 release:

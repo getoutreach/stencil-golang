@@ -53,6 +53,11 @@ arguments:
     schema:
       type: boolean
     default: true
+  releaseOptions.enableCLIs:
+    description: Whether to release CLIs defined in `commands` as versioned binaries (assumes that `releaseOptions.enabled` is true).
+    schema:
+      type: boolean
+    default: true
   commands:
     refines: github.com/getoutreach/stencil-base
     schema:
@@ -212,17 +217,25 @@ arguments:
       enum:
         - gofmt
         - gofumpt
+  go.linters.strict:
+    description: Enable a stricter set of golangci-lint linters and rules for higher code quality enforcement.
+    default: false
+    schema:
+      type: boolean
   go.stanza:
     description: Go stanza version
     default: "1.25.0"
     schema:
       type:
         - string
-  go.linters.strict:
-    description: Enable a stricter set of golangci-lint linters and rules for higher code quality enforcement.
-    default: false
+  go.testLibraryPreference:
+    description: Whether the generated AGENTS.md instructs agents to prefer `gotest.tools/v3/assert` (`gotest.tools`, default) or `github.com/stretchr/testify` (`testify`) in tests.
+    default: gotest.tools
     schema:
-      type: boolean
+      type: string
+      enum:
+        - gotest.tools
+        - testify
   # HPA fields
   hpa.enabled:
     description: Enable HPA for the primary deployment

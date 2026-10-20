@@ -1,4 +1,4 @@
-{{- if stencil.Arg "releaseOptions.enabled" }}
+{{- if and (stencil.Arg "releaseOptions.enabled") (stencil.Arg "releaseOptions.enableCLIs") }}
 {{- if not (stencil.Arg "commands") }}
 {{ file.Skip "No commands defined" }}
 {{- end -}}
@@ -39,7 +39,9 @@ builds:
       ## <</Stencil::Block>>
       {{- end }}
 
-archives: []
+## <<Stencil::Block(archives)>>
+{{ (file.Block "archives") | trim | default "archives: []" }}
+## <</Stencil::Block>>
 checksum:
   name_template: 'checksums.txt'
 release:
