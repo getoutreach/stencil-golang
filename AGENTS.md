@@ -72,7 +72,7 @@ If you need more context, you can find more information in `docs/` directory.
 ### Always
 - Run `go mod tidy` after adding, removing or upgrading Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
-- Match the error convention this repo's handwritten code already follows. If it standardizes on `github.com/pkg/errors` (e.g., the search* repos), use its `errors.New`/`Wrap`/`Wrapf`. Otherwise, use the standard library `errors.New` and `fmt.Errorf("context: %w", err)`. Never mix the two styles in one package. Always check errors with `errors.Is`/`errors.As`, never with type assertions like `err.(T)`.
+- Match the error convention used by the service's handwritten Go code, including when adding a new package. If the service has no established convention, use the standard library `errors.New` and `fmt.Errorf("context: %w", err)`. If it uses `github.com/pkg/errors` (e.g., the search* repos), use its `errors.New`/`Wrap`/`Wrapf`. Never mix the two styles in one package. Always check errors with `errors.Is`/`errors.As`, never with type assertions like `err.(T)`.
 - Prefer `gotest.tools/v3/assert` in tests over `github.com/stretchr/testify` or hand-rolled assertions
 - When a task touches `.go` files (PR review, writing code), read
   References table and fetch relevant references before you produce output,
