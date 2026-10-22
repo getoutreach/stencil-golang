@@ -11,12 +11,7 @@ Stencil Module for Golang Applications
 ## Project overview
 
 <!-- <<Stencil::Block(projectOverview)>> -->
-This repository is a Stencil module that scaffolds and maintains Golang
-applications and services at Outreach. It provides `templates/` (`*.tpl`)
-rendered by the `stencil` program—covering Go source, gRPC/HTTP APIs,
-Kubernetes deployments, Dockerfiles, CI, and tooling config. Behavior is
-driven by `service.yaml` arguments, while `Stencil::Block` regions preserve
-repo-specific edits and `stencil.lock` tracks module versions and file ownership.
+
 <!-- <</Stencil::Block>> -->
 
 ## Generic commands
@@ -72,7 +67,7 @@ If you need more context, you can find more information in `docs/` directory.
 ### Always
 - Run `go mod tidy` after adding, removing or upgrading Go dependencies
 - Run `make gogenerate` after modifying protobuf definitions or interfaces with generated code
-- Match the error convention used by the service's handwritten Go code, including when adding a new package. If the service has no established convention, use the standard library `errors.New` and `fmt.Errorf("context: %w", err)`. If it uses `github.com/pkg/errors` (e.g., the search* repos), use its `errors.New`/`Wrap`/`Wrapf`. Never mix the two styles in one package. Always check errors with `errors.Is`/`errors.As`, never with type assertions like `err.(T)`.
+- Match the error convention used by the service's handwritten Go code, including when adding a new package. If the service has no established convention, use the standard library `errors.New` and `fmt.Errorf("context: %w", err)`. If it uses `github.com/pkg/errors`, use its `errors.New`/`Wrap`/`Wrapf`. Never mix the two styles in one package. Always check errors with `errors.Is`/`errors.As`, never with type assertions like `err.(T)`.
 - Prefer `gotest.tools/v3/assert` in tests over `github.com/stretchr/testify` or hand-rolled assertions
 - When a task touches `.go` files (PR review, writing code), read
   References table and fetch relevant references before you produce output,
