@@ -58,8 +58,11 @@ arguments:
     schema:
       type: boolean
     default: true
+  releaseOptions.force:
+    schema:
+      type: boolean
+    description: If this is set to true the `make release` step and assets declaration in .releaserc.yaml will render regardless of other arguments.
   commands:
-    refines: github.com/getoutreach/stencil-base
     schema:
       type: array
       items:
