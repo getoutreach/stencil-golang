@@ -4,9 +4,9 @@
 ## <</Stencil::Block>>
 FROM registry.example.com/foo/golang:1.0.0 AS builder
 ARG VERSION
-ENV GOCACHE "/go-build-cache"
-ENV GOPRIVATE github.com/getoutreach/*
-ENV CGO_ENABLED 0
+ENV GOCACHE="/go-build-cache"
+ENV GOPRIVATE=github.com/getoutreach/*
+ENV CGO_ENABLED=0
 WORKDIR /src
 
 # Copy our source code into the container for building

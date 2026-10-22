@@ -7,9 +7,9 @@
 ## <</Stencil::Block>>
 FROM {{ .Runtime.Box.Docker.ImagePullRegistry }}/golang:{{ $goVersion.Major }}.{{ $goVersion.Minor }}.{{ $goVersion.Patch }} AS builder
 ARG VERSION
-ENV GOCACHE "/go-build-cache"
-ENV GOPRIVATE github.com/{{ .Runtime.Box.Org }}/*
-ENV CGO_ENABLED {{ stencil.ApplyTemplate "cgoEnabled" | trim }}
+ENV GOCACHE="/go-build-cache"
+ENV GOPRIVATE=github.com/{{ .Runtime.Box.Org }}/*
+ENV CGO_ENABLED={{ stencil.ApplyTemplate "cgoEnabled" | trim }}
 WORKDIR /src
 
 # Copy our source code into the container for building
