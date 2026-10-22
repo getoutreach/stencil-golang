@@ -49,10 +49,7 @@ arguments:
     description: Deprecated, denotes this is an open source repository.
     deprecated: "definition migrated to github.com/getoutreach/stencil-base"
   releaseOptions.enabled:
-    description: (From stencil-base) Whether the repository makes releases.
-    schema:
-      type: boolean
-    default: true
+    from: github.com/getoutreach/stencil-base
   releaseOptions.enableCLIs:
     description: Whether to release CLIs defined in `commands` as versioned binaries (assumes that `releaseOptions.enabled` is true).
     schema:
