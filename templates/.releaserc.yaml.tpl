@@ -1,5 +1,26 @@
 {{- file.Skip "Virtual file for .releaserc.yaml.tpl module hooks" }}
 
+{{- define "commands-binary-build" }}
+  # Build the binaries
+  - - "@semantic-release/exec"
+    # We use generateNotesCmd instead of a different step because it has access
+    # to last/nextRelease due to when the step runs.
+    - generateNotesCmd: "make release APP_VERSION=${nextRelease.version}"
+{{- end }}
+
+{{- define "commands-gh-release" }}
+  # Create the GitHub Release
+  - - "@semantic-release/github"
+    - assets:
+        - "dist/*.tar.gz"
+        - "dist/checksums.txt"
+{{- end }}
+
+{{- if or (and (stencil.Arg "commands") (stencil.Arg "releaseOptions.enableCLIs")) (stencil.Arg "releaseOptions.force") }}
+  {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "buildBinaryReleaseConfig" (list (stencil.ApplyTemplate "commands-binary-build")) }}
+  {{ stencil.AddToModuleHook "github.com/getoutreach/stencil-base" "GHReleaseConfig" (list (stencil.ApplyTemplate "commands-gh-release")) }}
+{{- end}}
+
 {{- define "grpcClients-pre-release-config" }}
 {{- if or (not (stencil.Arg "service")) (has "grpc" (stencil.Arg "serviceActivities")) }}
   {{- if has "node" (stencil.Arg "grpcClients") }}
