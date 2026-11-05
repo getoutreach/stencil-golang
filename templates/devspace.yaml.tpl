@@ -225,6 +225,11 @@ dev:
         value:
           name: BOX_REPOSITORY_URL
           value: ${BOX_REPOSITORY_URL}
+      - op: add
+        path: spec.containers[0].env
+        value:
+          name: GOMODCACHE
+          value: ${DEV_CONTAINER_CACHE}/go-mod
 
       # Cache for packages, build cache, etc.
       - op: add
