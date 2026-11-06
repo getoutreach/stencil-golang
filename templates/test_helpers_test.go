@@ -24,10 +24,9 @@ func stencilArgs(extraArgs map[string]any) map[string]any {
 
 // newStencilTest creates a new stencil test instance with the provided
 // template filename and extra arguments merged with the base arguments.
-func newStencilTest(t *testing.T, templateFilename string, args map[string]any, helpers ...string) *stenciltest.Template {
+func newStencilTest(t *testing.T, templateFilename string, args map[string]any) *stenciltest.Template {
 	t.Helper()
-	allHelpers := append([]string{"_helpers.tpl"}, helpers...)
-	st := stenciltest.New(t, templateFilename, allHelpers...)
+	st := stenciltest.New(t, templateFilename, "_helpers.tpl")
 	st.Args(stencilArgs(args))
 	return st
 }
@@ -46,8 +45,8 @@ func newStencilTestWithGolangPlugin(t *testing.T, templateFilename string, args 
 }
 
 // assertTemplateSnapshot is a helper to validate a given template against a snapshot.
-func assertTemplateSnapshot(t *testing.T, templateFilename string, args map[string]any, helpers ...string) {
+func assertTemplateSnapshot(t *testing.T, templateFilename string, args map[string]any) {
 	t.Helper()
-	st := newStencilTest(t, templateFilename, args, helpers...)
+	st := newStencilTest(t, templateFilename, args)
 	st.Run(stenciltest.RegenerateSnapshots())
 }

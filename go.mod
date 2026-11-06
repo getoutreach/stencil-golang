@@ -9,7 +9,7 @@ toolchain go1.25.7
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/getoutreach/gobox v1.120.1
-	github.com/getoutreach/stencil v1.46.0
+	github.com/getoutreach/stencil v1.47.0
 	github.com/google/go-cmp v0.7.0
 	github.com/magefile/mage v1.17.2
 	github.com/pkg/errors v0.9.1
@@ -69,7 +69,7 @@ require (
 	github.com/go-git/go-billy/v5 v5.9.1 // indirect
 	github.com/go-git/go-git/v5 v5.19.2 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
-	github.com/gofrs/flock v0.13.0 // indirect
+	github.com/gofrs/flock v0.13.1 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect

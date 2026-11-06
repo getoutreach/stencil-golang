@@ -1,11 +1,11 @@
 // Copyright 2023 Outreach Corporation. All Rights Reserved.
 
-// Description: provides tools for merging plugins.
+// Description: Provides tools for merging plugins.
+
 package plugin
 
 import (
 	"fmt"
-	"reflect"
 
 	"github.com/blang/semver/v4"
 	"github.com/getoutreach/stencil/pkg/extensions/apiv1"
@@ -45,22 +45,22 @@ func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen
 
 	fileNameLeft, ok := fileNameLeftInf.(string)
 	if !ok {
-		return "", fmt.Errorf("expected left go.mod file name to be of type string, got %s", reflect.TypeOf(fileNameLeftInf).String())
+		return "", fmt.Errorf("%w: expected left go.mod file name to be of type string, got %T", ErrInvalidArgumentType, fileNameLeftInf)
 	}
 
 	modFileLeft, ok := modFileLeftInf.(string)
 	if !ok {
-		return "", fmt.Errorf("expected left go.mod file to be of type string, got %s", reflect.TypeOf(modFileLeftInf).String())
+		return "", fmt.Errorf("%w: expected left go.mod file to be of type string, got %T", ErrInvalidArgumentType, modFileLeftInf)
 	}
 
 	fileNameRight, ok := fileNameRightInf.(string)
 	if !ok {
-		return "", fmt.Errorf("expected right go.mod file name to be of type string, got %s", reflect.TypeOf(fileNameRightInf).String())
+		return "", fmt.Errorf("%w: expected right go.mod file name to be of type string, got %T", ErrInvalidArgumentType, fileNameRightInf)
 	}
 
 	modFileRight, ok := modFileRightInf.(string)
 	if !ok {
-		return "", fmt.Errorf("expected right go.mod file to be of type string, got %s", reflect.TypeOf(modFileRightInf).String())
+		return "", fmt.Errorf("%w: expected right go.mod file to be of type string, got %T", ErrInvalidArgumentType, modFileRightInf)
 	}
 
 	leftMod, err := modfile.Parse(fileNameLeft, []byte(modFileLeft), nil)

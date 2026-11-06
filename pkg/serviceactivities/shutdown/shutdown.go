@@ -28,7 +28,7 @@ func NewSignalError(s os.Signal) SignalError {
 	return SignalError{Signal: s}
 }
 
-// Error satisfies the error interface
+// Error satisfies the error interface.
 func (s SignalError) Error() string {
 	return fmt.Sprintf("signal: %v", s.Signal)
 }
@@ -53,7 +53,7 @@ func New() *ServiceActivity {
 	}
 }
 
-// Run runs the shutdown service activity
+// Run runs the shutdown service activity.
 func (s *ServiceActivity) Run(ctx context.Context) error {
 	// listen for interrupt, terminated, and hangup signals and gracefully shutdown server
 	c := make(chan os.Signal, 1)
@@ -72,14 +72,14 @@ func (s *ServiceActivity) Run(ctx context.Context) error {
 	}
 }
 
-// Close closes the shutdown service activity
+// Close closes the shutdown service activity.
 func (s *ServiceActivity) Close(_ context.Context) error {
 	close(s.done)
 	return nil
 }
 
 // HandleShutdownConditions encapsulates the shutdown logging logic for services into a simple function, and returns
-// a boolean indicating if it is a graceful shutdown or not
+// a boolean indicating if it is a graceful shutdown or not.
 func HandleShutdownConditions(ctx context.Context, err error) bool {
 	if err != nil {
 		var fsErr SignalError

@@ -29,15 +29,15 @@ type ServiceActivity struct {
 	undo func()
 }
 
-// New creates a new gomaxprocs service activity
+// New creates a new gomaxprocs service activity.
 func New() *ServiceActivity {
 	return &ServiceActivity{}
 }
 
-// Run runs the gomaxprocs service activity
+// Run runs the gomaxprocs service activity.
 func (s *ServiceActivity) Run(ctx context.Context) error {
 	var err error
-	s.undo, err = maxprocs.Set(maxprocs.Logger(func(m string, args ...interface{}) {
+	s.undo, err = maxprocs.Set(maxprocs.Logger(func(m string, args ...any) {
 		message := fmt.Sprintf(m, args...)
 		log.Info(ctx, "maxprocs.Set", log.F{"message": message})
 	}))
@@ -49,7 +49,7 @@ func (s *ServiceActivity) Run(ctx context.Context) error {
 	return nil
 }
 
-// Close closes the gomaxprocs service activity
+// Close closes the gomaxprocs service activity.
 func (s *ServiceActivity) Close(_ context.Context) error {
 	if s.undo != nil {
 		s.undo()
