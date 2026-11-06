@@ -332,3 +332,8 @@ func TestRenderAppConfigWithK8sYamlParser(t *testing.T) {
 		},
 	})
 }
+
+func TestBufLint(t *testing.T) {
+	st := stenciltest.New(t, "api/buf.yaml.tpl", libraryTmpls...)
+	st.Run(stenciltest.RegenerateSnapshots())
+}
