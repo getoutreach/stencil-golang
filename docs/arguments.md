@@ -88,6 +88,13 @@ kubernetes:
             controller: true
 ```
 
+Each resource also accepts these optional fields:
+
+| Field | Type | Description |
+|----|----|----|
+| `addConfig` | `boolean` | Give the generated type a `cfg *config.Config` field and a `New<Kind>` constructor. Add the import for your config package to the `imports` Stencil block in the generated type file. |
+| `configPackage` | `string` | Path of your config package, relative to the repository root, for example `internal/config`. When set, `controller-gen` also generates deepcopy methods for that package. Set this together with `addConfig`, because a type that holds `config.Config` cannot get deepcopy methods if its config package does not have them. Your config package must have a `+kubebuilder:object:generate=true` marker. |
+
 ## `lintroller`
 
 **Type**: `string`
