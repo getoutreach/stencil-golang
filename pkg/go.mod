@@ -1,8 +1,6 @@
 module github.com/getoutreach/stencil-golang/pkg
 
-go 1.25.0
-
-toolchain go1.25.7
+go 1.25.7
 
 require (
 	github.com/KimMachineGun/automemlimit v1.0.0
