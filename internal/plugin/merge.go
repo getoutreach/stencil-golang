@@ -34,6 +34,9 @@ import (
 //     but not in the right go.mod will be kept.
 //   - The go statement from the right go.mod file will always be used over
 //     the left go.mod file.
+//   - The toolchain statement of the right go.mod file will always be used
+//     over the left go.mod file. If the right go.mod file has no toolchain
+//     statement, the one in the left go.mod file is removed.
 func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen // Why: We're OK with this
 	// It's safe to assume that the arguments are in the correct order
 	// because this is validated by the native extension interface (see
@@ -134,8 +137,11 @@ func MergeGoMod(t *apiv1.TemplateFunctionExec) (string, error) { //nolint:funlen
 		return "", errors.Wrap(err, "failed to set go version")
 	}
 
-	// Always use the toolchain from the right hand go.mod
-	if err := leftMod.AddToolchainStmt(rightMod.Toolchain.Name); err != nil {
+	// No right hand toolchain: it is implied by the go statement, so drop
+	// the left hand one.
+	if rightMod.Toolchain == nil {
+		leftMod.DropToolchainStmt()
+	} else if err := leftMod.AddToolchainStmt(rightMod.Toolchain.Name); err != nil {
 		return "", errors.Wrap(err, "failed to set toolchain")
 	}
 
