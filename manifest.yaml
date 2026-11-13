@@ -223,8 +223,8 @@ arguments:
     schema:
       type: boolean
   go.stanza:
-    description: Go stanza version
-    default: "1.25.0"
+    description: Overrides the version in the go directive of go.mod. Defaults to versions.go.
+    default: ""
     schema:
       type:
         - string

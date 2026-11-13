@@ -18,7 +18,8 @@ type goMod struct {
 	// goVersion is the version of the go statement
 	goVersion string
 
-	// toolchain is the value of the toolchain directive, e.g. "go1.22.0"
+	// toolchain is the value of the toolchain directive, e.g. "go1.22.0".
+	// An empty value means that there is no toolchain directive.
 	toolchain string
 
 	// modules is a map of module path to version
@@ -79,11 +80,6 @@ func newGoMod(args ...any) goMod {
 		g.goVersion = "1.19"
 	}
 
-	// Default to a static toolchain.
-	if g.toolchain == "" {
-		g.toolchain = "go1.19.0"
-	}
-
 	return g
 }
 
@@ -94,7 +90,10 @@ func unmarshalGoMod(b []byte) goMod {
 		panic(err)
 	}
 
-	g := goMod{goVersion: mf.Go.Version, toolchain: mf.Toolchain.Name}
+	g := goMod{goVersion: mf.Go.Version}
+	if mf.Toolchain != nil {
+		g.toolchain = mf.Toolchain.Name
+	}
 	for _, req := range mf.Require {
 		// Don't initialize unless we need to. Prevents tests from being
 		// invalid because of a difference here.
@@ -129,8 +128,10 @@ func (g *goMod) Marshal() string {
 		panic(fmt.Sprintf("failed to add go statement: %v", err))
 	}
 
-	if err := mf.AddToolchainStmt(g.toolchain); err != nil {
-		panic(fmt.Sprintf("failed to add toolchain statement: %v", err))
+	if g.toolchain != "" {
+		if err := mf.AddToolchainStmt(g.toolchain); err != nil {
+			panic(fmt.Sprintf("failed to add toolchain statement: %v", err))
+		}
 	}
 
 	for module, version := range g.modules {
@@ -267,6 +268,22 @@ func TestMergeGoMod(t *testing.T) {
 				right: newGoMod(nil, nil, "1.20", "go1.22.5"),
 			},
 			want: newGoMod(nil, nil, "1.20", "go1.22.5"),
+		},
+		{
+			name: "should drop go toolchain from left when right has none",
+			args: args{
+				left:  newGoMod(nil, nil, "1.20", "go1.20.5"),
+				right: newGoMod(nil, nil, "1.22.5"),
+			},
+			want: newGoMod(nil, nil, "1.22.5"),
+		},
+		{
+			name: "should not add a go toolchain when neither side has one",
+			args: args{
+				left:  newGoMod(nil, nil, "1.20"),
+				right: newGoMod(nil, nil, "1.22.5"),
+			},
+			want: newGoMod(nil, nil, "1.22.5"),
 		},
 	}
 	for _, tt := range tests {
