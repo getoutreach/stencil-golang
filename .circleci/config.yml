@@ -4,7 +4,6 @@ version: 2.1
 orbs:
   shared: getoutreach/shared@dev:2.41.0-rc.8
   ## <<Stencil::Block(CircleCIExtraOrbs)>>
-
   ## <</Stencil::Block>>
 
 parameters:
@@ -15,7 +14,6 @@ parameters:
     type: boolean
     default: false
   ## <<Stencil::Block(CircleCIExtraParams)>>
-
   ## <</Stencil::Block>>
 
 # Extra contexts to expose to all jobs below
@@ -32,7 +30,6 @@ contexts: &contexts
   - wizcli
   - datadog
   ## <<Stencil::Block(extraContexts)>>
-
   ## <</Stencil::Block>>
 
 # Test configs to pass to test and cache jobs
