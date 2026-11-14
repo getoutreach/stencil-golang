@@ -1,0 +1,44 @@
+(*codegen.File)(// Copyright 2026 Outreach Corporation. All Rights Reserved.
+
+// Description: This file stores type information
+
+package v1
+
+import (
+	"github.com/getoutreach/gobox/pkg/log"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	// Place imports here
+	// <<Stencil::Block(imports)>>
+
+	// <</Stencil::Block>>
+)
+// Pod is an alias to corev1.Pod
+// +kubebuilder:object:root=true
+type Pod corev1.Pod
+
+// PodList is an alias to corev1.PodList
+// +kubebuilder:object:root=true
+type PodList corev1.PodList
+
+// MarshalLog can be used to add resource fields to log, satisfies resources.Resource interface.
+func (r *Pod) MarshalLog(addfield func(key string, value interface{})) {
+	addfield("resource.name", r.Name)
+	addfield("resource.namespace", r.Namespace)
+}
+
+// Define additional types here.
+// <<Stencil::Block(moreTypes)>>
+
+// <</Stencil::Block>>
+
+// init registers the custom types with the schema
+func init() { //nolint:gochecknoinits // Why: used for registering
+	// Register additional types here.
+	// <<Stencil::Block(registerTypes)>>
+
+	// <</Stencil::Block>>
+
+	SchemeBuilder.Register(&Pod{}, &PodList{})
+})

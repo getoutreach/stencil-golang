@@ -9,8 +9,17 @@
 // the version/group combo provided.
 package {{ .version }}
 
+{{- /* Collect the config packages that need deepcopy methods generated for them. */}}
+{{- $configPaths := list }}
+{{- range $r := .resources }}
+{{- if $r.configPackage }}
+{{- $configPaths = append $configPaths $r.configPackage }}
+{{- end }}
+{{- end }}
+{{- $configPaths = $configPaths | uniq | sortAlpha }}
+
 //nolint:lll //Why: Long shell script
-//go:generate /usr/bin/env bash -c "pushd ../../..{{if not (empty .package)}}/..{{end}} >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.20.0 -- controller-gen object paths=./api/k8s/{{ .package }}/{{ .version }} && popd >/dev/null 2>&1"
+//go:generate /usr/bin/env bash -c "pushd ../../..{{if not (empty .package)}}/..{{end}} >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.20.0 -- controller-gen object paths=./api/k8s/{{ .package }}/{{ .version }}{{ range $p := $configPaths }} paths=./{{ $p }}{{ end }} && popd >/dev/null 2>&1"
 {{ end }}
 
 {{- range $g := stencil.Arg "kubernetes.groups" }}
