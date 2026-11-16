@@ -284,7 +284,6 @@ local nonDevelopmentObjects = {
     },
   },
   waypoint: ok.WaypointProxy(app.name + '-waypoint', namespace=app.namespace, team='org-team'),
-  waypointConfig: ok.WaypointProxyConfig(app.name + '-waypoint', namespace=app.namespace, team='org-team'),
   grpcRoute: ok.GrpcRoute(app.name, app.namespace) {
     spec+: {
       parentRefs: [{
