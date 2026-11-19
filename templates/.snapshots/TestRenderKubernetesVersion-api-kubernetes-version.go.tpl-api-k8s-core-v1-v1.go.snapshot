@@ -1,0 +1,11 @@
+(*codegen.File)(// Copyright 2026 Outreach Corporation. All Rights Reserved.
+
+// Description: This file triggers generation of the types
+
+// Package v1 contains declarations for interacting with
+// the version/group combo provided.
+package v1
+
+//nolint:lll //Why: Long shell script
+//go:generate /usr/bin/env bash -c "pushd ../../../.. >/dev/null 2>&1 && ./scripts/shell-wrapper.sh mise.sh exec github:kubernetes-sigs/controller-tools@v0.20.0 -- controller-gen object paths=./api/k8s/core/v1 && popd >/dev/null 2>&1"
+)
