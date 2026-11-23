@@ -97,6 +97,9 @@ func TestRenderDeploymentJsonnetWithHPA(t *testing.T) {
 
 func TestRenderDeploymentJsonnet_AdditionalAllowedMetrics(t *testing.T) {
 	assertTemplateSnapshot(t, "deployments/appname/app.jsonnet.tpl", map[string]any{
+		// The allowlist only applies to the Datadog scrape, which is no longer
+		// the default.
+		"metrics": "datadog",
 		"additionalAllowedMetrics": []any{
 			"my_custom_counter",
 			"my_custom_histogram_bucket",

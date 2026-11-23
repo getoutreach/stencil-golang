@@ -111,8 +111,8 @@ arguments:
         - datadog
         - opentelemetry
         - dual
-    description: Metrics collector to use (supports opentelemetry and datadog)
-    default: datadog
+    description: Metrics collector to use (supports opentelemetry, datadog and dual). Set datadog to keep exposing metrics to the Datadog agent.
+    default: opentelemetry
   tracing:
     schema:
       type: string

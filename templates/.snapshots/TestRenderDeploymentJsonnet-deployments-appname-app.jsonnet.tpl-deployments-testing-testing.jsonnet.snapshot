@@ -144,25 +144,11 @@ local all = {
 			template+: {
 				metadata+: {
 					labels+: sharedLabels {
+						'opentelemetry.io/scrape': 'true',
 						'version': app.version,
 					},
 					annotations+: {
 						configmap_hash: $.configmap.md5,
-						datadog_prom_instances_:: [
-							{
-								prometheus_url: 'http://%%host%%:' +
-																$.deployment.spec.template.spec.containers_.default.ports_['http-prom'].containerPort +
-																'/metrics',
-								namespace: app.name,
-								metrics: $._metricsAllowlist,
-								send_distribution_buckets: true,
-							},
-						],
-						// The number of elements in .check_names and .init_configs must be the same as the number of
-						// elements in .instances, so populate all three from the objects in .datadog_prom_instances_
-						['ad.datadoghq.com/' + app.name + '.check_names']: std.manifestJsonMinified(['openmetrics' for x in self.datadog_prom_instances_]),
-						['ad.datadoghq.com/' + app.name + '.init_configs']: std.manifestJsonMinified([{} for x in self.datadog_prom_instances_]),
-						['ad.datadoghq.com/' + app.name + '.instances']: std.manifestJsonEx(self.datadog_prom_instances_, '  '),
 					},
 				},
 				spec+: {
