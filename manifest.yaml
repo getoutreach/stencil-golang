@@ -164,7 +164,7 @@ arguments:
       type: boolean
   versions.go:
     description: Go version to use
-    default: "1.25.7"
+    default: "1.27.4"
     schema:
       type:
         - string
