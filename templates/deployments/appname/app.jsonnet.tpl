@@ -387,7 +387,6 @@ local nonDevelopmentObjects = {
     },
   },
   waypoint: ok.WaypointProxy(app.name + '-waypoint', namespace=app.namespace, team='{{ stencil.Arg "reportingTeam" }}'),
-  waypointConfig: ok.WaypointProxyConfig(app.name + '-waypoint', namespace=app.namespace, team='{{ stencil.Arg "reportingTeam" }}'),
   grpcRoute: ok.GrpcRoute(app.name, app.namespace) {
     spec+: {
       parentRefs: [{
